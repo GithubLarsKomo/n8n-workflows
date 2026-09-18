@@ -6,9 +6,10 @@ This repository is public, therefore only sanitized workflow JSON belongs here. 
 
 ## Layout
 
-- workflows/active/ — sanitized exports of workflows that are active/published in the live n8n instance.
+- workflows/active/ — sanitized exports of active/published workflows.
+- workflows/inactive/ — sanitized exports of inactive workflows.
 - docs/WORKFLOW-INVENTORY.md — human-readable inventory.
-- scripts/export-active-workflows.py — live exporter using the n8n Public API.
+- scripts/export-active-workflows.py — live exporter for active and inactive workflows using the n8n Public API.
 - scripts/sync-active-workflows.sh — convenience wrapper to export, inventory, commit and optionally push.
 
 ## Configuration
@@ -44,7 +45,7 @@ The repository is public. `.env` and `.env.*` are ignored by Git; `.env.example`
 
     python3 scripts/export-active-workflows.py
 
-The exporter requests only active workflows, follows n8n pagination, removes credential bindings and common secret-bearing fields, and writes deterministic JSON files.
+The exporter queries both `active=true` and `active=false`, follows n8n API pagination for each set, removes credential bindings and common secret-bearing fields, and writes deterministic JSON files into separate `workflows/active/` and `workflows/inactive/` directories. Files that no longer belong to a status are removed from that directory on the next export.
 
 Review the diff before pushing because workflow parameters can contain arbitrary user-authored text.
 
