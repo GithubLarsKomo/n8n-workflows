@@ -11,12 +11,25 @@ This repository is public, therefore only sanitized workflow JSON belongs here. 
 - scripts/export-active-workflows.py — live exporter using the n8n Public API.
 - scripts/sync-active-workflows.sh — convenience wrapper to export, inventory, commit and optionally push.
 
-## Required environment
+## Configuration
+
+The exporter automatically loads `.env` from the repository root:
+
+    cp .env.example .env
+
+Example:
+
+    N8N_BASE_URL=https://your-n8n.example.com
+    N8N_API_KEY=...
+
+You may also export the variables in the shell:
 
     export N8N_BASE_URL="https://your-n8n.example.com"
     export N8N_API_KEY="..."
 
-The API key is read only from the environment and must never be committed.
+Already exported environment variables take precedence over values from `.env`.
+
+The repository is public. `.env` and `.env.*` are ignored by Git; `.env.example` is the only exception. Never commit the real API key.
 
 ## Export
 
