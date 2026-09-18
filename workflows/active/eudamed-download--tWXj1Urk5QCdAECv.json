@@ -1,0 +1,452 @@
+{
+  "active": true,
+  "activeVersion": {
+    "authors": "Lars Komorowski",
+    "autosaved": true,
+    "connections": {
+      "DB Seeds": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "HTTP Request EUDAMED",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP Request EUDAMED": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Split Out",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Insert or update rows in a table": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Loop Over Items": {
+        "main": [
+          [],
+          [
+            {
+              "index": 0,
+              "node": "Insert or update rows in a table",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Normalize EUDAMED": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "DB Seeds",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Split Out": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Normalize EUDAMED",
+              "type": "main"
+            }
+          ]
+        ]
+      }
+    },
+    "createdAt": "2026-09-18T09:48:50.131Z",
+    "description": "",
+    "name": "Version 3ac7d2f5",
+    "nodes": [
+      {
+        "id": "3e64bf23-987f-40e7-b108-0f4314cf71c5",
+        "name": "Schedule Trigger",
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "weeks",
+                "triggerAtHour": 5
+              }
+            ]
+          }
+        },
+        "position": [
+          -544,
+          -80
+        ],
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.3
+      },
+      {
+        "id": "4ae63f11-07b6-414e-b40e-766a825a5850",
+        "name": "Split Out",
+        "parameters": {
+          "fieldToSplitOut": "value",
+          "options": {}
+        },
+        "position": [
+          64,
+          -80
+        ],
+        "type": "n8n-nodes-base.splitOut",
+        "typeVersion": 1
+      },
+      {
+        "id": "03896dda-c32e-4b20-95c7-f2eba1d09d54",
+        "name": "HTTP Request EUDAMED",
+        "parameters": {
+          "options": {},
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "MF_SRN",
+                "value": "={{ $json.MANUFACTURER_SRN }}"
+              },
+              {
+                "name": "api-version",
+                "value": "v1.0"
+              },
+              {
+                "name": "format",
+                "value": "json"
+              }
+            ]
+          },
+          "sendQuery": true,
+          "url": "https://api.datalake.sante.service.ec.europa.eu/eudamed/udi"
+        },
+        "position": [
+          -144,
+          -80
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4
+      },
+      {
+        "id": "c53bf824-a1a3-47d7-968c-bf6e805137c8",
+        "name": "Normalize EUDAMED",
+        "parameters": {
+          "jsCode": "const d = $json;\n\n// alle beim Start geladenen EUDAMED-Seeds\nconst seeds = $('DB Seeds')\n  .all()\n  .map(item => item.json);\n\n// EUDAMED liefert MF_SRN im Device selbst zurück.\n// Damit ordnen wir jedes Device wieder unserem internen Unternehmen zu.\nconst srn = String(d.MF_SRN || '')\n  .trim()\n  .toUpperCase();\n\nconst seed = seeds.find(s =>\n  String(s.MANUFACTURER_SRN || '')\n    .trim()\n    .toUpperCase() === srn\n);\n\nif (!seed) {\n  throw new Error(\n    `Keine APPLICANT_ID für EUDAMED MF_SRN ${d.MF_SRN} gefunden`\n  );\n}\n\n// Suchtext für CI-Klassifikation\nconst haystack = [\n  d.TRADE_NAME,\n  d.DEVICE_NAME,\n  d.DEVICE_MODEL,\n  d.REFERENCE,\n  d.MEDICAL_PURPOSE\n]\n.filter(Boolean)\n.join(\" \")\n.toUpperCase();\n\nconst topics = [\n  {\n    name: \"NEPHRIN\",\n    terms: [\n      \"NEPHRIN\",\n      \"ANTI-NEPHRIN\",\n      \"ANTI NEPHRIN\"\n    ]\n  },\n  {\n    name: \"MEMBRANOUS_NEPHROPATHY\",\n    terms: [\n      \"PLA2R\",\n      \"THSD7A\",\n      \"NELL1\",\n      \"NELL-1\"\n    ]\n  },\n  {\n    name: \"NEURODEGENERATION\",\n    terms: [\n      \"P217\",\n      \"P-TAU217\",\n      \"PTAU217\",\n      \"TAU217\",\n      \"GFAP\",\n      \"NEUROFILAMENT\",\n      \"NFL\",\n      \"AMYLOID\",\n      \"ABETA\",\n      \"AΒETA\"\n    ]\n  }\n];\n\nconst matchedTopics = topics\n  .filter(topic =>\n    topic.terms.some(term =>\n      haystack.includes(term.toUpperCase())\n    )\n  )\n  .map(topic => topic.name);\n\nreturn {\n  EUDAMED_ID: d.ID ?? null,\n  EUDAMED_UUID: d.UUID ?? null,\n  UDI_DI_DATA_ULID: d.UDI_DI_DATA_ULID ?? null,\n\n  PRIMARY_DI: d.PRIMARY_DI ?? null,\n  BASIC_UDI: d.BASIC_UDI ?? null,\n\n  APPLICANT_ID: Number(seed.APPLICANT_ID),\n\n  MANUFACTURER_SRN: d.MF_SRN ?? seed.MANUFACTURER_SRN ?? null,\n  MANUFACTURER_NAME: d.MF_NAME ?? seed.MANUFACTURER_NAME ?? null,\n\n  TRADE_NAME: d.TRADE_NAME ?? null,\n  DEVICE_NAME: d.DEVICE_NAME ?? null,\n  DEVICE_MODEL: d.DEVICE_MODEL ?? null,\n  REFERENCE: d.REFERENCE ?? null,\n\n  NOMENCLATURE_CODE:\n    d.NOMENCLATURE_CODE\n      ? String(d.NOMENCLATURE_CODE).trim()\n      : null,\n\n  RISK_CLASS_ID: d.RISK_CLASS_ID ?? null,\n  APPLICABLE_LEGISLATION_ID:\n    d.APPLICABLE_LEGISLATION_ID ?? null,\n\n  DEVICE_CRITERION:\n    d.DEVICE_CRITERION ?? null,\n\n  PLACED_ON_THE_MARKET_ID:\n    d.PLACED_ON_THE_MARKET_ID ?? null,\n\n  DEVICE_STATUS_TYPE_ID:\n    d.DEVICE_STATUS_TYPE_ID ?? null,\n\n  STATUS_ID:\n    d.STATUS_ID ?? null,\n\n  VERSION_NUMBER:\n    d.VERSION_NUMBER ?? null,\n\n  LATEST_VERSION:\n    d.LATEST_VERSION ?? null,\n\n  NEW_DEVICE:\n    d.NEW_DEVICE ?? null,\n\n  REAGENT:\n    d.REAGENT ?? null,\n\n  INSTRUMENT:\n    d.INSTRUMENT ?? null,\n\n  KIT:\n    d.KIT ?? null,\n\n  PROFESSIONAL_TESTING:\n    d.PROFESSIONAL_TESTING ?? null,\n\n  SELF_TESTING:\n    d.SELF_TESTING ?? null,\n\n  NEAR_PATIENT_TESTING:\n    d.NEAR_PATIENT_TESTING ?? null,\n\n  COMPANION_DIAGNOSTICS:\n    d.COMPANION_DIAGNOSTICS ?? null,\n\n  AR_NAME:\n    d.AR_NAME ?? null,\n\n  AR_SRN:\n    d.AR_SRN ?? null,\n\n  TOPIC_MATCH:\n    matchedTopics.length\n      ? matchedTopics.join(\",\")\n      : null,\n\n  PAYLOAD_JSON:\n    JSON.stringify(d)\n};",
+          "mode": "runOnceForEachItem"
+        },
+        "position": [
+          272,
+          -80
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "b88b4385-9dad-4df3-8da8-e03924c58962",
+        "name": "Insert or update rows in a table",
+        "parameters": {
+          "columnToMatchOn": "EUDAMED_UUID",
+          "operation": "upsert",
+          "options": {},
+          "table": {
+            "__rl": true,
+            "cachedResultName": "if_eudamed_device",
+            "mode": "list",
+            "value": "if_eudamed_device"
+          }
+        },
+        "position": [
+          688,
+          16
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "d3c4acd8-05f4-451c-ae64-4808100b8ba4",
+        "name": "DB Seeds",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "SELECT\n    c.APPLICANT_ID,\n    c.APPLICANT,\n    e.MANUFACTURER_NAME,\n    e.MANUFACTURER_SRN\nFROM infofee01_fda.if_regulatory_company c\nJOIN infofee01_fda.if_regulatory_eudamed_mf e\n    ON e.APPLICANT_ID = c.APPLICANT_ID\nWHERE\n    c.EUDAMED_ACTIVE = 1\n    AND e.ACTIVE = 1\nORDER BY\n    c.APPLICANT_ID,\n    e.MANUFACTURER_SRN;"
+        },
+        "position": [
+          -352,
+          -80
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "id": "f4db1ff6-0bdc-4fe5-a67e-0a35e73fca92",
+        "name": "Loop Over Items",
+        "parameters": {
+          "batchSize": 100,
+          "options": {}
+        },
+        "position": [
+          480,
+          -80
+        ],
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3
+      }
+    ],
+    "updatedAt": "2026-09-18T09:48:53.000Z",
+    "versionId": "3ac7d2f5-3b2e-41d5-a6c9-cfdb81368cf9",
+    "workflowId": "tWXj1Urk5QCdAECv"
+  },
+  "activeVersionId": "3ac7d2f5-3b2e-41d5-a6c9-cfdb81368cf9",
+  "connections": {
+    "DB Seeds": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "HTTP Request EUDAMED",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP Request EUDAMED": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Split Out",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Insert or update rows in a table": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "index": 0,
+            "node": "Insert or update rows in a table",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Normalize EUDAMED": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "DB Seeds",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Normalize EUDAMED",
+            "type": "main"
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-09-17T09:21:55.277Z",
+  "id": "tWXj1Urk5QCdAECv",
+  "isArchived": false,
+  "name": "EUDAMED Download",
+  "nodes": [
+    {
+      "id": "3e64bf23-987f-40e7-b108-0f4314cf71c5",
+      "name": "Schedule Trigger",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtHour": 5
+            }
+          ]
+        }
+      },
+      "position": [
+        -544,
+        -80
+      ],
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3
+    },
+    {
+      "id": "4ae63f11-07b6-414e-b40e-766a825a5850",
+      "name": "Split Out",
+      "parameters": {
+        "fieldToSplitOut": "value",
+        "options": {}
+      },
+      "position": [
+        64,
+        -80
+      ],
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1
+    },
+    {
+      "id": "03896dda-c32e-4b20-95c7-f2eba1d09d54",
+      "name": "HTTP Request EUDAMED",
+      "parameters": {
+        "options": {},
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "MF_SRN",
+              "value": "={{ $json.MANUFACTURER_SRN }}"
+            },
+            {
+              "name": "api-version",
+              "value": "v1.0"
+            },
+            {
+              "name": "format",
+              "value": "json"
+            }
+          ]
+        },
+        "sendQuery": true,
+        "url": "https://api.datalake.sante.service.ec.europa.eu/eudamed/udi"
+      },
+      "position": [
+        -144,
+        -80
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4
+    },
+    {
+      "id": "c53bf824-a1a3-47d7-968c-bf6e805137c8",
+      "name": "Normalize EUDAMED",
+      "parameters": {
+        "jsCode": "const d = $json;\n\n// alle beim Start geladenen EUDAMED-Seeds\nconst seeds = $('DB Seeds')\n  .all()\n  .map(item => item.json);\n\n// EUDAMED liefert MF_SRN im Device selbst zurück.\n// Damit ordnen wir jedes Device wieder unserem internen Unternehmen zu.\nconst srn = String(d.MF_SRN || '')\n  .trim()\n  .toUpperCase();\n\nconst seed = seeds.find(s =>\n  String(s.MANUFACTURER_SRN || '')\n    .trim()\n    .toUpperCase() === srn\n);\n\nif (!seed) {\n  throw new Error(\n    `Keine APPLICANT_ID für EUDAMED MF_SRN ${d.MF_SRN} gefunden`\n  );\n}\n\n// Suchtext für CI-Klassifikation\nconst haystack = [\n  d.TRADE_NAME,\n  d.DEVICE_NAME,\n  d.DEVICE_MODEL,\n  d.REFERENCE,\n  d.MEDICAL_PURPOSE\n]\n.filter(Boolean)\n.join(\" \")\n.toUpperCase();\n\nconst topics = [\n  {\n    name: \"NEPHRIN\",\n    terms: [\n      \"NEPHRIN\",\n      \"ANTI-NEPHRIN\",\n      \"ANTI NEPHRIN\"\n    ]\n  },\n  {\n    name: \"MEMBRANOUS_NEPHROPATHY\",\n    terms: [\n      \"PLA2R\",\n      \"THSD7A\",\n      \"NELL1\",\n      \"NELL-1\"\n    ]\n  },\n  {\n    name: \"NEURODEGENERATION\",\n    terms: [\n      \"P217\",\n      \"P-TAU217\",\n      \"PTAU217\",\n      \"TAU217\",\n      \"GFAP\",\n      \"NEUROFILAMENT\",\n      \"NFL\",\n      \"AMYLOID\",\n      \"ABETA\",\n      \"AΒETA\"\n    ]\n  }\n];\n\nconst matchedTopics = topics\n  .filter(topic =>\n    topic.terms.some(term =>\n      haystack.includes(term.toUpperCase())\n    )\n  )\n  .map(topic => topic.name);\n\nreturn {\n  EUDAMED_ID: d.ID ?? null,\n  EUDAMED_UUID: d.UUID ?? null,\n  UDI_DI_DATA_ULID: d.UDI_DI_DATA_ULID ?? null,\n\n  PRIMARY_DI: d.PRIMARY_DI ?? null,\n  BASIC_UDI: d.BASIC_UDI ?? null,\n\n  APPLICANT_ID: Number(seed.APPLICANT_ID),\n\n  MANUFACTURER_SRN: d.MF_SRN ?? seed.MANUFACTURER_SRN ?? null,\n  MANUFACTURER_NAME: d.MF_NAME ?? seed.MANUFACTURER_NAME ?? null,\n\n  TRADE_NAME: d.TRADE_NAME ?? null,\n  DEVICE_NAME: d.DEVICE_NAME ?? null,\n  DEVICE_MODEL: d.DEVICE_MODEL ?? null,\n  REFERENCE: d.REFERENCE ?? null,\n\n  NOMENCLATURE_CODE:\n    d.NOMENCLATURE_CODE\n      ? String(d.NOMENCLATURE_CODE).trim()\n      : null,\n\n  RISK_CLASS_ID: d.RISK_CLASS_ID ?? null,\n  APPLICABLE_LEGISLATION_ID:\n    d.APPLICABLE_LEGISLATION_ID ?? null,\n\n  DEVICE_CRITERION:\n    d.DEVICE_CRITERION ?? null,\n\n  PLACED_ON_THE_MARKET_ID:\n    d.PLACED_ON_THE_MARKET_ID ?? null,\n\n  DEVICE_STATUS_TYPE_ID:\n    d.DEVICE_STATUS_TYPE_ID ?? null,\n\n  STATUS_ID:\n    d.STATUS_ID ?? null,\n\n  VERSION_NUMBER:\n    d.VERSION_NUMBER ?? null,\n\n  LATEST_VERSION:\n    d.LATEST_VERSION ?? null,\n\n  NEW_DEVICE:\n    d.NEW_DEVICE ?? null,\n\n  REAGENT:\n    d.REAGENT ?? null,\n\n  INSTRUMENT:\n    d.INSTRUMENT ?? null,\n\n  KIT:\n    d.KIT ?? null,\n\n  PROFESSIONAL_TESTING:\n    d.PROFESSIONAL_TESTING ?? null,\n\n  SELF_TESTING:\n    d.SELF_TESTING ?? null,\n\n  NEAR_PATIENT_TESTING:\n    d.NEAR_PATIENT_TESTING ?? null,\n\n  COMPANION_DIAGNOSTICS:\n    d.COMPANION_DIAGNOSTICS ?? null,\n\n  AR_NAME:\n    d.AR_NAME ?? null,\n\n  AR_SRN:\n    d.AR_SRN ?? null,\n\n  TOPIC_MATCH:\n    matchedTopics.length\n      ? matchedTopics.join(\",\")\n      : null,\n\n  PAYLOAD_JSON:\n    JSON.stringify(d)\n};",
+        "mode": "runOnceForEachItem"
+      },
+      "position": [
+        272,
+        -80
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "b88b4385-9dad-4df3-8da8-e03924c58962",
+      "name": "Insert or update rows in a table",
+      "parameters": {
+        "columnToMatchOn": "EUDAMED_UUID",
+        "operation": "upsert",
+        "options": {},
+        "table": {
+          "__rl": true,
+          "cachedResultName": "if_eudamed_device",
+          "mode": "list",
+          "value": "if_eudamed_device"
+        }
+      },
+      "position": [
+        688,
+        16
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "d3c4acd8-05f4-451c-ae64-4808100b8ba4",
+      "name": "DB Seeds",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "SELECT\n    c.APPLICANT_ID,\n    c.APPLICANT,\n    e.MANUFACTURER_NAME,\n    e.MANUFACTURER_SRN\nFROM infofee01_fda.if_regulatory_company c\nJOIN infofee01_fda.if_regulatory_eudamed_mf e\n    ON e.APPLICANT_ID = c.APPLICANT_ID\nWHERE\n    c.EUDAMED_ACTIVE = 1\n    AND e.ACTIVE = 1\nORDER BY\n    c.APPLICANT_ID,\n    e.MANUFACTURER_SRN;"
+      },
+      "position": [
+        -352,
+        -80
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "id": "f4db1ff6-0bdc-4fe5-a67e-0a35e73fca92",
+      "name": "Loop Over Items",
+      "parameters": {
+        "batchSize": 100,
+        "options": {}
+      },
+      "position": [
+        480,
+        -80
+      ],
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3
+    }
+  ],
+  "settings": {
+    "binaryMode": "separate",
+    "executionOrder": "v1"
+  },
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-09-18T09:48:50.129Z",
+  "versionId": "3ac7d2f5-3b2e-41d5-a6c9-cfdb81368cf9"
+}
