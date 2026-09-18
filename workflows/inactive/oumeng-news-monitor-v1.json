@@ -1,0 +1,260 @@
+{
+  "name": "Oumeng News Monitor v1",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      },
+      "id": "schedule",
+      "name": "Every 6 hours",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://oumeng.com.cn/frontend/news",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "list",
+      "name": "Fetch Oumeng News List",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const html = String($json.body ?? $json.data ?? $json ?? '');\nconst data = $getWorkflowStaticData('global');\ndata.seenNewsIds ??= [];\nconst seen = new Set(data.seenNewsIds);\nconst out=[];\nconst re=/href=[\"']([^\"']*\\/frontend\\/news\\/[^\"']+)[\"'][^>]*>([\\s\\S]*?)<\\/a>/gi;\nlet m;\nwhile ((m=re.exec(html))) {\n  const url=new URL(m[1], 'https://oumeng.com.cn').href;\n  const id=url.split('/').filter(Boolean).pop();\n  if (!seen.has(id)) out.push({json:{id,url,title:m[2].replace(/<[^>]+>/g,' ').replace(/\\s+/g,' ').trim()}});\n}\nreturn out.slice(0,1);"
+      },
+      "id": "extract-new",
+      "name": "Extract New News Items",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{$json.url}}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "text"
+            }
+          }
+        }
+      },
+      "id": "detail",
+      "name": "Fetch Detail Page",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const src=$('Extract New News Items').item.json;\nconst html=String($json.body ?? $json.data ?? '');\nconst text=html.replace(/<script[\\s\\S]*?<\\/script>/gi,' ').replace(/<style[\\s\\S]*?<\\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&').replace(/\\s+/g,' ').trim();\nreturn [{json:{...src,article:text.slice(0,30000)}}];"
+      },
+      "id": "article",
+      "name": "Extract Article Text",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://ollama:11434/api/chat",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({model:'hf.co/unsloth/Qwen3-4B-Instruct-2507-GGUF:Q4_K_M',stream:false,format:'json',messages:[{role:'system',content:'Translate the Chinese source faithfully into German and provide a concise executive summary. Return JSON with translation_de, summary_de, material.'},{role:'user',content:$json.article}]}) }}",
+        "options": {}
+      },
+      "id": "ollama",
+      "name": "Translate + Executive Summary",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const src=$('Extract Article Text').item.json;\nlet a={}; try { a=JSON.parse($json.message?.content ?? '{}'); } catch {}\nreturn [{json:{...src,...a,subject:'Oumeng News: '+(src.title||src.id),body:(a.summary_de||'')+'\\n\\n'+(a.translation_de||'')+'\\n\\nQuelle: '+src.url}}];"
+      },
+      "id": "format",
+      "name": "Format Email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://10.4.190.16:5678/webhook/internal-mail/send",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-webhook-token",
+              "value": "={{$env.INTERNAL_MAIL_WEBHOOK_TOKEN}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({to:'Lars',from:'infofee@euroimmun.de',subject:$json.subject,text:$json.body}) }}",
+        "options": {}
+      },
+      "id": "mail",
+      "name": "Send Internal Mail",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const src=$('Extract New News Items').item.json; const d=$getWorkflowStaticData('global'); d.seenNewsIds ??=[]; if(!d.seenNewsIds.includes(src.id)) d.seenNewsIds.push(src.id); d.seenNewsIds=d.seenNewsIds.slice(-500); return items;"
+      },
+      "id": "seen",
+      "name": "Mark News As Seen",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Every 6 hours": {
+      "main": [
+        [
+          {
+            "node": "Fetch Oumeng News List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Oumeng News List": {
+      "main": [
+        [
+          {
+            "node": "Extract New News Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract New News Items": {
+      "main": [
+        [
+          {
+            "node": "Fetch Detail Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Detail Page": {
+      "main": [
+        [
+          {
+            "node": "Extract Article Text",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Article Text": {
+      "main": [
+        [
+          {
+            "node": "Translate + Executive Summary",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Translate + Executive Summary": {
+      "main": [
+        [
+          {
+            "node": "Format Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Email": {
+      "main": [
+        [
+          {
+            "node": "Send Internal Mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Internal Mail": {
+      "main": [
+        [
+          {
+            "node": "Mark News As Seen",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}
