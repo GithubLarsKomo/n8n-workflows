@@ -1,0 +1,465 @@
+{
+  "name": "Oumeng Intelligence Monitor v2",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      },
+      "id": "schedule",
+      "name": "Every 6 hours",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const queries=['欧蒙 医学 诊断 2026','欧蒙医学诊断 招聘 杭州 北京 天津','欧蒙 2.0 本土化 中国智造','欧蒙 杭州 生产基地 研发中心','欧蒙 天津 杭州 生产 双引擎','欧蒙 股权 变更 收购 投资 融资','欧蒙 医学诊断 工商 变更 法定代表人','欧蒙 NMPA 注册 2026','欧蒙 EUROIMMUN 中国 本土化','欧蒙 医疗 控股 交易','site:nmpa.gov.cn 欧蒙','site:samr.gov.cn 欧蒙'];\nreturn queries.map(q=>({json:{query:q}}));"
+      },
+      "id": "queries",
+      "name": "Build Search Queries",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://searxng:8080/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{$json.query}}"
+            },
+            {
+              "name": "format",
+              "value": "json"
+            },
+            {
+              "name": "language",
+              "value": "zh-CN"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "searx",
+      "name": "SearXNG Search",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const out=[]; const seen=new Set();\nfor(const i of items){for(const r of (i.json.results||[])){try{const u=new URL(r.url);u.hash='';['utm_source','utm_medium','utm_campaign'].forEach(k=>u.searchParams.delete(k));const url=u.href;if(seen.has(url))continue;seen.add(url);out.push({json:{canonical_url:url,discovery_title:r.title||'',discovery_snippet:r.content||'',source_class:/oumeng\\.com\\.cn$/i.test(u.hostname)?'primary_official':/(nmpa|samr|gov)\\.gov\\.cn$/i.test(u.hostname)?'primary_regulatory':'secondary'}});}catch{}}}\n// Always seed the official Oumeng news page.\nconst seed='https://oumeng.com.cn/frontend/news'; if(!seen.has(seed))out.unshift({json:{canonical_url:seed,discovery_title:'Oumeng News',source_class:'primary_official'}}); return out;"
+      },
+      "id": "normalize",
+      "name": "Normalize + URL Dedupe",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        660,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const q=s=>\"'\"+String(s??'').replace(/\\\\/g,'\\\\\\\\').replace(/'/g,\"''\")+\"'\"; return items.map(i=>({json:{...i.json,lookup_sql:`SELECT ${q(i.json.canonical_url)} canonical_url,${q(i.json.discovery_title)} discovery_title,${q(i.json.discovery_snippet)} discovery_snippet,${q(i.json.source_class)} source_class,s.last_content_hash,s.last_crawled_at FROM (SELECT 1) x LEFT JOIN ci_oumeng_source s ON s.url_hash=SHA2(${q(i.json.canonical_url)},256) LIMIT 1`}}));"
+      },
+      "id": "lookupsql",
+      "name": "Build Source Lookup SQL",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        880,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{$json.lookup_sql}}",
+        "options": {}
+      },
+      "id": "dblookup",
+      "name": "MariaDB Source Lookup",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5,
+      "position": [
+        1100,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const ttl=12*3600*1000; const now=Date.now(); return items.filter(i=>!i.json.last_crawled_at || now-new Date(i.json.last_crawled_at).getTime()>=ttl);"
+      },
+      "id": "ttl",
+      "name": "Recrawl Due?",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1320,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://firecrawl-api-1:3002/v1/scrape",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({url:$json.canonical_url,formats:['markdown'],onlyMainContent:true}) }}",
+        "options": {}
+      },
+      "id": "crawl",
+      "name": "Firecrawl Scrape",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1540,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "function h(s){let a=2166136261;for(let i=0;i<s.length;i++){a^=s.charCodeAt(i);a=Math.imul(a,16777619)}return ('00000000'+(a>>>0).toString(16)).slice(-8)}\nreturn items.map(i=>{const d=i.json.data||i.json;const md=String(d.markdown||'').trim();const meta=d.metadata||{};const prev=$('MariaDB Source Lookup').item.json;return {json:{canonical_url:meta.sourceURL||prev.canonical_url,title:meta.title||prev.discovery_title||'',source_class:prev.source_class,markdown:md,content_hash:h(md),previous_hash:prev.last_content_hash||null,changed:!!md&&h(md)!==prev.last_content_hash}}});"
+      },
+      "id": "hash",
+      "name": "Content Hash + Change Detection",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1760,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.filter(i=>i.json.changed);"
+      },
+      "id": "changed",
+      "name": "Only New or Changed",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1980,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://ollama:11434/api/chat",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({model:'hf.co/unsloth/Qwen3-4B-Instruct-2507-GGUF:Q4_K_M',stream:false,format:'json',messages:[{role:'system',content:'You are an evidence classifier for competitive intelligence. Extract only claims supported by the supplied source. Categories: OWNERSHIP, TRANSACTION, FINANCING, MANAGEMENT, REGULATORY, DISTRIBUTION, LOCALIZATION, PRODUCTION, OPERATIONAL_INDEPENDENCE. Return JSON: {relevant:boolean,event_type:string,event_date:string|null,materiality:0-100,confidence:0-100,summary_de:string,evidence_quote:string,entities:[],requires_corroboration:boolean}. Ownership/transaction/financing/management claims from secondary sources require corroboration. Recruiting/marketing alone cannot prove ownership or transaction.'},{role:'user',content:'URL: '+$json.canonical_url+'\\nSOURCE_CLASS: '+$json.source_class+'\\nTITLE: '+$json.title+'\\n\\n'+$json.markdown.slice(0,24000)}]}) }}",
+        "options": {}
+      },
+      "id": "ollama",
+      "name": "Evidence Extraction",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        2200,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const src=$('Only New or Changed').item.json;let e={};try{e=JSON.parse($json.message?.content||'{}')}catch{};const basis=[e.event_type,e.event_date,e.summary_de,(e.entities||[]).sort().join('|')].join('|').toLowerCase().replace(/\\s+/g,' ').trim();let a=2166136261;for(let i=0;i<basis.length;i++){a^=basis.charCodeAt(i);a=Math.imul(a,16777619)}const fp=('00000000'+(a>>>0).toString(16)).slice(-8);return [{json:{...src,...e,event_fingerprint:fp}}];"
+      },
+      "id": "fingerprint",
+      "name": "Event Fingerprint",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2420,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const q=s=>\"'\"+String(s??'').replace(/\\\\/g,'\\\\\\\\').replace(/'/g,\"''\")+\"'\";return items.map(i=>{const j=i.json;const sql=`INSERT INTO ci_oumeng_source(canonical_url,url_hash,host,source_class,first_seen_at,last_seen_at,last_crawled_at,last_content_hash) VALUES(${q(j.canonical_url)},SHA2(${q(j.canonical_url)},256),SUBSTRING_INDEX(SUBSTRING_INDEX(${q(j.canonical_url)},'/',3),'/',-1),${q(j.source_class)},NOW(),NOW(),NOW(),${q(j.content_hash)}) ON DUPLICATE KEY UPDATE last_seen_at=NOW(),last_crawled_at=NOW(),last_content_hash=VALUES(last_content_hash),source_class=VALUES(source_class); INSERT IGNORE INTO ci_oumeng_snapshot(url_hash,canonical_url,content_hash,captured_at,title,markdown) VALUES(SHA2(${q(j.canonical_url)},256),${q(j.canonical_url)},${q(j.content_hash)},NOW(),${q(j.title)},${q(j.markdown)}); INSERT INTO ci_oumeng_event(event_fingerprint,event_type,event_date,materiality,confidence,status,summary_de,entities_json,first_seen_at,last_seen_at,source_count) VALUES(${q(j.event_fingerprint)},${q(j.event_type)},NULLIF(${q(j.event_date)},''),${Number(j.materiality)||0},${Number(j.confidence)||0},'candidate',${q(j.summary_de)},${q(JSON.stringify(j.entities||[]))},NOW(),NOW(),1) ON DUPLICATE KEY UPDATE last_seen_at=NOW(),materiality=GREATEST(materiality,VALUES(materiality)),confidence=GREATEST(confidence,VALUES(confidence)),source_count=source_count+1; INSERT IGNORE INTO ci_oumeng_event_evidence(event_fingerprint,url_hash,content_hash,source_role,evidence_json) VALUES(${q(j.event_fingerprint)},SHA2(${q(j.canonical_url)},256),${q(j.content_hash)},${q(j.source_class)},${q(JSON.stringify({quote:j.evidence_quote||'',url:j.canonical_url}))}); SELECT ${q(j.event_fingerprint)} event_fingerprint;`;return {json:{...j,persist_sql:sql}}});"
+      },
+      "id": "persistbuild",
+      "name": "Build Evidence SQL",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2640,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "={{$json.persist_sql}}",
+        "options": {}
+      },
+      "id": "dbpersist",
+      "name": "MariaDB Persist Evidence",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5,
+      "position": [
+        2860,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const e=$('Build Evidence SQL').item.json;const primary=e.source_class?.startsWith('primary');const material=(Number(e.materiality)||0)>=70&&(Number(e.confidence)||0)>=75;const allowed=material&&e.relevant!==false&&(primary||!e.requires_corroboration);return allowed?[{json:e}]:[];"
+      },
+      "id": "gate",
+      "name": "Conservative Materiality Gate",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3080,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "if(!items.length)return[];const lines=items.map(i=>'- ['+(i.json.event_type||'OTHER')+'] '+(i.json.summary_de||'')+'\\n  '+i.json.canonical_url);return [{json:{subject:'Oumeng Intelligence Monitor – wesentliche neue Entwicklung',body:'Neue belastbare Entwicklungen:\\n\\n'+lines.join('\\n\\n')}}];"
+      },
+      "id": "digest",
+      "name": "Build Executive Digest",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        3300,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://10.4.190.16:5678/webhook/internal-mail/send",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "x-webhook-token",
+              "value": "={{$env.INTERNAL_MAIL_WEBHOOK_TOKEN}}"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({to:'Lars',from:'infofee@euroimmun.de',subject:$json.subject,text:$json.body}) }}",
+        "options": {}
+      },
+      "id": "mail",
+      "name": "Send Internal Mail",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        3520,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "Every 6 hours": {
+      "main": [
+        [
+          {
+            "node": "Build Search Queries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Search Queries": {
+      "main": [
+        [
+          {
+            "node": "SearXNG Search",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SearXNG Search": {
+      "main": [
+        [
+          {
+            "node": "Normalize + URL Dedupe",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize + URL Dedupe": {
+      "main": [
+        [
+          {
+            "node": "Build Source Lookup SQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Source Lookup SQL": {
+      "main": [
+        [
+          {
+            "node": "MariaDB Source Lookup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MariaDB Source Lookup": {
+      "main": [
+        [
+          {
+            "node": "Recrawl Due?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recrawl Due?": {
+      "main": [
+        [
+          {
+            "node": "Firecrawl Scrape",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Firecrawl Scrape": {
+      "main": [
+        [
+          {
+            "node": "Content Hash + Change Detection",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Content Hash + Change Detection": {
+      "main": [
+        [
+          {
+            "node": "Only New or Changed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Only New or Changed": {
+      "main": [
+        [
+          {
+            "node": "Evidence Extraction",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evidence Extraction": {
+      "main": [
+        [
+          {
+            "node": "Event Fingerprint",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Event Fingerprint": {
+      "main": [
+        [
+          {
+            "node": "Build Evidence SQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Evidence SQL": {
+      "main": [
+        [
+          {
+            "node": "MariaDB Persist Evidence",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MariaDB Persist Evidence": {
+      "main": [
+        [
+          {
+            "node": "Conservative Materiality Gate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Conservative Materiality Gate": {
+      "main": [
+        [
+          {
+            "node": "Build Executive Digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build Executive Digest": {
+      "main": [
+        [
+          {
+            "node": "Send Internal Mail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "tags": []
+}
