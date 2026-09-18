@@ -1,0 +1,215 @@
+#!/usr/bin/env python3
+"""Export all active n8n workflows as sanitized deterministic JSON.
+
+Environment:
+  N8N_BASE_URL   Base URL of the n8n instance, without /api/v1.
+  N8N_API_KEY    n8n Public API key.
+
+The repository is public. This script removes credential bindings and common
+secret-bearing values, but workflow parameters are arbitrary user content.
+Always review the git diff before pushing.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import re
+import sys
+import urllib.parse
+import urllib.request
+from pathlib import Path
+
+BASE_URL = os.environ.get("N8N_BASE_URL", "").rstrip("/")
+API_KEY = os.environ.get("N8N_API_KEY", "")
+OUT_DIR = Path("workflows/active")
+INVENTORY = Path("docs/WORKFLOW-INVENTORY.generated.md")
+
+SECRET_KEY_RE = re.compile(
+    r"(password|passwd|secret|token|api[_-]?key|authorization|private[_-]?key|"
+    r"client[_-]?secret|access[_-]?key|bearer|credential)",
+    re.IGNORECASE,
+)
+SECRET_HEADER_RE = re.compile(
+    r"^(authorization|proxy-authorization|x-api-key|api-key|x-auth-token)$",
+    re.IGNORECASE,
+)
+
+
+def die(message: str) -> None:
+    print(message, file=sys.stderr)
+    raise SystemExit(2)
+
+
+def request_json(url: str):
+    req = urllib.request.Request(
+        url,
+        headers={
+            "accept": "application/json",
+            "X-N8N-API-KEY": API_KEY,
+        },
+    )
+    with urllib.request.urlopen(req, timeout=60) as response:
+        return json.load(response)
+
+
+def sanitize_url(value: str) -> str:
+    try:
+        parsed = urllib.parse.urlsplit(value)
+    except ValueError:
+        return value
+    if not parsed.scheme or not parsed.netloc or "@" not in parsed.netloc:
+        return value
+    host = parsed.netloc.split("@", 1)[1]
+    return urllib.parse.urlunsplit(
+        (parsed.scheme, host, parsed.path, parsed.query, parsed.fragment)
+    )
+
+
+def sanitize(value, parent_key=None):
+    if isinstance(value, dict):
+        if parent_key == "credentials":
+            return {"__redacted__": "credential bindings removed"}
+
+        header_name = value.get("name")
+        if isinstance(header_name, str) and SECRET_HEADER_RE.match(header_name.strip()):
+            copied = dict(value)
+            if "value" in copied:
+                copied["value"] = "__REDACTED__"
+            return {key: sanitize(item, key) for key, item in copied.items()}
+
+        result = {}
+        for key, item in value.items():
+            if key in {"pinData", "staticData", "shared", "homeProject", "meta"}:
+                continue
+            if SECRET_KEY_RE.search(str(key)):
+                result[key] = "__REDACTED__"
+            else:
+                result[key] = sanitize(item, str(key))
+        return result
+
+    if isinstance(value, list):
+        return [sanitize(item, parent_key) for item in value]
+
+    if isinstance(value, str):
+        if value.startswith(("http://", "https://")):
+            return sanitize_url(value)
+        return value
+
+    return value
+
+
+def slugify(name: str) -> str:
+    slug = re.sub(r"[^a-zA-Z0-9._-]+", "-", name.strip()).strip("-").lower()
+    return slug or "workflow"
+
+
+def fetch_active_workflows():
+    workflows = []
+    cursor = None
+
+    while True:
+        params = {
+            "active": "true",
+            "limit": "250",
+            "excludePinnedData": "true",
+        }
+        if cursor:
+            params["cursor"] = cursor
+
+        url = f"{BASE_URL}/api/v1/workflows?{urllib.parse.urlencode(params)}"
+        payload = request_json(url)
+
+        if isinstance(payload, list):
+            page = payload
+            cursor = None
+        else:
+            page = payload.get("data", [])
+            cursor = payload.get("nextCursor")
+
+        if not isinstance(page, list):
+            die("Unexpected n8n workflow-list response shape.")
+
+        workflows.extend(page)
+
+        if not cursor:
+            break
+
+    return workflows
+
+
+def write_exports(workflows):
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+
+    expected = set()
+    inventory_rows = []
+
+    for workflow in workflows:
+        workflow_id = str(workflow.get("id", "unknown"))
+        name = str(workflow.get("name", "Unnamed workflow"))
+        filename = f"{slugify(name)}--{workflow_id}.json"
+        path = OUT_DIR / filename
+        expected.add(path.resolve())
+
+        clean = sanitize(workflow)
+        path.write_text(
+            json.dumps(clean, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+
+        nodes = workflow.get("nodes") or []
+        trigger_types = sorted(
+            {
+                str(node.get("type", ""))
+                for node in nodes
+                if "trigger" in str(node.get("type", "")).lower()
+            }
+        )
+        inventory_rows.append(
+            (
+                name,
+                workflow_id,
+                ", ".join(trigger_types) if trigger_types else "—",
+                len(nodes),
+            )
+        )
+
+    for old in OUT_DIR.glob("*.json"):
+        if old.resolve() not in expected:
+            old.unlink()
+
+    inventory_rows.sort(key=lambda row: row[0].lower())
+
+    lines = [
+        "# Generated Active n8n Workflow Inventory",
+        "",
+        "Generated from the live n8n Public API with active=true.",
+        "",
+        "| Workflow | ID | Trigger node types | Nodes |",
+        "|---|---|---|---:|",
+    ]
+
+    for name, workflow_id, trigger_types, node_count in inventory_rows:
+        safe_name = name.replace("|", "\\|")
+        safe_triggers = trigger_types.replace("|", "\\|")
+        lines.append(
+            f"| {safe_name} | {workflow_id} | {safe_triggers} | {node_count} |"
+        )
+
+    lines += ["", f"Total active workflows: {len(inventory_rows)}.", ""]
+    INVENTORY.write_text("\n".join(lines), encoding="utf-8")
+
+
+def main() -> None:
+    if not BASE_URL:
+        die("N8N_BASE_URL is not set.")
+    if not API_KEY:
+        die("N8N_API_KEY is not set.")
+
+    workflows = fetch_active_workflows()
+    write_exports(workflows)
+    print(f"Exported {len(workflows)} active workflow(s) to {OUT_DIR}/")
+
+
+if __name__ == "__main__":
+    main()
