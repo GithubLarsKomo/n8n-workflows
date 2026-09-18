@@ -1,0 +1,587 @@
+{
+  "active": true,
+  "activeVersion": {
+    "authors": "Lars Komorowski",
+    "autosaved": true,
+    "connections": {
+      "Basic LLM Chain": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Clean text": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Basic LLM Chain",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Update",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Lies Original": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Loop Over Items": {
+        "main": [
+          [],
+          [
+            {
+              "index": 0,
+              "node": "Clean text",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL SET NAMES": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Lies Original",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Ollama Chat Model": {
+        "ai_languageModel": [
+          [
+            {
+              "index": 0,
+              "node": "Basic LLM Chain",
+              "type": "ai_languageModel"
+            }
+          ]
+        ]
+      },
+      "Schedule Orders": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL SET NAMES",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Update": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items",
+              "type": "main"
+            }
+          ]
+        ]
+      }
+    },
+    "createdAt": "2026-05-04T09:28:32.393Z",
+    "description": "",
+    "name": "Version 73f01e99",
+    "nodes": [
+      {
+        "credentials": "__REDACTED__",
+        "id": "89eba1cd-55ee-4265-b5d4-8f21e7139de4",
+        "name": "Lies Original",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "SELECT A.Bestellungen_Annahmen_BemerkungenNr, A.Bestellungen_Annahmen_BemerkungenText, A.Bestellungen_Annahmen_BemerkungenMD5\nFROM orderStock.if_bestellungen_annahmen_bemerkungen as A\nWHERE Bestellungen_Annahmen_BemerkungenText IS NOT NULL AND Bestellungen_Annahmen_BemerkungenText <> '' AND\n  (Bestellungen_Annahmen_BemerkungenText_E IS NULL OR\n   Bestellungen_Annahmen_BemerkungenText_E = '')\nORDER BY A.Bestellungen_Annahmen_BemerkungenNr\nLIMIT 200;"
+        },
+        "position": [
+          208,
+          0
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "d4348acf-3651-4814-8523-4e0ce226b24a",
+        "name": "Update",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $json.text.trim(),\n  $('Loop Over Items').item.json.Bestellungen_Annahmen_BemerkungenMD5\n] }}"
+          },
+          "query": "UPDATE orderStock.if_bestellungen_annahmen_bemerkungen\nSET Bestellungen_Annahmen_BemerkungenText_E = $1\nWHERE Bestellungen_Annahmen_BemerkungenMD5 = $2"
+        },
+        "position": [
+          1216,
+          80
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "id": "c232ea86-c45e-406c-a6b2-d4e7f848edde",
+        "name": "Loop Over Items",
+        "parameters": {
+          "options": {}
+        },
+        "position": [
+          416,
+          0
+        ],
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "650cd036-3be6-42e9-8840-0d9519feff70",
+        "name": "Ollama Chat Model",
+        "parameters": {
+          "model": "translategemma:latest",
+          "options": {
+            "temperature": 0
+          }
+        },
+        "position": [
+          704,
+          336
+        ],
+        "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+        "typeVersion": 1
+      },
+      {
+        "id": "fafa3aea-210e-43f4-8a22-24629b0781b9",
+        "name": "Basic LLM Chain",
+        "onError": "continueRegularOutput",
+        "parameters": {
+          "batching": {},
+          "promptType": "define",
+          "text": "=You are a professional German (de) to English (en) translator. Your goal is to accurately convey the meaning and nuances of the original German text while adhering to English grammar, vocabulary, and cultural sensitivities.\n        Produce only the English translation, without any additional explanations or commentary. Please translate the following German text between into English:\n\n{{ $json.text_clean }}"
+        },
+        "position": [
+          720,
+          96
+        ],
+        "type": "@n8n/n8n-nodes-langchain.chainLlm",
+        "typeVersion": 1.7
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "912191ca-c8d1-4d3e-91c0-c0a2a4246b87",
+        "name": "MySQL SET NAMES",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "SET NAMES utf8;"
+        },
+        "position": [
+          32,
+          0
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "id": "74932951-3f6f-4a8e-bd4e-211a9ddedaa2",
+        "name": "Schedule Orders",
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "expression": "=*/3 5 * * *",
+                "field": "cronExpression"
+              }
+            ]
+          }
+        },
+        "position": [
+          -144,
+          0
+        ],
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2
+      },
+      {
+        "id": "2dd5e32e-a106-4422-85c4-28a3162a5dd8",
+        "name": "Clean text",
+        "parameters": {
+          "jsCode": "const text = $json.Bestellungen_BemerkungenText ?? \"\";\n\nlet cleaned = String(text)\n  .replace(/\\\\r\\\\n/g, \"\\n\")\n  .replace(/\\\\n/g, \"\\n\")\n  .replace(/\\r\\n/g, \"\\n\")\n  .replace(/\\r/g, \"\\n\")\n  .replace(/\\u0000/g, \"\")\n  .replace(/[ \\t]{2,}/g, \" \")     // nur Spaces/Tabs\n  .replace(/[ \\t]+$/gm, \"\")\n  .replace(/\\n{3,}/g, \"\\n\\n\")\n  .trim();\n\nif (!cleaned) {\n  return [{ \n    json: {\n      ...$json,\n      skip: true,\n      reason: \"empty_source_text\",\n      text_clean: \"\"\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    ...$json,\n    skip: false,\n    reason: \"\",\n    text_clean: cleaned\n  }\n}];"
+        },
+        "position": [
+          576,
+          96
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "4a18ba04-6f3d-49b3-87a8-30563cacf256",
+        "name": "If",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "58338e71-8411-4e1f-ab85-66b0862989b3",
+                "leftValue": "={{ $json.error }}",
+                "operator": {
+                  "operation": "notExists",
+                  "singleValue": true,
+                  "type": "string"
+                },
+                "rightValue": ""
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          1008,
+          96
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3
+      }
+    ],
+    "updatedAt": "2026-05-04T20:34:23.000Z",
+    "versionId": "73f01e99-92c4-4ffd-94e7-5d05fd1a630e",
+    "workflowId": "c2G4iAC5Wo82lKMo"
+  },
+  "activeVersionId": "73f01e99-92c4-4ffd-94e7-5d05fd1a630e",
+  "connections": {
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Clean text": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Basic LLM Chain",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Update",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Lies Original": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "index": 0,
+            "node": "Clean text",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL SET NAMES": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Lies Original",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Ollama Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "index": 0,
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel"
+          }
+        ]
+      ]
+    },
+    "Schedule Orders": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL SET NAMES",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Update": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items",
+            "type": "main"
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-03-27T14:10:16.362Z",
+  "id": "c2G4iAC5Wo82lKMo",
+  "isArchived": false,
+  "name": "Translate Bestellungen_Annahmen_Bemerkungen",
+  "nodes": [
+    {
+      "credentials": "__REDACTED__",
+      "id": "89eba1cd-55ee-4265-b5d4-8f21e7139de4",
+      "name": "Lies Original",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "SELECT A.Bestellungen_Annahmen_BemerkungenNr, A.Bestellungen_Annahmen_BemerkungenText, A.Bestellungen_Annahmen_BemerkungenMD5\nFROM orderStock.if_bestellungen_annahmen_bemerkungen as A\nWHERE Bestellungen_Annahmen_BemerkungenText IS NOT NULL AND Bestellungen_Annahmen_BemerkungenText <> '' AND\n  (Bestellungen_Annahmen_BemerkungenText_E IS NULL OR\n   Bestellungen_Annahmen_BemerkungenText_E = '')\nORDER BY A.Bestellungen_Annahmen_BemerkungenNr\nLIMIT 200;"
+      },
+      "position": [
+        208,
+        0
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "d4348acf-3651-4814-8523-4e0ce226b24a",
+      "name": "Update",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $json.text.trim(),\n  $('Loop Over Items').item.json.Bestellungen_Annahmen_BemerkungenMD5\n] }}"
+        },
+        "query": "UPDATE orderStock.if_bestellungen_annahmen_bemerkungen\nSET Bestellungen_Annahmen_BemerkungenText_E = $1\nWHERE Bestellungen_Annahmen_BemerkungenMD5 = $2"
+      },
+      "position": [
+        1216,
+        80
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "id": "c232ea86-c45e-406c-a6b2-d4e7f848edde",
+      "name": "Loop Over Items",
+      "parameters": {
+        "options": {}
+      },
+      "position": [
+        416,
+        0
+      ],
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "650cd036-3be6-42e9-8840-0d9519feff70",
+      "name": "Ollama Chat Model",
+      "parameters": {
+        "model": "translategemma:latest",
+        "options": {
+          "temperature": 0
+        }
+      },
+      "position": [
+        704,
+        336
+      ],
+      "type": "@n8n/n8n-nodes-langchain.lmChatOllama",
+      "typeVersion": 1
+    },
+    {
+      "id": "fafa3aea-210e-43f4-8a22-24629b0781b9",
+      "name": "Basic LLM Chain",
+      "onError": "continueRegularOutput",
+      "parameters": {
+        "batching": {},
+        "promptType": "define",
+        "text": "=You are a professional German (de) to English (en) translator. Your goal is to accurately convey the meaning and nuances of the original German text while adhering to English grammar, vocabulary, and cultural sensitivities.\n        Produce only the English translation, without any additional explanations or commentary. Please translate the following German text between into English:\n\n{{ $json.text_clean }}"
+      },
+      "position": [
+        720,
+        96
+      ],
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.7
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "912191ca-c8d1-4d3e-91c0-c0a2a4246b87",
+      "name": "MySQL SET NAMES",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "SET NAMES utf8;"
+      },
+      "position": [
+        32,
+        0
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "id": "74932951-3f6f-4a8e-bd4e-211a9ddedaa2",
+      "name": "Schedule Orders",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "expression": "=*/3 5 * * *",
+              "field": "cronExpression"
+            }
+          ]
+        }
+      },
+      "position": [
+        -144,
+        0
+      ],
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2
+    },
+    {
+      "id": "2dd5e32e-a106-4422-85c4-28a3162a5dd8",
+      "name": "Clean text",
+      "parameters": {
+        "jsCode": "const text = $json.Bestellungen_BemerkungenText ?? \"\";\n\nlet cleaned = String(text)\n  .replace(/\\\\r\\\\n/g, \"\\n\")\n  .replace(/\\\\n/g, \"\\n\")\n  .replace(/\\r\\n/g, \"\\n\")\n  .replace(/\\r/g, \"\\n\")\n  .replace(/\\u0000/g, \"\")\n  .replace(/[ \\t]{2,}/g, \" \")     // nur Spaces/Tabs\n  .replace(/[ \\t]+$/gm, \"\")\n  .replace(/\\n{3,}/g, \"\\n\\n\")\n  .trim();\n\nif (!cleaned) {\n  return [{ \n    json: {\n      ...$json,\n      skip: true,\n      reason: \"empty_source_text\",\n      text_clean: \"\"\n    }\n  }];\n}\n\nreturn [{\n  json: {\n    ...$json,\n    skip: false,\n    reason: \"\",\n    text_clean: cleaned\n  }\n}];"
+      },
+      "position": [
+        576,
+        96
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "4a18ba04-6f3d-49b3-87a8-30563cacf256",
+      "name": "If",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "58338e71-8411-4e1f-ab85-66b0862989b3",
+              "leftValue": "={{ $json.error }}",
+              "operator": {
+                "operation": "notExists",
+                "singleValue": true,
+                "type": "string"
+              },
+              "rightValue": ""
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        1008,
+        96
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3
+    }
+  ],
+  "settings": {
+    "binaryMode": "separate",
+    "executionOrder": "v1"
+  },
+  "tags": [
+    {
+      "createdAt": "2026-04-23T05:48:15.085Z",
+      "id": "AHMfT31SnsSmveY8",
+      "name": "translate",
+      "updatedAt": "2026-04-23T05:48:15.085Z"
+    },
+    {
+      "createdAt": "2026-04-13T10:45:59.098Z",
+      "id": "st1slTi02oFp2NrM",
+      "name": "ollama",
+      "updatedAt": "2026-04-13T10:45:59.098Z"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2026-05-04T09:28:32.392Z",
+  "versionId": "73f01e99-92c4-4ffd-94e7-5d05fd1a630e"
+}

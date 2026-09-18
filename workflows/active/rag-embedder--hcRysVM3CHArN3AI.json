@@ -1,0 +1,1163 @@
+{
+  "active": true,
+  "activeVersion": {
+    "authors": "Lars Komorowski",
+    "autosaved": true,
+    "connections": {
+      "Code - validate embedding": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - store embedding",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark embedding failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP - call Ollama": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code - validate embedding",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark embedding failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "HTTP - call Ollama",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Loop Over Items": {
+        "main": [
+          [],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark embedding processing",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - claim up to 32 chunks": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - load claimed embed batch",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - create embed claim token": "__REDACTED__",
+      "MySQL - delete expired embed claims": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - create embed claim token",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - load claimed embed batch": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - log done": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - log embedding failure": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - mark embedding failed": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - release failed embedding claim",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - mark embedding processing": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - recover expired embed claims": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - recover orphaned processing chunks",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - recover orphaned processing chunks": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - delete expired embed claims",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - release failed embedding claim": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - log embedding failure",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - release successful embedding claim": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - log done",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - store embedding": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - release successful embedding claim",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger Embedder": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - recover expired embed claims",
+              "type": "main"
+            }
+          ]
+        ]
+      }
+    },
+    "createdAt": "2026-08-18T06:40:51.456Z",
+    "description": "",
+    "name": "Version 63f49508",
+    "nodes": [
+      {
+        "credentials": "__REDACTED__",
+        "id": "425f5ecc-1fca-4548-af5d-5c730b407cd8",
+        "name": "MySQL - claim up to 32 chunks",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "detailedOutput": true,
+            "queryReplacement": "={{\n  [\n    $('MySQL - create embed claim token').first().json.ClaimToken\n  ]\n}}"
+          },
+          "query": "INSERT IGNORE INTO infofee01_rag.if_embed_claims (\n    ChunkUUIDBin,\n    ClaimTokenBin,\n    ClaimedAt,\n    ExpiresAt\n)\nSELECT\n    c.ChunkUUIDBin,\n    UUID_TO_BIN_MDB($1),\n    NOW(6),\n    DATE_ADD(NOW(6), INTERVAL 90 MINUTE)\n\nFROM infofee01_rag.if_chunks AS c\n\nLEFT JOIN infofee01_rag.if_embed_claims AS existing\n    ON existing.ChunkUUIDBin = c.ChunkUUIDBin\n\nWHERE existing.ChunkUUIDBin IS NULL\n\n  AND c.ChunkEmbedding IS NULL\n  AND c.EmbedStatus = 'pending'\n  AND c.EmbedAttempts < 5\n\n  AND (\n      c.EmbedNextAttemptAt IS NULL\n      OR c.EmbedNextAttemptAt <= NOW()\n  )\n\nORDER BY\n    c.EmbedNextAttemptAt,\n    c.TextUUIDBin,\n    c.ChunkChunkNumber,\n    c.ChunkUUIDBin\n\nLIMIT 32;"
+        },
+        "position": [
+          -1648,
+          128
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "alwaysOutputData": false,
+        "id": "27c47b96-91f2-426d-be83-f141d69042df",
+        "maxTries": 5,
+        "name": "HTTP - call Ollama",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              }
+            ]
+          },
+          "jsonBody": "={{ {\n  model: 'nomic-embed-text:latest',\n  prompt:\n    'search_document: ' +\n    String($('Loop Over Items').item.json.ChunkText ?? '')\n      .replace(/\\r?\\n/g, ' ')\n      .replace(/\\.{4,}/g, '...')\n      .replace(/[ \\t]{2,}/g, ' ')\n      .trim()\n} }}",
+          "method": "POST",
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "json"
+              }
+            },
+            "timeout": 120000
+          },
+          "sendBody": true,
+          "sendHeaders": true,
+          "specifyBody": "json",
+          "url": "http://10.4.190.16:11434/api/embeddings"
+        },
+        "position": [
+          -608,
+          112
+        ],
+        "retryOnFail": false,
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "waitBetweenTries": 5000
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "d394b392-9cf3-4033-8fcc-3f43fa2372b3",
+        "name": "MySQL - store embedding",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "detailedOutput": true,
+            "queryReplacement": "={{\n  [\n    JSON.stringify($json.embedding),\n    $('Loop Over Items').item.json.ChunkUUID,\n    $('Loop Over Items').item.json.ClaimToken\n  ]\n}}"
+          },
+          "query": "UPDATE infofee01_rag.if_chunks AS c\n\nJOIN infofee01_rag.if_embed_claims AS q\n    ON q.ChunkUUIDBin = c.ChunkUUIDBin\n\nSET\n    c.ChunkEmbedding = VEC_FromText($1),\n    c.EmbedStatus = 'done',\n    c.EmbedLastError = NULL,\n    c.EmbedFinishedAt = NOW(),\n    c.EmbedNextAttemptAt = NULL\n\nWHERE c.ChunkUUIDBin = UUID_TO_BIN_MDB($2)\n\n  AND q.ClaimTokenBin = UUID_TO_BIN_MDB($3)\n\n  AND c.EmbedStatus = 'processing'\n  AND c.ChunkEmbedding IS NULL\n  AND q.ExpiresAt > NOW();"
+        },
+        "position": [
+          -160,
+          -64
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "id": "d2fd89d2-38d8-407a-8bb1-87f05fbac4bf",
+        "name": "Schedule Trigger Embedder",
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "expression": "0 */1 * * * *",
+                "field": "cronExpression"
+              }
+            ]
+          }
+        },
+        "position": [
+          -2624,
+          128
+        ],
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "32b3235b-9987-48b0-902e-6142a6b27757",
+        "name": "MySQL - mark embedding failed",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{\n  [\n    String(\n      $json.message\n      ?? $json.error?.message\n      ?? $json.error\n      ?? 'unknown embedding error'\n    ).slice(0, 4000),\n\n    $('Loop Over Items').item.json.ChunkUUID,\n\n    $('Loop Over Items').item.json.ClaimToken\n  ]\n}}"
+          },
+          "query": "UPDATE infofee01_rag.if_chunks AS c\n\nJOIN infofee01_rag.if_embed_claims AS q\n    ON q.ChunkUUIDBin = c.ChunkUUIDBin\n\nSET\n    c.EmbedStatus = CASE\n        WHEN c.EmbedAttempts >= 5 THEN 'failed'\n        ELSE 'pending'\n    END,\n\n    c.EmbedLastError = $1,\n\n    c.EmbedStartedAt = NULL,\n\n    c.EmbedFinishedAt = CASE\n        WHEN c.EmbedAttempts >= 5 THEN NOW()\n        ELSE NULL\n    END,\n\n    c.EmbedNextAttemptAt = CASE\n        WHEN c.EmbedAttempts >= 5 THEN NULL\n        ELSE TIMESTAMPADD(\n            MINUTE,\n            LEAST(\n                POWER(2, GREATEST(c.EmbedAttempts - 1, 0)),\n                30\n            ),\n            NOW()\n        )\n    END\n\nWHERE c.ChunkUUIDBin = UUID_TO_BIN_MDB($2)\n\n  AND q.ClaimTokenBin = UUID_TO_BIN_MDB($3)\n\n  AND c.ChunkEmbedding IS NULL\n  AND c.EmbedStatus = 'processing'\n  AND q.ExpiresAt > NOW();"
+        },
+        "position": [
+          -160,
+          128
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "alwaysOutputData": false,
+        "credentials": "__REDACTED__",
+        "id": "f9a7f433-b2f1-4482-a1f3-b3deb83f27ad",
+        "name": "MySQL - mark embedding processing",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "detailedOutput": true,
+            "queryReplacement": "={{\n  [\n    $('Loop Over Items').item.json.ChunkUUID,\n    $('Loop Over Items').item.json.ClaimToken\n  ]\n}}"
+          },
+          "query": "UPDATE infofee01_rag.if_chunks AS c\n\nJOIN infofee01_rag.if_embed_claims AS q\n    ON q.ChunkUUIDBin = c.ChunkUUIDBin\n\nSET\n    c.EmbedStatus = 'processing',\n    c.EmbedAttempts = c.EmbedAttempts + 1,\n    c.EmbedStartedAt = NOW(),\n    c.EmbedFinishedAt = NULL,\n    c.EmbedNextAttemptAt = NULL,\n    c.EmbedLastError = NULL\n\nWHERE c.ChunkUUIDBin = UUID_TO_BIN_MDB($1)\n  AND q.ClaimTokenBin = UUID_TO_BIN_MDB($2)\n\n  AND q.ExpiresAt > NOW()\n\n  AND c.ChunkEmbedding IS NULL\n  AND c.EmbedStatus = 'pending'\n  AND c.EmbedAttempts < 5;"
+        },
+        "position": [
+          -1040,
+          192
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "id": "9a9455b3-2be2-488c-9ee1-4cda1693089f",
+        "name": "Code - validate embedding",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "jsCode": "const embedding = $json.embedding;\n\nif (!Array.isArray(embedding)) {\n  throw new Error('Ollama response contains no embedding array');\n}\n\nif (embedding.length !== 768) {\n  throw new Error(\n    `Unexpected embedding dimension: ${embedding.length}; expected 768`\n  );\n}\n\nif (!embedding.every(Number.isFinite)) {\n  throw new Error('Embedding contains non-finite values');\n}\n\nreturn [{\n  json: {\n    embedding,\n  },\n}];"
+        },
+        "position": [
+          -384,
+          16
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "a93f5ea9-6d48-4439-baa9-af36b10f0489",
+        "name": "MySQL - log embedding failure",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{\n  [\n    $('Loop Over Items').item.json.ChunkUUID\n  ]\n}}"
+          },
+          "query": "INSERT INTO infofee01_rag.if_extraction_log (\n    TextUUIDBin,\n    Stage,\n    Status,\n    Message,\n    LoggedAt\n)\nSELECT\n    TextUUIDBin,\n    'embed',\n    CASE\n        WHEN EmbedStatus = 'failed' THEN 'failed'\n        ELSE 'retry'\n    END,\n    CONCAT(\n        CASE\n            WHEN EmbedStatus = 'failed'\n                THEN 'EMBED_DEAD_LETTER: '\n            ELSE 'EMBED_RETRY: '\n        END,\n        COALESCE(EmbedLastError, 'unknown'),\n        ' for chunk ',\n        BIN_TO_UUID_MDB(ChunkUUIDBin),\n        ' attempt ',\n        EmbedAttempts,\n        '/5'\n    ),\n    NOW()\nFROM infofee01_rag.if_chunks\nWHERE ChunkUUIDBin = UUID_TO_BIN_MDB($1);"
+        },
+        "position": [
+          208,
+          128
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "id": "3f30eb1a-a216-4af9-adc4-a7f8eb4561fc",
+        "name": "Loop Over Items",
+        "parameters": {
+          "options": {}
+        },
+        "position": [
+          -1264,
+          128
+        ],
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3
+      },
+      {
+        "id": "48fd3a25-01a9-49ad-8d0d-c89d52a69b7b",
+        "name": "If",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "09eec0a3-35f1-41ff-be00-1c8dd6196211",
+                "leftValue": "={{ Number($json.data?.affectedRows ?? 0) === 1 }}",
+                "operator": {
+                  "operation": "true",
+                  "singleValue": true,
+                  "type": "boolean"
+                },
+                "rightValue": {}
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          -832,
+          192
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "51651efb-cd85-4958-9336-376c40d6415a",
+        "name": "MySQL - log done",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{\n  [\n    $('Loop Over Items').item.json.TextUUID,\n    $('Loop Over Items').item.json.ChunkUUID\n  ]\n}}"
+          },
+          "query": "INSERT INTO infofee01_rag.if_extraction_log (\n  TextUUIDBin, \n  Stage, \n  Status, \n  Message, \n  LoggedAt\n) VALUES (\n  UUID_TO_BIN_MDB($1), \n  'embed', \n  'done', \n  CONCAT('embedded chunk ', $2), \n  NOW()\n);"
+        },
+        "position": [
+          464,
+          128
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "40a57a06-7476-49a7-baf6-7a6bb048a1d1",
+        "name": "MySQL - recover expired embed claims",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "UPDATE infofee01_rag.if_chunks AS c\nJOIN infofee01_rag.if_embed_claims AS q\n    ON q.ChunkUUIDBin = c.ChunkUUIDBin\nSET\n    c.EmbedStatus = CASE\n        WHEN c.EmbedAttempts >= 5 THEN 'failed'\n        ELSE 'pending'\n    END,\n\n    c.EmbedLastError = 'CLAIM_EXPIRED',\n\n    c.EmbedStartedAt = NULL,\n\n    c.EmbedFinishedAt = CASE\n        WHEN c.EmbedAttempts >= 5 THEN NOW()\n        ELSE NULL\n    END,\n\n    c.EmbedNextAttemptAt = CASE\n        WHEN c.EmbedAttempts >= 5 THEN NULL\n        ELSE NOW()\n    END\n\nWHERE q.ExpiresAt <= NOW()\n  AND c.ChunkEmbedding IS NULL;"
+        },
+        "position": [
+          -2432,
+          128
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "b7bd9505-ae74-4341-88d0-7d292bbb8a3f",
+        "name": "MySQL - delete expired embed claims",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "DELETE FROM infofee01_rag.if_embed_claims\nWHERE ExpiresAt <= NOW();"
+        },
+        "position": [
+          -2048,
+          128
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "425c602a-064c-4f49-807d-76ee8173184a",
+        "name": "MySQL - create embed claim token",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "SELECT UUID() AS ClaimToken;"
+        },
+        "position": [
+          -1840,
+          128
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "dabe4c38-d674-4afa-a2d3-629b5ad0bcb6",
+        "name": "MySQL - load claimed embed batch",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "detailedOutput": false,
+            "queryReplacement": "={{\n  [\n    $('MySQL - create embed claim token').first().json.ClaimToken\n  ]\n}}"
+          },
+          "query": "SELECT\n    BIN_TO_UUID_MDB(c.ChunkUUIDBin) AS ChunkUUID,\n    BIN_TO_UUID_MDB(c.TextUUIDBin) AS TextUUID,\n\n    c.ChunkChunkNumber,\n    c.ChunkText,\n    CHAR_LENGTH(c.ChunkText) AS ChunkTextLength,\n\n    c.EmbedStatus,\n    c.EmbedAttempts,\n\n    BIN_TO_UUID_MDB(q.ClaimTokenBin) AS ClaimToken,\n    q.ClaimedAt,\n    q.ExpiresAt\n\nFROM infofee01_rag.if_embed_claims AS q\n\nJOIN infofee01_rag.if_chunks AS c\n    ON c.ChunkUUIDBin = q.ChunkUUIDBin\n\nWHERE q.ClaimTokenBin = UUID_TO_BIN_MDB($1)\n\n  AND c.ChunkEmbedding IS NULL\n  AND c.EmbedStatus = 'pending'\n\nORDER BY\n    c.TextUUIDBin,\n    c.ChunkChunkNumber,\n    c.ChunkUUIDBin;"
+        },
+        "position": [
+          -1456,
+          128
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "61eddb8b-d475-4b9e-a04e-a7b6a894d5f2",
+        "name": "MySQL - release failed embedding claim",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{\n  [\n    $('Loop Over Items').item.json.ChunkUUID,\n    $('Loop Over Items').item.json.ClaimToken\n  ]\n}}"
+          },
+          "query": "DELETE FROM infofee01_rag.if_embed_claims\nWHERE ChunkUUIDBin = UUID_TO_BIN_MDB($1)\n  AND ClaimTokenBin = UUID_TO_BIN_MDB($2);"
+        },
+        "position": [
+          16,
+          128
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "2158f945-cf57-4724-89bb-99f150e62799",
+        "name": "MySQL - release successful embedding claim",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{\n  [\n    $('Loop Over Items').item.json.ChunkUUID,\n    $('Loop Over Items').item.json.ClaimToken\n  ]\n}}"
+          },
+          "query": "DELETE FROM infofee01_rag.if_embed_claims\nWHERE ChunkUUIDBin = UUID_TO_BIN_MDB($1)\n  AND ClaimTokenBin = UUID_TO_BIN_MDB($2);"
+        },
+        "position": [
+          16,
+          -64
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "e3240c7d-1e0a-475c-867d-8334af6175ae",
+        "name": "MySQL - recover orphaned processing chunks",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "UPDATE infofee01_rag.if_chunks AS c\n\nLEFT JOIN infofee01_rag.if_embed_claims AS q\n    ON q.ChunkUUIDBin = c.ChunkUUIDBin\n\nSET\n    c.EmbedStatus = CASE\n        WHEN c.EmbedAttempts >= 5 THEN 'failed'\n        ELSE 'pending'\n    END,\n\n    c.EmbedLastError = 'ORPHANED_PROCESSING',\n\n    c.EmbedStartedAt = NULL,\n\n    c.EmbedFinishedAt = CASE\n        WHEN c.EmbedAttempts >= 5 THEN NOW()\n        ELSE NULL\n    END,\n\n    c.EmbedNextAttemptAt = CASE\n        WHEN c.EmbedAttempts >= 5 THEN NULL\n        ELSE NOW()\n    END\n\nWHERE c.ChunkEmbedding IS NULL\n  AND c.EmbedStatus = 'processing'\n  AND q.ChunkUUIDBin IS NULL\n  AND (\n      c.EmbedStartedAt IS NULL\n      OR c.EmbedStartedAt < NOW() - INTERVAL 15 MINUTE\n  );"
+        },
+        "position": [
+          -2240,
+          128
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      }
+    ],
+    "updatedAt": "2026-08-18T06:40:55.000Z",
+    "versionId": "63f49508-a5ab-442f-9db2-9d87e640c09d",
+    "workflowId": "hcRysVM3CHArN3AI"
+  },
+  "activeVersionId": "63f49508-a5ab-442f-9db2-9d87e640c09d",
+  "connections": {
+    "Code - validate embedding": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - store embedding",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark embedding failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP - call Ollama": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code - validate embedding",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark embedding failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "HTTP - call Ollama",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark embedding processing",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - claim up to 32 chunks": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - load claimed embed batch",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - create embed claim token": "__REDACTED__",
+    "MySQL - delete expired embed claims": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - create embed claim token",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - load claimed embed batch": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - log done": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - log embedding failure": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - mark embedding failed": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - release failed embedding claim",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - mark embedding processing": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - recover expired embed claims": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - recover orphaned processing chunks",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - recover orphaned processing chunks": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - delete expired embed claims",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - release failed embedding claim": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - log embedding failure",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - release successful embedding claim": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - log done",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - store embedding": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - release successful embedding claim",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger Embedder": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - recover expired embed claims",
+            "type": "main"
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-08-17T05:04:50.905Z",
+  "id": "hcRysVM3CHArN3AI",
+  "isArchived": false,
+  "name": "RAG Embedder",
+  "nodes": [
+    {
+      "credentials": "__REDACTED__",
+      "id": "425f5ecc-1fca-4548-af5d-5c730b407cd8",
+      "name": "MySQL - claim up to 32 chunks",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "detailedOutput": true,
+          "queryReplacement": "={{\n  [\n    $('MySQL - create embed claim token').first().json.ClaimToken\n  ]\n}}"
+        },
+        "query": "INSERT IGNORE INTO infofee01_rag.if_embed_claims (\n    ChunkUUIDBin,\n    ClaimTokenBin,\n    ClaimedAt,\n    ExpiresAt\n)\nSELECT\n    c.ChunkUUIDBin,\n    UUID_TO_BIN_MDB($1),\n    NOW(6),\n    DATE_ADD(NOW(6), INTERVAL 90 MINUTE)\n\nFROM infofee01_rag.if_chunks AS c\n\nLEFT JOIN infofee01_rag.if_embed_claims AS existing\n    ON existing.ChunkUUIDBin = c.ChunkUUIDBin\n\nWHERE existing.ChunkUUIDBin IS NULL\n\n  AND c.ChunkEmbedding IS NULL\n  AND c.EmbedStatus = 'pending'\n  AND c.EmbedAttempts < 5\n\n  AND (\n      c.EmbedNextAttemptAt IS NULL\n      OR c.EmbedNextAttemptAt <= NOW()\n  )\n\nORDER BY\n    c.EmbedNextAttemptAt,\n    c.TextUUIDBin,\n    c.ChunkChunkNumber,\n    c.ChunkUUIDBin\n\nLIMIT 32;"
+      },
+      "position": [
+        -1648,
+        128
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "alwaysOutputData": false,
+      "id": "27c47b96-91f2-426d-be83-f141d69042df",
+      "maxTries": 5,
+      "name": "HTTP - call Ollama",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "jsonBody": "={{ {\n  model: 'nomic-embed-text:latest',\n  prompt:\n    'search_document: ' +\n    String($('Loop Over Items').item.json.ChunkText ?? '')\n      .replace(/\\r?\\n/g, ' ')\n      .replace(/\\.{4,}/g, '...')\n      .replace(/[ \\t]{2,}/g, ' ')\n      .trim()\n} }}",
+        "method": "POST",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 120000
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "url": "http://10.4.190.16:11434/api/embeddings"
+      },
+      "position": [
+        -608,
+        112
+      ],
+      "retryOnFail": false,
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "waitBetweenTries": 5000
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "d394b392-9cf3-4033-8fcc-3f43fa2372b3",
+      "name": "MySQL - store embedding",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "detailedOutput": true,
+          "queryReplacement": "={{\n  [\n    JSON.stringify($json.embedding),\n    $('Loop Over Items').item.json.ChunkUUID,\n    $('Loop Over Items').item.json.ClaimToken\n  ]\n}}"
+        },
+        "query": "UPDATE infofee01_rag.if_chunks AS c\n\nJOIN infofee01_rag.if_embed_claims AS q\n    ON q.ChunkUUIDBin = c.ChunkUUIDBin\n\nSET\n    c.ChunkEmbedding = VEC_FromText($1),\n    c.EmbedStatus = 'done',\n    c.EmbedLastError = NULL,\n    c.EmbedFinishedAt = NOW(),\n    c.EmbedNextAttemptAt = NULL\n\nWHERE c.ChunkUUIDBin = UUID_TO_BIN_MDB($2)\n\n  AND q.ClaimTokenBin = UUID_TO_BIN_MDB($3)\n\n  AND c.EmbedStatus = 'processing'\n  AND c.ChunkEmbedding IS NULL\n  AND q.ExpiresAt > NOW();"
+      },
+      "position": [
+        -160,
+        -64
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "id": "d2fd89d2-38d8-407a-8bb1-87f05fbac4bf",
+      "name": "Schedule Trigger Embedder",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "expression": "0 */1 * * * *",
+              "field": "cronExpression"
+            }
+          ]
+        }
+      },
+      "position": [
+        -2624,
+        128
+      ],
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "32b3235b-9987-48b0-902e-6142a6b27757",
+      "name": "MySQL - mark embedding failed",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{\n  [\n    String(\n      $json.message\n      ?? $json.error?.message\n      ?? $json.error\n      ?? 'unknown embedding error'\n    ).slice(0, 4000),\n\n    $('Loop Over Items').item.json.ChunkUUID,\n\n    $('Loop Over Items').item.json.ClaimToken\n  ]\n}}"
+        },
+        "query": "UPDATE infofee01_rag.if_chunks AS c\n\nJOIN infofee01_rag.if_embed_claims AS q\n    ON q.ChunkUUIDBin = c.ChunkUUIDBin\n\nSET\n    c.EmbedStatus = CASE\n        WHEN c.EmbedAttempts >= 5 THEN 'failed'\n        ELSE 'pending'\n    END,\n\n    c.EmbedLastError = $1,\n\n    c.EmbedStartedAt = NULL,\n\n    c.EmbedFinishedAt = CASE\n        WHEN c.EmbedAttempts >= 5 THEN NOW()\n        ELSE NULL\n    END,\n\n    c.EmbedNextAttemptAt = CASE\n        WHEN c.EmbedAttempts >= 5 THEN NULL\n        ELSE TIMESTAMPADD(\n            MINUTE,\n            LEAST(\n                POWER(2, GREATEST(c.EmbedAttempts - 1, 0)),\n                30\n            ),\n            NOW()\n        )\n    END\n\nWHERE c.ChunkUUIDBin = UUID_TO_BIN_MDB($2)\n\n  AND q.ClaimTokenBin = UUID_TO_BIN_MDB($3)\n\n  AND c.ChunkEmbedding IS NULL\n  AND c.EmbedStatus = 'processing'\n  AND q.ExpiresAt > NOW();"
+      },
+      "position": [
+        -160,
+        128
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "alwaysOutputData": false,
+      "credentials": "__REDACTED__",
+      "id": "f9a7f433-b2f1-4482-a1f3-b3deb83f27ad",
+      "name": "MySQL - mark embedding processing",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "detailedOutput": true,
+          "queryReplacement": "={{\n  [\n    $('Loop Over Items').item.json.ChunkUUID,\n    $('Loop Over Items').item.json.ClaimToken\n  ]\n}}"
+        },
+        "query": "UPDATE infofee01_rag.if_chunks AS c\n\nJOIN infofee01_rag.if_embed_claims AS q\n    ON q.ChunkUUIDBin = c.ChunkUUIDBin\n\nSET\n    c.EmbedStatus = 'processing',\n    c.EmbedAttempts = c.EmbedAttempts + 1,\n    c.EmbedStartedAt = NOW(),\n    c.EmbedFinishedAt = NULL,\n    c.EmbedNextAttemptAt = NULL,\n    c.EmbedLastError = NULL\n\nWHERE c.ChunkUUIDBin = UUID_TO_BIN_MDB($1)\n  AND q.ClaimTokenBin = UUID_TO_BIN_MDB($2)\n\n  AND q.ExpiresAt > NOW()\n\n  AND c.ChunkEmbedding IS NULL\n  AND c.EmbedStatus = 'pending'\n  AND c.EmbedAttempts < 5;"
+      },
+      "position": [
+        -1040,
+        192
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "id": "9a9455b3-2be2-488c-9ee1-4cda1693089f",
+      "name": "Code - validate embedding",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "jsCode": "const embedding = $json.embedding;\n\nif (!Array.isArray(embedding)) {\n  throw new Error('Ollama response contains no embedding array');\n}\n\nif (embedding.length !== 768) {\n  throw new Error(\n    `Unexpected embedding dimension: ${embedding.length}; expected 768`\n  );\n}\n\nif (!embedding.every(Number.isFinite)) {\n  throw new Error('Embedding contains non-finite values');\n}\n\nreturn [{\n  json: {\n    embedding,\n  },\n}];"
+      },
+      "position": [
+        -384,
+        16
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "a93f5ea9-6d48-4439-baa9-af36b10f0489",
+      "name": "MySQL - log embedding failure",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{\n  [\n    $('Loop Over Items').item.json.ChunkUUID\n  ]\n}}"
+        },
+        "query": "INSERT INTO infofee01_rag.if_extraction_log (\n    TextUUIDBin,\n    Stage,\n    Status,\n    Message,\n    LoggedAt\n)\nSELECT\n    TextUUIDBin,\n    'embed',\n    CASE\n        WHEN EmbedStatus = 'failed' THEN 'failed'\n        ELSE 'retry'\n    END,\n    CONCAT(\n        CASE\n            WHEN EmbedStatus = 'failed'\n                THEN 'EMBED_DEAD_LETTER: '\n            ELSE 'EMBED_RETRY: '\n        END,\n        COALESCE(EmbedLastError, 'unknown'),\n        ' for chunk ',\n        BIN_TO_UUID_MDB(ChunkUUIDBin),\n        ' attempt ',\n        EmbedAttempts,\n        '/5'\n    ),\n    NOW()\nFROM infofee01_rag.if_chunks\nWHERE ChunkUUIDBin = UUID_TO_BIN_MDB($1);"
+      },
+      "position": [
+        208,
+        128
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "id": "3f30eb1a-a216-4af9-adc4-a7f8eb4561fc",
+      "name": "Loop Over Items",
+      "parameters": {
+        "options": {}
+      },
+      "position": [
+        -1264,
+        128
+      ],
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3
+    },
+    {
+      "id": "48fd3a25-01a9-49ad-8d0d-c89d52a69b7b",
+      "name": "If",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "09eec0a3-35f1-41ff-be00-1c8dd6196211",
+              "leftValue": "={{ Number($json.data?.affectedRows ?? 0) === 1 }}",
+              "operator": {
+                "operation": "true",
+                "singleValue": true,
+                "type": "boolean"
+              },
+              "rightValue": {}
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        -832,
+        192
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "51651efb-cd85-4958-9336-376c40d6415a",
+      "name": "MySQL - log done",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{\n  [\n    $('Loop Over Items').item.json.TextUUID,\n    $('Loop Over Items').item.json.ChunkUUID\n  ]\n}}"
+        },
+        "query": "INSERT INTO infofee01_rag.if_extraction_log (\n  TextUUIDBin, \n  Stage, \n  Status, \n  Message, \n  LoggedAt\n) VALUES (\n  UUID_TO_BIN_MDB($1), \n  'embed', \n  'done', \n  CONCAT('embedded chunk ', $2), \n  NOW()\n);"
+      },
+      "position": [
+        464,
+        128
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "40a57a06-7476-49a7-baf6-7a6bb048a1d1",
+      "name": "MySQL - recover expired embed claims",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "UPDATE infofee01_rag.if_chunks AS c\nJOIN infofee01_rag.if_embed_claims AS q\n    ON q.ChunkUUIDBin = c.ChunkUUIDBin\nSET\n    c.EmbedStatus = CASE\n        WHEN c.EmbedAttempts >= 5 THEN 'failed'\n        ELSE 'pending'\n    END,\n\n    c.EmbedLastError = 'CLAIM_EXPIRED',\n\n    c.EmbedStartedAt = NULL,\n\n    c.EmbedFinishedAt = CASE\n        WHEN c.EmbedAttempts >= 5 THEN NOW()\n        ELSE NULL\n    END,\n\n    c.EmbedNextAttemptAt = CASE\n        WHEN c.EmbedAttempts >= 5 THEN NULL\n        ELSE NOW()\n    END\n\nWHERE q.ExpiresAt <= NOW()\n  AND c.ChunkEmbedding IS NULL;"
+      },
+      "position": [
+        -2432,
+        128
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "b7bd9505-ae74-4341-88d0-7d292bbb8a3f",
+      "name": "MySQL - delete expired embed claims",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "DELETE FROM infofee01_rag.if_embed_claims\nWHERE ExpiresAt <= NOW();"
+      },
+      "position": [
+        -2048,
+        128
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "425c602a-064c-4f49-807d-76ee8173184a",
+      "name": "MySQL - create embed claim token",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "SELECT UUID() AS ClaimToken;"
+      },
+      "position": [
+        -1840,
+        128
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "dabe4c38-d674-4afa-a2d3-629b5ad0bcb6",
+      "name": "MySQL - load claimed embed batch",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "detailedOutput": false,
+          "queryReplacement": "={{\n  [\n    $('MySQL - create embed claim token').first().json.ClaimToken\n  ]\n}}"
+        },
+        "query": "SELECT\n    BIN_TO_UUID_MDB(c.ChunkUUIDBin) AS ChunkUUID,\n    BIN_TO_UUID_MDB(c.TextUUIDBin) AS TextUUID,\n\n    c.ChunkChunkNumber,\n    c.ChunkText,\n    CHAR_LENGTH(c.ChunkText) AS ChunkTextLength,\n\n    c.EmbedStatus,\n    c.EmbedAttempts,\n\n    BIN_TO_UUID_MDB(q.ClaimTokenBin) AS ClaimToken,\n    q.ClaimedAt,\n    q.ExpiresAt\n\nFROM infofee01_rag.if_embed_claims AS q\n\nJOIN infofee01_rag.if_chunks AS c\n    ON c.ChunkUUIDBin = q.ChunkUUIDBin\n\nWHERE q.ClaimTokenBin = UUID_TO_BIN_MDB($1)\n\n  AND c.ChunkEmbedding IS NULL\n  AND c.EmbedStatus = 'pending'\n\nORDER BY\n    c.TextUUIDBin,\n    c.ChunkChunkNumber,\n    c.ChunkUUIDBin;"
+      },
+      "position": [
+        -1456,
+        128
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "61eddb8b-d475-4b9e-a04e-a7b6a894d5f2",
+      "name": "MySQL - release failed embedding claim",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{\n  [\n    $('Loop Over Items').item.json.ChunkUUID,\n    $('Loop Over Items').item.json.ClaimToken\n  ]\n}}"
+        },
+        "query": "DELETE FROM infofee01_rag.if_embed_claims\nWHERE ChunkUUIDBin = UUID_TO_BIN_MDB($1)\n  AND ClaimTokenBin = UUID_TO_BIN_MDB($2);"
+      },
+      "position": [
+        16,
+        128
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "2158f945-cf57-4724-89bb-99f150e62799",
+      "name": "MySQL - release successful embedding claim",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{\n  [\n    $('Loop Over Items').item.json.ChunkUUID,\n    $('Loop Over Items').item.json.ClaimToken\n  ]\n}}"
+        },
+        "query": "DELETE FROM infofee01_rag.if_embed_claims\nWHERE ChunkUUIDBin = UUID_TO_BIN_MDB($1)\n  AND ClaimTokenBin = UUID_TO_BIN_MDB($2);"
+      },
+      "position": [
+        16,
+        -64
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "e3240c7d-1e0a-475c-867d-8334af6175ae",
+      "name": "MySQL - recover orphaned processing chunks",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "UPDATE infofee01_rag.if_chunks AS c\n\nLEFT JOIN infofee01_rag.if_embed_claims AS q\n    ON q.ChunkUUIDBin = c.ChunkUUIDBin\n\nSET\n    c.EmbedStatus = CASE\n        WHEN c.EmbedAttempts >= 5 THEN 'failed'\n        ELSE 'pending'\n    END,\n\n    c.EmbedLastError = 'ORPHANED_PROCESSING',\n\n    c.EmbedStartedAt = NULL,\n\n    c.EmbedFinishedAt = CASE\n        WHEN c.EmbedAttempts >= 5 THEN NOW()\n        ELSE NULL\n    END,\n\n    c.EmbedNextAttemptAt = CASE\n        WHEN c.EmbedAttempts >= 5 THEN NULL\n        ELSE NOW()\n    END\n\nWHERE c.ChunkEmbedding IS NULL\n  AND c.EmbedStatus = 'processing'\n  AND q.ChunkUUIDBin IS NULL\n  AND (\n      c.EmbedStartedAt IS NULL\n      OR c.EmbedStartedAt < NOW() - INTERVAL 15 MINUTE\n  );"
+      },
+      "position": [
+        -2240,
+        128
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    }
+  ],
+  "settings": {
+    "binaryMode": "separate",
+    "executionOrder": "v1"
+  },
+  "tags": [
+    {
+      "createdAt": "2026-06-16T05:48:49.435Z",
+      "id": "Dz5cI4qGPy822fko",
+      "name": "rag",
+      "updatedAt": "2026-06-16T05:48:49.435Z"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2026-08-18T06:40:51.455Z",
+  "versionId": "63f49508-a5ab-442f-9db2-9d87e640c09d"
+}

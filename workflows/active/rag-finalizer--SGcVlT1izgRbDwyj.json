@@ -1,0 +1,299 @@
+{
+  "active": true,
+  "activeVersion": {
+    "authors": "Lars Komorowski",
+    "autosaved": true,
+    "connections": {
+      "Code - decide ready/failed": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - apply status",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - apply status": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - log",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - load up to 32 candidate texts": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code - decide ready/failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger Finalizer": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - load up to 32 candidate texts",
+              "type": "main"
+            }
+          ]
+        ]
+      }
+    },
+    "createdAt": "2026-08-17T08:19:26.917Z",
+    "description": "",
+    "name": "Version 8673f97b",
+    "nodes": [
+      {
+        "id": "6bf6803e-e450-4234-9d0b-f92b5b1a1d69",
+        "name": "Code - decide ready/failed",
+        "parameters": {
+          "jsCode": "const updates = [];\n\nfor (const item of $input.all()) {\n  const row = item.json;\n\n  const chunkCount = Number(row.ChunkCount ?? 0);\n  const missing = Number(row.ChunksWithoutEmbedding ?? 0);\n  const failed = Number(row.FailedEmbeddingChunks ?? 0);\n\n  if (chunkCount <= 0) {\n    continue;\n  }\n\n  if (failed > 0) {\n    updates.push({\n      TextUUID: row.TextUUID,\n      newStatus: 'failed',\n      reason: 'EMBED_ERROR',\n    });\n    continue;\n  }\n\n  if (missing > 0) {\n    updates.push({\n      TextUUID: row.TextUUID,\n      newStatus: 'pending',\n      reason: null,\n    });\n    continue;\n  }\n\n  updates.push({\n    TextUUID: row.TextUUID,\n    newStatus: 'ready',\n    reason: null,\n  });\n}\n\nreturn [{\n  json: {\n    updates\n  }\n}];"
+        },
+        "position": [
+          16,
+          0
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "6c63c544-13ff-4223-bdb9-405f17cc8b56",
+        "name": "MySQL - apply status",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{\n  [\n    JSON.stringify($json.updates ?? [])\n  ]\n}}"
+          },
+          "query": "UPDATE infofee01_rag.if_texts AS t\nJOIN JSON_TABLE(\n    $1,\n    '$[*]' COLUMNS (\n        TextUUID   VARCHAR(36) PATH '$.TextUUID',\n        newStatus  VARCHAR(32) PATH '$.newStatus',\n        reason     VARCHAR(255) PATH '$.reason' NULL ON EMPTY\n    )\n) AS u\n    ON t.TextUUIDBin = UUID_TO_BIN_MDB(u.TextUUID)\nSET\n    t.TextStatus =\n        CONVERT(u.newStatus USING utf8mb4) COLLATE utf8mb4_unicode_ci,\n\n    t.TextFailedReason =\n        CONVERT(u.reason USING utf8mb4) COLLATE utf8mb4_unicode_ci\n\nWHERE\n       t.TextStatus COLLATE utf8mb4_unicode_ci\n       <>\n       CONVERT(u.newStatus USING utf8mb4) COLLATE utf8mb4_unicode_ci\n\n    OR NOT (\n        t.TextFailedReason COLLATE utf8mb4_unicode_ci\n        <=>\n        CONVERT(u.reason USING utf8mb4) COLLATE utf8mb4_unicode_ci\n    );"
+        },
+        "position": [
+          256,
+          0
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "6d7f29ac-84dd-493b-b4ee-19785045fa72",
+        "name": "MySQL - log",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{\n  [\n    JSON.stringify(\n      $('Code - decide ready/failed').first().json.updates ?? []\n    )\n  ]\n}}"
+          },
+          "query": "INSERT INTO infofee01_rag.if_extraction_log (\n    TextUUIDBin,\n    Stage,\n    Status,\n    Message,\n    LoggedAt\n)\nSELECT\n    UUID_TO_BIN_MDB(u.TextUUID),\n    'finalize',\n    u.newStatus,\n    CONCAT(\n        'auto-reconciled text to ',\n        u.newStatus,\n        CASE\n            WHEN u.reason IS NOT NULL\n                THEN CONCAT(' reason=', u.reason)\n            ELSE ''\n        END\n    ),\n    NOW()\nFROM JSON_TABLE(\n    $1,\n    '$[*]' COLUMNS (\n        TextUUID   VARCHAR(36) PATH '$.TextUUID',\n        newStatus  VARCHAR(32) PATH '$.newStatus',\n        reason     VARCHAR(255) PATH '$.reason' NULL ON EMPTY\n    )\n) AS u;"
+        },
+        "position": [
+          496,
+          0
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "id": "6ba18bf1-33ce-4242-8071-57439ea147fb",
+        "name": "Schedule Trigger Finalizer",
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "expression": "30 */5 * * * *",
+                "field": "cronExpression"
+              }
+            ]
+          }
+        },
+        "position": [
+          -464,
+          0
+        ],
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "1db96400-2385-48ed-a6a2-b549d49d6e2a",
+        "name": "MySQL - load up to 32 candidate texts",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "SELECT\n    BIN_TO_UUID_MDB(t.TextUUIDBin) AS TextUUID,\n    t.TextStatus,\n    t.TextID,\n\n    COUNT(c.ChunkUUIDBin) AS ChunkCount,\n\n    SUM(\n        CASE\n            WHEN c.ChunkEmbedding IS NULL THEN 1\n            ELSE 0\n        END\n    ) AS ChunksWithoutEmbedding,\n\n    SUM(\n        CASE\n            WHEN c.EmbedStatus = 'failed' THEN 1\n            ELSE 0\n        END\n    ) AS FailedEmbeddingChunks\n\nFROM infofee01_rag.if_texts AS t\n\nJOIN infofee01_rag.if_chunks AS c\n    ON c.TextUUIDBin = t.TextUUIDBin\n\nWHERE t.TextStatus IN ('pending', 'processing', 'ready', 'failed')\n\nGROUP BY\n    t.TextUUIDBin,\n    t.TextStatus,\n    t.TextID\n\nHAVING\n       (\n           SUM(CASE WHEN c.EmbedStatus = 'failed' THEN 1 ELSE 0 END) > 0\n           AND t.TextStatus <> 'failed'\n       )\n\n    OR (\n           SUM(CASE WHEN c.EmbedStatus = 'failed' THEN 1 ELSE 0 END) = 0\n           AND SUM(CASE WHEN c.ChunkEmbedding IS NULL THEN 1 ELSE 0 END) > 0\n           AND t.TextStatus <> 'pending'\n       )\n\n    OR (\n           SUM(CASE WHEN c.EmbedStatus = 'failed' THEN 1 ELSE 0 END) = 0\n           AND SUM(CASE WHEN c.ChunkEmbedding IS NULL THEN 1 ELSE 0 END) = 0\n           AND t.TextStatus <> 'ready'\n       )\n\nORDER BY t.TextUUIDBin\nLIMIT 32;"
+        },
+        "position": [
+          -224,
+          0
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      }
+    ],
+    "updatedAt": "2026-08-17T08:20:02.000Z",
+    "versionId": "8673f97b-ec9c-466b-9a52-d9aee8f7f62a",
+    "workflowId": "SGcVlT1izgRbDwyj"
+  },
+  "activeVersionId": "8673f97b-ec9c-466b-9a52-d9aee8f7f62a",
+  "connections": {
+    "Code - decide ready/failed": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - apply status",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - apply status": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - log",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - load up to 32 candidate texts": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code - decide ready/failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger Finalizer": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - load up to 32 candidate texts",
+            "type": "main"
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-08-17T07:03:10.926Z",
+  "id": "SGcVlT1izgRbDwyj",
+  "isArchived": false,
+  "name": "RAG Finalizer",
+  "nodes": [
+    {
+      "id": "6bf6803e-e450-4234-9d0b-f92b5b1a1d69",
+      "name": "Code - decide ready/failed",
+      "parameters": {
+        "jsCode": "const updates = [];\n\nfor (const item of $input.all()) {\n  const row = item.json;\n\n  const chunkCount = Number(row.ChunkCount ?? 0);\n  const missing = Number(row.ChunksWithoutEmbedding ?? 0);\n  const failed = Number(row.FailedEmbeddingChunks ?? 0);\n\n  if (chunkCount <= 0) {\n    continue;\n  }\n\n  if (failed > 0) {\n    updates.push({\n      TextUUID: row.TextUUID,\n      newStatus: 'failed',\n      reason: 'EMBED_ERROR',\n    });\n    continue;\n  }\n\n  if (missing > 0) {\n    updates.push({\n      TextUUID: row.TextUUID,\n      newStatus: 'pending',\n      reason: null,\n    });\n    continue;\n  }\n\n  updates.push({\n    TextUUID: row.TextUUID,\n    newStatus: 'ready',\n    reason: null,\n  });\n}\n\nreturn [{\n  json: {\n    updates\n  }\n}];"
+      },
+      "position": [
+        16,
+        0
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "6c63c544-13ff-4223-bdb9-405f17cc8b56",
+      "name": "MySQL - apply status",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{\n  [\n    JSON.stringify($json.updates ?? [])\n  ]\n}}"
+        },
+        "query": "UPDATE infofee01_rag.if_texts AS t\nJOIN JSON_TABLE(\n    $1,\n    '$[*]' COLUMNS (\n        TextUUID   VARCHAR(36) PATH '$.TextUUID',\n        newStatus  VARCHAR(32) PATH '$.newStatus',\n        reason     VARCHAR(255) PATH '$.reason' NULL ON EMPTY\n    )\n) AS u\n    ON t.TextUUIDBin = UUID_TO_BIN_MDB(u.TextUUID)\nSET\n    t.TextStatus =\n        CONVERT(u.newStatus USING utf8mb4) COLLATE utf8mb4_unicode_ci,\n\n    t.TextFailedReason =\n        CONVERT(u.reason USING utf8mb4) COLLATE utf8mb4_unicode_ci\n\nWHERE\n       t.TextStatus COLLATE utf8mb4_unicode_ci\n       <>\n       CONVERT(u.newStatus USING utf8mb4) COLLATE utf8mb4_unicode_ci\n\n    OR NOT (\n        t.TextFailedReason COLLATE utf8mb4_unicode_ci\n        <=>\n        CONVERT(u.reason USING utf8mb4) COLLATE utf8mb4_unicode_ci\n    );"
+      },
+      "position": [
+        256,
+        0
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "6d7f29ac-84dd-493b-b4ee-19785045fa72",
+      "name": "MySQL - log",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{\n  [\n    JSON.stringify(\n      $('Code - decide ready/failed').first().json.updates ?? []\n    )\n  ]\n}}"
+        },
+        "query": "INSERT INTO infofee01_rag.if_extraction_log (\n    TextUUIDBin,\n    Stage,\n    Status,\n    Message,\n    LoggedAt\n)\nSELECT\n    UUID_TO_BIN_MDB(u.TextUUID),\n    'finalize',\n    u.newStatus,\n    CONCAT(\n        'auto-reconciled text to ',\n        u.newStatus,\n        CASE\n            WHEN u.reason IS NOT NULL\n                THEN CONCAT(' reason=', u.reason)\n            ELSE ''\n        END\n    ),\n    NOW()\nFROM JSON_TABLE(\n    $1,\n    '$[*]' COLUMNS (\n        TextUUID   VARCHAR(36) PATH '$.TextUUID',\n        newStatus  VARCHAR(32) PATH '$.newStatus',\n        reason     VARCHAR(255) PATH '$.reason' NULL ON EMPTY\n    )\n) AS u;"
+      },
+      "position": [
+        496,
+        0
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "id": "6ba18bf1-33ce-4242-8071-57439ea147fb",
+      "name": "Schedule Trigger Finalizer",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "expression": "30 */5 * * * *",
+              "field": "cronExpression"
+            }
+          ]
+        }
+      },
+      "position": [
+        -464,
+        0
+      ],
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "1db96400-2385-48ed-a6a2-b549d49d6e2a",
+      "name": "MySQL - load up to 32 candidate texts",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "SELECT\n    BIN_TO_UUID_MDB(t.TextUUIDBin) AS TextUUID,\n    t.TextStatus,\n    t.TextID,\n\n    COUNT(c.ChunkUUIDBin) AS ChunkCount,\n\n    SUM(\n        CASE\n            WHEN c.ChunkEmbedding IS NULL THEN 1\n            ELSE 0\n        END\n    ) AS ChunksWithoutEmbedding,\n\n    SUM(\n        CASE\n            WHEN c.EmbedStatus = 'failed' THEN 1\n            ELSE 0\n        END\n    ) AS FailedEmbeddingChunks\n\nFROM infofee01_rag.if_texts AS t\n\nJOIN infofee01_rag.if_chunks AS c\n    ON c.TextUUIDBin = t.TextUUIDBin\n\nWHERE t.TextStatus IN ('pending', 'processing', 'ready', 'failed')\n\nGROUP BY\n    t.TextUUIDBin,\n    t.TextStatus,\n    t.TextID\n\nHAVING\n       (\n           SUM(CASE WHEN c.EmbedStatus = 'failed' THEN 1 ELSE 0 END) > 0\n           AND t.TextStatus <> 'failed'\n       )\n\n    OR (\n           SUM(CASE WHEN c.EmbedStatus = 'failed' THEN 1 ELSE 0 END) = 0\n           AND SUM(CASE WHEN c.ChunkEmbedding IS NULL THEN 1 ELSE 0 END) > 0\n           AND t.TextStatus <> 'pending'\n       )\n\n    OR (\n           SUM(CASE WHEN c.EmbedStatus = 'failed' THEN 1 ELSE 0 END) = 0\n           AND SUM(CASE WHEN c.ChunkEmbedding IS NULL THEN 1 ELSE 0 END) = 0\n           AND t.TextStatus <> 'ready'\n       )\n\nORDER BY t.TextUUIDBin\nLIMIT 32;"
+      },
+      "position": [
+        -224,
+        0
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    }
+  ],
+  "settings": {
+    "binaryMode": "separate",
+    "executionOrder": "v1"
+  },
+  "tags": [
+    {
+      "createdAt": "2026-06-16T05:48:49.435Z",
+      "id": "Dz5cI4qGPy822fko",
+      "name": "rag",
+      "updatedAt": "2026-06-16T05:48:49.435Z"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2026-08-17T08:19:26.916Z",
+  "versionId": "8673f97b-ec9c-466b-9a52-d9aee8f7f62a"
+}

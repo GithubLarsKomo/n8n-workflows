@@ -1,0 +1,3571 @@
+{
+  "active": true,
+  "activeVersion": {
+    "authors": "Lars Komorowski",
+    "autosaved": true,
+    "connections": {
+      "Code - collapse parts": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark parts pending",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Code - create extraction parts": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - create extraction part",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Code - extract json": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - save extraction part",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Code - extract json & markdown": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - save extraction part",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Code - get PDF page count": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code - create extraction parts",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Code - slice PDF": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "HTTP - call docling",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP - call docling": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "requiresForcedOcr?",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark part failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP - call docling with forced OCR": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "requiresVLM?",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark part failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP - call paddle-vl": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code - extract json",
+              "type": "main"
+            },
+            {
+              "index": 0,
+              "node": "HTTP - sleep paddle-vl",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "HTTP - sleep paddle-vl",
+              "type": "main"
+            },
+            {
+              "index": 0,
+              "node": "MySQL - mark part failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP - fetch PDF": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code - get PDF page count",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark part failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP - fetch part source PDF": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code - slice PDF",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark part failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP - paddle-vl sleeping?": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Sleepting?",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark part failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP - wake up paddle-vl": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Wait",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark part failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If all parts finished?": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If dead parts?",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If attempts >= 3 (give up)": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark part dead-letter",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - requeue part",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If dead parts?": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark parent dead-letter",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark parent done",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If part found": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark part processing",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If row found": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark processing",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Merge": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Prepare for VLM",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - check part states": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If all parts finished?",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - claim one pending part": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If part found",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - claim one pending row": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If row found",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - create extraction part": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code - collapse parts",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - enqueue chunk job": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark text pending",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - mark parent dead-letter": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark text failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - mark parent done": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - enqueue chunk job",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - mark part dead-letter": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - check part states",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - mark part failed": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - read part attempts",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - mark part processing": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "HTTP - fetch part source PDF",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - mark processing": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "HTTP - fetch PDF",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - mark text pending": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - log done",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - read part attempts": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If attempts >= 3 (give up)",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - recover stale parts": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - claim one pending part",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - requeue part": {
+        "main": [
+          []
+        ]
+      },
+      "MySQL - save extraction part": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - check part states",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "OCR Run?": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "HTTP - call docling with forced OCR",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Code - extract json & markdown",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Prepare for VLM": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "HTTP - call paddle-vl",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger Extractor": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - claim one pending row",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger Part Worker": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - recover stale parts",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Sleepting?": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "HTTP - wake up paddle-vl",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Merge",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "VLM Run?": {
+        "main": [
+          [
+            {
+              "index": 1,
+              "node": "Merge",
+              "type": "main"
+            },
+            {
+              "index": 0,
+              "node": "HTTP - paddle-vl sleeping?",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Code - extract json & markdown",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Wait": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Merge",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "requiresForcedOcr?": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "OCR Run?",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "requiresVLM?": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "VLM Run?",
+              "type": "main"
+            }
+          ]
+        ]
+      }
+    },
+    "createdAt": "2026-08-14T07:56:52.766Z",
+    "description": "",
+    "name": "Version 3ab065a6",
+    "nodes": [
+      {
+        "id": "c63e497a-e75f-41ec-b3a0-e792a0b302e9",
+        "name": "If attempts >= 3 (give up)",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "if-attempts-over-limit",
+                "leftValue": "={{ Number($json.Attempts ?? 0) }}",
+                "operator": {
+                  "operation": "gte",
+                  "type": "number"
+                },
+                "rightValue": 3
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          160,
+          784
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "24486799-de24-4255-aa4e-b827e10cfeaf",
+        "name": "MySQL - log done",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.TextUUID,\n  `Extraction completed successfully: ${\n    $('MySQL - check part states').first().json.DoneParts\n  } part(s)`\n] }}"
+          },
+          "query": "INSERT INTO infofee01_rag.if_extraction_log\n(\n    TextUUIDBin,\n    Stage,\n    Status,\n    Message,\n    LoggedAt\n)\nVALUES\n(\n    UUID_TO_BIN_MDB($1),\n    'extract',\n    'done',\n    $2,\n    NOW()\n);"
+        },
+        "position": [
+          1856,
+          560
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "137e6a11-cbb8-4893-a09e-2da368e34384",
+        "name": "MySQL - mark text pending",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.TextUUID\n] }}"
+          },
+          "query": "UPDATE infofee01_rag.if_texts\nSET\n    TextStatus = 'pending',\n    TextFailedReason = NULL\nWHERE TextUUIDBin = UUID_TO_BIN_MDB($1);"
+        },
+        "position": [
+          1664,
+          560
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "alwaysOutputData": true,
+        "id": "46a7c376-2a9a-4cbd-b16b-4931496a129d",
+        "name": "HTTP - call docling",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "bodyParameters": {
+            "parameters": [
+              {
+                "inputDataFieldName": "data",
+                "name": "files",
+                "parameterType": "formBinaryData"
+              },
+              {
+                "name": "image_export_mode",
+                "value": "placeholder"
+              },
+              {
+                "name": "do_ocr",
+                "value": "true"
+              },
+              {
+                "name": "pdf_backend",
+                "value": "dlparse_v4"
+              },
+              {
+                "name": "table_mode",
+                "value": "accurate"
+              },
+              {
+                "name": "do_table_structure",
+                "value": "true"
+              },
+              {
+                "name": "include_images",
+                "value": "false"
+              },
+              {
+                "name": "to_formats",
+                "value": "md"
+              },
+              {
+                "name": "to_formats",
+                "value": "json"
+              },
+              {
+                "name": "pipeline",
+                "value": "standard"
+              }
+            ]
+          },
+          "contentType": "multipart-form-data",
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Accept",
+                "value": "application/json"
+              }
+            ]
+          },
+          "method": "POST",
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "json"
+              }
+            },
+            "timeout": 300000
+          },
+          "sendBody": true,
+          "sendHeaders": true,
+          "url": "http://10.4.190.16:5001/v1/convert/file"
+        },
+        "position": [
+          -3008,
+          800
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "82be4c21-feea-4680-9de0-020e1deefedb",
+        "name": "HTTP - fetch PDF",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Accept",
+                "value": "application/pdf"
+              }
+            ]
+          },
+          "options": {
+            "allowUnauthorizedCerts": true,
+            "response": {
+              "response": {
+                "responseFormat": "file"
+              }
+            },
+            "timeout": 60000
+          },
+          "sendHeaders": true,
+          "url": "={{ $('MySQL - claim one pending row').item.json.Filepath }}"
+        },
+        "position": [
+          -2480,
+          -624
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "f5be2581-7c52-4ba1-a7af-85bb2a896260",
+        "name": "MySQL - mark processing",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "UPDATE infofee01_rag.if_extraction_queue\nSET\n    Status = 'processing',\n    StartedAt = NOW(),\n    FinishedAt = NULL,\n    Attempts = Attempts + 1,\n    LastError = NULL\n  \nWHERE QueueID =\n    {{ $('MySQL - claim one pending row').first().json.QueueID }};"
+        },
+        "position": [
+          -2656,
+          -624
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "id": "e701c79f-dc76-4b45-8be4-13fd3df20790",
+        "name": "If row found",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "if-no-row",
+                "leftValue": "={{ $('MySQL - claim one pending row').item?.json?.QueueID }}",
+                "operator": {
+                  "operation": "exists",
+                  "singleValue": true,
+                  "type": "number"
+                },
+                "rightValue": ""
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          -2880,
+          -528
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "d41ab615-1f86-4c0b-ab2c-2d627251fe5d",
+        "name": "MySQL - claim one pending row",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "SELECT QueueID, BIN_TO_UUID_MDB(TextUUIDBin) AS TextUUID, Filepath, Attempts\n\nFROM infofee01_rag.if_extraction_queue\n\nWHERE Status = 'pending' \n  AND (StartedAt IS NULL OR StartedAt < (NOW() - INTERVAL 30 MINUTE)) \n\nORDER BY CreatedAt ASC \n\nLIMIT 1 FOR UPDATE SKIP LOCKED;"
+        },
+        "position": [
+          -3056,
+          -528
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "id": "258a1461-027b-4f8e-b91b-c8e5ae6aafea",
+        "name": "Schedule Trigger Extractor",
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "expression": "*/30 * * * * *",
+                "field": "cronExpression"
+              }
+            ]
+          }
+        },
+        "position": [
+          -3232,
+          -528
+        ],
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2
+      },
+      {
+        "alwaysOutputData": true,
+        "id": "92682636-f676-4641-b7b0-d84d94cecdcd",
+        "name": "HTTP - call docling with forced OCR",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "bodyParameters": {
+            "parameters": [
+              {
+                "inputDataFieldName": "data",
+                "name": "files",
+                "parameterType": "formBinaryData"
+              },
+              {
+                "name": "image_export_mode",
+                "value": "placeholder"
+              },
+              {
+                "name": "do_ocr",
+                "value": "true"
+              },
+              {
+                "name": "pdf_backend",
+                "value": "dlparse_v4"
+              },
+              {
+                "name": "table_mode",
+                "value": "accurate"
+              },
+              {
+                "name": "do_table_structure",
+                "value": "true"
+              },
+              {
+                "name": "include_images",
+                "value": "false"
+              },
+              {
+                "name": "to_formats",
+                "value": "md"
+              },
+              {
+                "name": "to_formats",
+                "value": "json"
+              },
+              {
+                "name": "pipeline",
+                "value": "standard"
+              },
+              {
+                "name": "force_ocr",
+                "value": "true"
+              },
+              {
+                "name": "ocr_preset",
+                "value": "rapidocr"
+              }
+            ]
+          },
+          "contentType": "multipart-form-data",
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Accept",
+                "value": "application/json"
+              }
+            ]
+          },
+          "method": "POST",
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "json"
+              }
+            },
+            "timeout": 300000
+          },
+          "sendBody": true,
+          "sendHeaders": true,
+          "url": "http://10.4.190.16:5001/v1/convert/file"
+        },
+        "position": [
+          -2432,
+          528
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "edfb903e-4502-4b4f-8a1e-c900a9056414",
+        "name": "requiresForcedOcr?",
+        "parameters": {
+          "jsCode": "/**\n * n8n Code-Node: requiresForcedOcr?\n *\n * Aufgaben:\n * 1. Qualität der Docling-Textextraktion bewerten\n * 2. requiresForcedOcr setzen\n * 3. Original-PDF aus \"HTTP - fetch PDF\" wieder anhängen\n */\n\nconst CONFIG = {\n  minimumCharacters: 80,\n  minimumAlphanumericRatio: 0.52,\n  maximumSuspiciousRatio: 0.10,\n  maximumSymbolTokenRatio: 0.25,\n  minimumWordCoverage: 0.30,\n  fallbackScoreThreshold: 3,\n};\n\nfunction firstNonEmpty(values) {\n  for (const value of values) {\n    if (\n      typeof value === 'string' &&\n      value.trim() !== ''\n    ) {\n      return value;\n    }\n  }\n\n  return '';\n}\n\nfunction decodeBasicHtmlEntities(text) {\n  return text\n    .replace(/&amp;/gi, '&')\n    .replace(/&lt;/gi, '<')\n    .replace(/&gt;/gi, '>')\n    .replace(/&quot;/gi, '\"')\n    .replace(/&#39;/gi, \"'\")\n    .replace(/&nbsp;/gi, ' ');\n}\n\nfunction removeMarkdownStructure(text) {\n  return text\n    // Bilder und Kommentare entfernen\n    .replace(/<!--[\\s\\S]*?-->/g, ' ')\n\n    // Markdown-Tabellentrennlinien entfernen\n    .replace(\n      /^\\s*\\|?(?:\\s*:?-{3,}:?\\s*\\|)+\\s*$/gm,\n      ' ',\n    )\n\n    // Markdown-Strukturzeichen entfernen\n    .replace(/[|#*_`~]/g, ' ')\n\n    // Leerzeichen vereinheitlichen\n    .replace(/\\s+/g, ' ')\n    .trim();\n}\n\nfunction round(value) {\n  return Math.round(value * 1000) / 1000;\n}\n\nfunction assessTextQuality(json) {\n  const rawText = firstNonEmpty([\n    json?.document?.md_content,\n    json?.document?.text_content,\n    json?.md_content,\n    json?.text_content,\n    json?.text,\n  ]);\n\n  if (!rawText) {\n    return {\n      requiresForcedOcr: true,\n      score: 10,\n      reasons: ['no_text_returned'],\n      metrics: {\n        rawCharacters: 0,\n        evaluatedCharacters: 0,\n      },\n    };\n  }\n\n  const decodedText =\n    decodeBasicHtmlEntities(rawText);\n\n  const evaluatedText =\n    removeMarkdownStructure(decodedText);\n\n  const compactText =\n    evaluatedText.replace(/\\s/g, '');\n\n  const characterCount = compactText.length;\n\n  if (characterCount === 0) {\n    return {\n      requiresForcedOcr: true,\n      score: 10,\n      reasons: ['no_evaluable_text'],\n      metrics: {\n        rawCharacters: rawText.length,\n        evaluatedCharacters: 0,\n      },\n    };\n  }\n\n  const alphanumericCount =\n    (\n      compactText.match(\n        /[\\p{L}\\p{N}]/gu,\n      ) || []\n    ).length;\n\n  const letterCount =\n    (\n      compactText.match(\n        /\\p{L}/gu,\n      ) || []\n    ).length;\n\n  const suspiciousCount =\n    (\n      compactText.match(\n        /[!$%&+\\/<=>?@\\\\^{}]/g,\n      ) || []\n    ).length;\n\n  const replacementCharacterCount =\n    (\n      compactText.match(\n        /[\\uFFFD\\u0000]/g,\n      ) || []\n    ).length;\n\n  const tokens = evaluatedText\n    .split(/\\s+/)\n    .filter(Boolean);\n\n  const symbolTokens = tokens.filter(\n    token =>\n      /^[^\\p{L}\\p{N}]+$/u.test(token),\n  );\n\n  const words =\n    evaluatedText.match(/\\p{L}{2,}/gu) || [];\n\n  const wordCharacterCount =\n    words.reduce(\n      (sum, word) => sum + word.length,\n      0,\n    );\n\n  const alphanumericRatio =\n    alphanumericCount / characterCount;\n\n  const letterRatio =\n    letterCount / characterCount;\n\n  const suspiciousRatio =\n    suspiciousCount / characterCount;\n\n  const replacementRatio =\n    replacementCharacterCount /\n    characterCount;\n\n  const symbolTokenRatio =\n    tokens.length > 0\n      ? symbolTokens.length / tokens.length\n      : 1;\n\n  const wordCoverage =\n    wordCharacterCount / characterCount;\n\n  let score = 0;\n  const reasons = [];\n\n  if (\n    characterCount <\n    CONFIG.minimumCharacters\n  ) {\n    score += 4;\n    reasons.push('too_little_text');\n  }\n\n  if (\n    alphanumericRatio <\n    CONFIG.minimumAlphanumericRatio\n  ) {\n    score += 2;\n    reasons.push(\n      'low_alphanumeric_ratio',\n    );\n  }\n\n  if (\n    suspiciousRatio >\n    CONFIG.maximumSuspiciousRatio\n  ) {\n    score += 2;\n    reasons.push(\n      'many_suspicious_characters',\n    );\n  }\n\n  if (\n    symbolTokenRatio >\n    CONFIG.maximumSymbolTokenRatio\n  ) {\n    score += 1;\n    reasons.push('many_symbol_tokens');\n  }\n\n  if (\n    wordCoverage <\n    CONFIG.minimumWordCoverage\n  ) {\n    score += 1;\n    reasons.push('low_word_coverage');\n  }\n\n  if (replacementCharacterCount > 0) {\n    score +=\n      replacementRatio > 0.01 ? 4 : 2;\n\n    reasons.push(\n      'invalid_or_replacement_characters',\n    );\n  }\n\n  if (\n    letterRatio < 0.35 &&\n    suspiciousRatio > 0.06\n  ) {\n    score += 2;\n    reasons.push(\n      'probable_broken_font_mapping',\n    );\n  }\n\n  return {\n    requiresForcedOcr:\n      score >=\n      CONFIG.fallbackScoreThreshold,\n\n    score,\n    reasons,\n\n    metrics: {\n      rawCharacters: rawText.length,\n      evaluatedCharacters:\n        characterCount,\n      tokens: tokens.length,\n      alphanumericRatio:\n        round(alphanumericRatio),\n      letterRatio:\n        round(letterRatio),\n      suspiciousRatio:\n        round(suspiciousRatio),\n      symbolTokenRatio:\n        round(symbolTokenRatio),\n      wordCoverage:\n        round(wordCoverage),\n      replacementRatio:\n        round(replacementRatio),\n    },\n  };\n}\n\n/*\n * Verarbeitung der n8n-Items\n */\n\nconst items = $input.all();\n\n/*\n * WICHTIG:\n * Der Name muss exakt dem Node entsprechen,\n * der die PDF herunterlädt.\n */\nconst pdfItems =\n  $('Code - slice PDF').all();\n\nreturn items.map((item, index) => {\n  const assessment =\n    assessTextQuality(item.json);\n\n  /*\n   * Original-PDF auswählen.\n   * Dein Workflow verarbeitet normalerweise\n   * nur ein Dokument, deshalb ist Index 0\n   * ein zulässiger Fallback.\n   */\n  const pdfItem =\n    pdfItems[index] ?? pdfItems[0];\n\n  /*\n   * Wenn die Binary noch am aktuellen Item\n   * hängt, diese verwenden. Andernfalls die\n   * Binary aus \"HTTP - fetch PDF\" übernehmen.\n   */\n  const binary =\n    item.binary?.data\n      ? item.binary\n      : pdfItem?.binary;\n\n  if (!binary?.data) {\n    throw new Error(\n      `Item ${index}: Die Original-PDF wurde ` +\n      `im Binary-Feld \"data\" nicht gefunden. ` +\n      `Prüfe den Output des Nodes ` +\n      `\"HTTP - fetch PDF\".`,\n    );\n  }\n\n  return {\n    json: {\n      ...item.json,\n\n      requiresForcedOcr:\n        assessment.requiresForcedOcr,\n\n      textQuality: assessment,\n    },\n\n    /*\n     * Hier wird die PDF tatsächlich\n     * an den nächsten Node weitergegeben.\n     */\n    binary,\n\n    pairedItem: {\n      item: index,\n    },\n  };\n});"
+        },
+        "position": [
+          -2784,
+          672
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "6dca62a4-f389-444a-a73d-4f5e7fe7686f",
+        "name": "OCR Run?",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "7f6b0caf-ca9d-430d-94f3-3b0567f2036a",
+                "leftValue": "={{ $json.requiresForcedOcr }}",
+                "operator": {
+                  "operation": "true",
+                  "singleValue": true,
+                  "type": "boolean"
+                },
+                "rightValue": false
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          -2624,
+          672
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3
+      },
+      {
+        "id": "b2ae5cff-f4f6-4012-9087-ae6dc1d2cd30",
+        "name": "requiresVLM?",
+        "parameters": {
+          "jsCode": "/**\n * n8n Code-Node: requiresVLM?\n *\n * Dieser Node wird nach der Forced-OCR-Ausführung aufgerufen.\n *\n * Ergebnis:\n *   requiresVLM: true\n *     OCR-Ergebnis ist grundsätzlich unbrauchbar.\n *     Aktuell: Dokument als failed markieren.\n *     Später: PaddleOCR-VL aufrufen.\n *\n *   requiresVLM: false\n *     OCR-Ergebnis kann weiterverarbeitet werden.\n */\n\nconst CONFIG = {\n  minimumCharacters: 50,\n  minimumAlphanumericRatio: 0.48,\n  maximumSuspiciousRatio: 0.12,\n  maximumSymbolTokenRatio: 0.30,\n  minimumWordCoverage: 0.22,\n\n  // Bewusst höher als beim ersten OCR-Gate:\n  // VLM soll nur bei klar unbrauchbarer OCR ausgelöst werden.\n  vlmScoreThreshold: 5,\n};\n\nfunction firstNonEmpty(values) {\n  for (const value of values) {\n    if (\n      typeof value === 'string' &&\n      value.trim() !== ''\n    ) {\n      return value;\n    }\n  }\n\n  return '';\n}\n\nfunction decodeBasicHtmlEntities(text) {\n  return text\n    .replace(/&amp;/gi, '&')\n    .replace(/&lt;/gi, '<')\n    .replace(/&gt;/gi, '>')\n    .replace(/&quot;/gi, '\"')\n    .replace(/&#39;/gi, \"'\")\n    .replace(/&nbsp;/gi, ' ');\n}\n\nfunction removeMarkdownStructure(text) {\n  return text\n    // HTML-Kommentare und Bildplatzhalter entfernen\n    .replace(/<!--[\\s\\S]*?-->/g, ' ')\n\n    // Markdown-Tabellentrennzeilen entfernen\n    .replace(\n      /^\\s*\\|?(?:\\s*:?-{3,}:?\\s*\\|)+\\s*$/gm,\n      ' ',\n    )\n\n    // Markdown-Strukturzeichen entfernen\n    .replace(/[|#*_`~]/g, ' ')\n\n    // Leerzeichen vereinheitlichen\n    .replace(/\\s+/g, ' ')\n    .trim();\n}\n\nfunction round(value) {\n  return Math.round(value * 1000) / 1000;\n}\n\nfunction assessVlmRequirement(json) {\n  const rawText = firstNonEmpty([\n    json?.document?.md_content,\n    json?.document?.text_content,\n    json?.md_content,\n    json?.text_content,\n    json?.text,\n  ]);\n\n  /*\n   * Forced OCR hat gar keinen Text geliefert.\n   */\n  if (!rawText) {\n    return {\n      requiresVLM: true,\n      score: 10,\n      status: 'failed_requires_vlm',\n      reasons: ['forced_ocr_returned_no_text'],\n      metrics: {\n        rawCharacters: 0,\n        evaluatedCharacters: 0,\n      },\n    };\n  }\n\n  const decodedText =\n    decodeBasicHtmlEntities(rawText);\n\n  const evaluatedText =\n    removeMarkdownStructure(decodedText);\n\n  const compactText =\n    evaluatedText.replace(/\\s/g, '');\n\n  const characterCount = compactText.length;\n\n  if (characterCount === 0) {\n    return {\n      requiresVLM: true,\n      score: 10,\n      status: 'failed_requires_vlm',\n      reasons: ['forced_ocr_returned_no_evaluable_text'],\n      metrics: {\n        rawCharacters: rawText.length,\n        evaluatedCharacters: 0,\n      },\n    };\n  }\n\n  const alphanumericCount =\n    (\n      compactText.match(\n        /[\\p{L}\\p{N}]/gu,\n      ) || []\n    ).length;\n\n  const letterCount =\n    (\n      compactText.match(\n        /\\p{L}/gu,\n      ) || []\n    ).length;\n\n  const suspiciousCount =\n    (\n      compactText.match(\n        /[!$%&+\\/<=>?@\\\\^{}]/g,\n      ) || []\n    ).length;\n\n  const replacementCharacterCount =\n    (\n      compactText.match(\n        /[\\uFFFD\\u0000]/g,\n      ) || []\n    ).length;\n\n  const tokens = evaluatedText\n    .split(/\\s+/)\n    .filter(Boolean);\n\n  const symbolTokens = tokens.filter(\n    token =>\n      /^[^\\p{L}\\p{N}]+$/u.test(token),\n  );\n\n  const words =\n    evaluatedText.match(/\\p{L}{2,}/gu) || [];\n\n  const wordCharacterCount =\n    words.reduce(\n      (sum, word) => sum + word.length,\n      0,\n    );\n\n  const alphanumericRatio =\n    alphanumericCount / characterCount;\n\n  const letterRatio =\n    letterCount / characterCount;\n\n  const suspiciousRatio =\n    suspiciousCount / characterCount;\n\n  const symbolTokenRatio =\n    tokens.length > 0\n      ? symbolTokens.length / tokens.length\n      : 1;\n\n  const wordCoverage =\n    wordCharacterCount / characterCount;\n\n  const replacementRatio =\n    replacementCharacterCount /\n    characterCount;\n\n  let score = 0;\n  const reasons = [];\n\n  if (\n    characterCount <\n    CONFIG.minimumCharacters\n  ) {\n    score += 5;\n    reasons.push(\n      'forced_ocr_returned_too_little_text',\n    );\n  }\n\n  if (\n    alphanumericRatio <\n    CONFIG.minimumAlphanumericRatio\n  ) {\n    score += 3;\n    reasons.push(\n      'forced_ocr_low_alphanumeric_ratio',\n    );\n  }\n\n  if (\n    suspiciousRatio >\n    CONFIG.maximumSuspiciousRatio\n  ) {\n    score += 3;\n    reasons.push(\n      'forced_ocr_many_suspicious_characters',\n    );\n  }\n\n  if (\n    symbolTokenRatio >\n    CONFIG.maximumSymbolTokenRatio\n  ) {\n    score += 2;\n    reasons.push(\n      'forced_ocr_many_symbol_tokens',\n    );\n  }\n\n  if (\n    wordCoverage <\n    CONFIG.minimumWordCoverage\n  ) {\n    score += 2;\n    reasons.push(\n      'forced_ocr_low_word_coverage',\n    );\n  }\n\n  if (replacementCharacterCount > 0) {\n    score +=\n      replacementRatio > 0.01 ? 5 : 3;\n\n    reasons.push(\n      'forced_ocr_contains_invalid_characters',\n    );\n  }\n\n  /*\n   * Typischer Zeichensalat:\n   * wenige Buchstaben und gleichzeitig\n   * ungewöhnlich viele Sonderzeichen.\n   */\n  if (\n    letterRatio < 0.30 &&\n    suspiciousRatio > 0.08\n  ) {\n    score += 4;\n    reasons.push(\n      'forced_ocr_probable_character_garbage',\n    );\n  }\n\n  const requiresVLM =\n    score >= CONFIG.vlmScoreThreshold;\n\n  return {\n    requiresVLM,\n    score,\n\n    status: requiresVLM\n      ? 'failed_requires_vlm'\n      : 'ocr_accepted',\n\n    reasons,\n\n    metrics: {\n      rawCharacters: rawText.length,\n      evaluatedCharacters: characterCount,\n      tokens: tokens.length,\n      alphanumericRatio:\n        round(alphanumericRatio),\n      letterRatio:\n        round(letterRatio),\n      suspiciousRatio:\n        round(suspiciousRatio),\n      symbolTokenRatio:\n        round(symbolTokenRatio),\n      wordCoverage:\n        round(wordCoverage),\n      replacementRatio:\n        round(replacementRatio),\n    },\n  };\n}\n\n/*\n * Eingehende Docling-OCR-Ergebnisse\n */\nconst items = $input.all();\n\n/*\n * Original-PDF erneut aus dem Download-Node holen.\n * Dadurch steht sie später auch für PaddleOCR-VL bereit.\n */\nconst pdfItems =\n  $('Code - slice PDF').all();\n\nreturn items.map((item, index) => {\n  const assessment =\n    assessVlmRequirement(item.json);\n\n  const pdfItem =\n    pdfItems[index] ?? pdfItems[0];\n\n  const binary =\n    item.binary?.data\n      ? item.binary\n      : pdfItem?.binary;\n\n  if (!binary?.data) {\n    throw new Error(\n      `Item ${index}: Original-PDF im Binary-Feld ` +\n      `\"data\" nicht gefunden.`,\n    );\n  }\n\n  return {\n    json: {\n      ...item.json,\n\n      requiresVLM:\n        assessment.requiresVLM,\n\n      vlmQualityAssessment:\n        assessment,\n\n      processingStatus:\n        assessment.status,\n\n      fallbackStage:\n        assessment.requiresVLM\n          ? 'paddleocr_vl_pending'\n          : null,\n    },\n\n    binary,\n\n    pairedItem: {\n      item: index,\n    },\n  };\n});"
+        },
+        "position": [
+          -2256,
+          448
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "32e778a4-820b-4feb-b1e7-14a27979e3e4",
+        "name": "Code - extract json & markdown",
+        "parameters": {
+          "jsCode": "const response = $input.first().json;\n\nconst part =\n  $('MySQL - claim one pending part').first().json;\n\nconst markdown =\n  response?.document?.md_content\n  ?? response?.md_content\n  ?? response?.md\n  ?? '';\n\nconst json =\n  response?.document?.json_content\n  ?? {};\n\nconst forcedOcrUsed =\n  $('HTTP - call docling with forced OCR').isExecuted;\n\nreturn [{\n  json: {\n    PartID: part.PartID,\n    QueueID: part.QueueID,\n    TextUUID: part.TextUUID,\n\n    PartNumber: part.PartNumber,\n    PageFrom: part.PageFrom,\n    PageTo: part.PageTo,\n\n    Extractor: forcedOcrUsed\n      ? 'docling_ocr'\n      : 'docling',\n\n    DoclingJSON: JSON.stringify(json),\n    DoclingMD: markdown,\n    PaddleJSON: null\n  }\n}];"
+        },
+        "position": [
+          -320,
+          560
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "alwaysOutputData": false,
+        "id": "b17845d8-b2ea-4a0b-a762-8e341ff09ba2",
+        "name": "HTTP - call paddle-vl",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Accept",
+                "value": "application/json"
+              }
+            ]
+          },
+          "jsonBody": "={{ {\n  file: $json.PaddleFileBase64,\n  fileType: $json.PaddleFileType,\n\n  useLayoutDetection: true,\n  useOcrForImageBlock: true,\n\n  useDocOrientationClassify: false,\n  useDocUnwarping: false,\n  useChartRecognition: false,\n\n  formatBlockContent: true,\n  returnMarkdownImages: false\n} }}",
+          "method": "POST",
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "json"
+              }
+            },
+            "timeout": 900000
+          },
+          "sendBody": true,
+          "sendHeaders": true,
+          "specifyBody": "json",
+          "url": "http://10.4.190.16:8021/layout-parsing"
+        },
+        "position": [
+          -672,
+          368
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "837eb2c4-d3ca-417c-9de0-53ab43414698",
+        "name": "Prepare for VLM",
+        "parameters": {
+          "jsCode": "const item = $input.first();\n\nconst binaryProperties = Object.keys(item.binary ?? {});\n\nif (binaryProperties.length === 0) {\n  throw new Error('Keine Binärdatei für PaddleOCR-VL vorhanden');\n}\n\nconst binaryPropertyName = binaryProperties.includes('data')\n  ? 'data'\n  : binaryProperties[0];\n\nconst fileBuffer = await this.helpers.getBinaryDataBuffer(\n  0,\n  binaryPropertyName\n);\n\nif (!fileBuffer?.length) {\n  throw new Error('Die Binärdatei für PaddleOCR-VL ist leer');\n}\n\nreturn [\n  {\n    json: {\n      ...item.json,\n      PaddleFileBase64: fileBuffer.toString('base64'),\n      PaddleFileType: 0,\n    },\n    binary: item.binary,\n  },\n];"
+        },
+        "position": [
+          -848,
+          368
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "14b300e1-4790-4310-a9b1-d3f0760d464a",
+        "name": "Code - extract json",
+        "parameters": {
+          "jsCode": "const response = $input.first().json;\n\nconst part =\n  $('MySQL - claim one pending part').first().json;\n\nif (\n  response?.errorCode !== undefined\n  && Number(response.errorCode) !== 0\n) {\n  throw new Error(\n    `PaddleOCR-VL Fehler ${response.errorCode}: `\n    + `${response.errorMsg || 'Unbekannter Fehler'}`\n  );\n}\n\nconst layoutParsingResults =\n  response?.result?.layoutParsingResults;\n\nif (!Array.isArray(layoutParsingResults)) {\n  throw new Error(\n    'PaddleOCR-VL-Antwort enthält keine layoutParsingResults'\n  );\n}\n\nfunction cleanText(value) {\n  return String(value ?? '')\n    .replace(/<img\\b[^>]*>/gi, '')\n    .replace(/<\\/?div\\b[^>]*>/gi, '')\n    .replace(/\\r\\n?/g, '\\n')\n    .replace(/[ \\t]+\\n/g, '\\n')\n    .replace(/\\n{3,}/g, '\\n\\n')\n    .trim();\n}\n\n/**\n * Erkennt eingebettete Bilder anhand typischer Base64-Signaturen.\n */\nfunction isEmbeddedImage(value) {\n  if (typeof value !== 'string') {\n    return false;\n  }\n\n  const content = value.trim();\n\n  return (\n    /^data:image\\//i.test(content)\n    || /^\\/9j\\//.test(content)       // JPEG\n    || /^iVBORw0KGgo/.test(content)  // PNG\n    || /^R0lGOD/.test(content)       // GIF\n    || /^UklGR/.test(content)        // WebP\n    || /^Qk/.test(content)           // BMP\n  );\n}\n\n/**\n * Diese Feldnamen enthalten typischerweise Bilddaten oder\n * Bildsammlungen. Die Normalisierung entfernt _, - und Großschreibung.\n */\nconst imageFieldNames = new Set([\n  'image',\n  'images',\n  'img',\n  'imgs',\n  'inputimage',\n  'inputimages',\n  'outputimage',\n  'outputimages',\n  'imagebase64',\n  'base64image',\n  'imagebytes',\n  'imageblob',\n  'imagedata',\n  'markdownimages',\n]);\n\nfunction normalizeFieldName(name) {\n  return String(name ?? '')\n    .toLowerCase()\n    .replace(/[^a-z0-9]/g, '');\n}\n\n/**\n * Entfernt Bilder rekursiv, unabhängig davon, an welcher Stelle\n * Paddle sie in layoutParsingResults zurückgibt.\n */\nfunction removeEmbeddedImages(value) {\n  if (Array.isArray(value)) {\n    for (let index = value.length - 1; index >= 0; index--) {\n      if (isEmbeddedImage(value[index])) {\n        value.splice(index, 1);\n      } else {\n        removeEmbeddedImages(value[index]);\n      }\n    }\n\n    return value;\n  }\n\n  if (\n    value === null\n    || typeof value !== 'object'\n  ) {\n    return value;\n  }\n\n  for (const key of Object.keys(value)) {\n    const child = value[key];\n    const normalizedKey = normalizeFieldName(key);\n\n    if (\n      imageFieldNames.has(normalizedKey)\n      || isEmbeddedImage(child)\n    ) {\n      delete value[key];\n      continue;\n    }\n\n    removeEmbeddedImages(child);\n\n    /*\n     * Leere Bildcontainer nach der rekursiven Bereinigung entfernen.\n     */\n    if (\n      imageFieldNames.has(normalizedKey)\n      && (\n        value[key] === null\n        || (\n          typeof value[key] === 'object'\n          && Object.keys(value[key]).length === 0\n        )\n      )\n    ) {\n      delete value[key];\n    }\n  }\n\n  return value;\n}\n\n/**\n * Tiefe JSON-kompatible Kopie erstellen.\n */\nconst cleanedLayoutParsingResults =\n  JSON.parse(JSON.stringify(layoutParsingResults));\n\nfor (const page of cleanedLayoutParsingResults) {\n  /*\n   * Markdown-Text bereinigen.\n   */\n  if (\n    page?.markdown\n    && typeof page.markdown === 'object'\n  ) {\n    page.markdown.text =\n      cleanText(page.markdown.text);\n  } else if (typeof page?.markdown === 'string') {\n    page.markdown = {\n      text: cleanText(page.markdown),\n    };\n  }\n\n  const blocks =\n    page?.prunedResult?.parsing_res_list\n    ?? page?.prunedResult?.parsingResList\n    ?? page?.parsing_res_list\n    ?? page?.parsingResList\n    ?? [];\n\n  if (!Array.isArray(blocks)) {\n    continue;\n  }\n\n  for (const block of blocks) {\n    const contentProperty =\n      Object.prototype.hasOwnProperty.call(\n        block,\n        'block_content'\n      )\n        ? 'block_content'\n        : Object.prototype.hasOwnProperty.call(\n            block,\n            'content'\n          )\n          ? 'content'\n          : Object.prototype.hasOwnProperty.call(\n              block,\n              'text'\n            )\n            ? 'text'\n            : 'block_content';\n\n    const cleanedContent =\n      cleanText(block?.[contentProperty]);\n\n    block[contentProperty] = cleanedContent;\n\n    const currentLabel = String(\n      block?.block_label\n      ?? block?.label\n      ?? ''\n    ).toLowerCase();\n\n    /*\n     * OCR-haltige Bildblöcke für den Chunker als Text kennzeichnen.\n     * Das ursprüngliche Label bleibt erhalten.\n     */\n    if (\n      ['image', 'picture'].includes(currentLabel)\n      && cleanedContent\n    ) {\n      if (block.block_label !== undefined) {\n        block.original_block_label =\n          block.block_label;\n\n        block.block_label = 'text';\n      } else {\n        block.original_label = block.label;\n        block.label = 'text';\n      }\n    }\n  }\n}\n\n/*\n * Jetzt sämtliche eingebetteten Bilder rekursiv entfernen,\n * insbesondere page.inputImage.\n */\nremoveEmbeddedImages(cleanedLayoutParsingResults);\n\nconst paddleText = cleanedLayoutParsingResults\n  .map(page => {\n    const markdownText =\n      page?.markdown?.text;\n\n    if (\n      typeof markdownText === 'string'\n      && markdownText.trim()\n    ) {\n      return markdownText;\n    }\n\n    const blocks =\n      page?.prunedResult?.parsing_res_list\n      ?? page?.prunedResult?.parsingResList\n      ?? page?.parsing_res_list\n      ?? page?.parsingResList\n      ?? [];\n\n    return Array.isArray(blocks)\n      ? blocks\n          .map(block =>\n            block?.block_content\n            ?? block?.content\n            ?? block?.text\n            ?? ''\n          )\n          .filter(Boolean)\n          .join('\\n\\n')\n      : '';\n  })\n  .filter(Boolean)\n  .join('\\n\\n')\n  .trim();\n\nif (!paddleText) {\n  throw new Error(\n    'PaddleOCR-VL hat keinen Text erkannt'\n  );\n}\n\nconst compactPaddleResult = {\n  schemaVersion: 1,\n  layoutParsingResults:\n    cleanedLayoutParsingResults,\n};\n\nconst serializedPaddleResult =\n  JSON.stringify(compactPaddleResult);\n\n/*\n * Sicherheitsprüfung: Es dürfen keine bekannten Bildsignaturen\n * mehr im gespeicherten JSON vorkommen.\n */\nif (\n  /data:image\\//i.test(serializedPaddleResult)\n  || /\\/9j\\//.test(serializedPaddleResult)\n  || /iVBORw0KGgo/.test(serializedPaddleResult)\n  || /R0lGOD/.test(serializedPaddleResult)\n) {\n  throw new Error(\n    'PaddleJSON enthält nach der Bereinigung weiterhin Bilddaten'\n  );\n}\n\nreturn [{\n  json: {\n    PartID: part.PartID,\n    QueueID: part.QueueID,\n    TextUUID: part.TextUUID,\n\n    PartNumber: part.PartNumber,\n    PageFrom: part.PageFrom,\n    PageTo: part.PageTo,\n\n    Extractor: 'paddle_vl',\n\n    DoclingJSON: null,\n    DoclingMD: null,\n    PaddleJSON: serializedPaddleResult\n  }\n}];"
+        },
+        "position": [
+          -320,
+          352
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "5793d2d0-72b4-4c0e-8ed0-e7cfb0a3e163",
+        "name": "VLM Run?",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "bb238b34-4e77-4f27-810b-eea067571a4d",
+                "leftValue": "={{ $json.vlmQualityAssessment.requiresVLM }}",
+                "operator": {
+                  "operation": "true",
+                  "singleValue": true,
+                  "type": "boolean"
+                },
+                "rightValue": false
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          -2096,
+          448
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3
+      },
+      {
+        "id": "df51f19e-ce15-43d8-87d1-979f81d62183",
+        "name": "Sleepting?",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "b3660438-9876-4963-9895-b8ba06966265",
+                "leftValue": "={{ $json.is_sleeping }}",
+                "operator": {
+                  "operation": "true",
+                  "singleValue": true,
+                  "type": "boolean"
+                },
+                "rightValue": false
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          -1680,
+          208
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3
+      },
+      {
+        "alwaysOutputData": true,
+        "id": "5bfde664-637c-4251-8519-148736e61f61",
+        "name": "HTTP - paddle-vl sleeping?",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Accept",
+                "value": "application/json"
+              }
+            ]
+          },
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "json"
+              }
+            },
+            "timeout": 60000
+          },
+          "sendHeaders": true,
+          "url": "http://paddleocr-vlm-server:8118/is_sleeping"
+        },
+        "position": [
+          -1888,
+          272
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4
+      },
+      {
+        "alwaysOutputData": true,
+        "id": "0694c143-b159-454d-892f-bcda0bc6642e",
+        "name": "HTTP - wake up paddle-vl",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Accept",
+                "value": "application/json"
+              }
+            ]
+          },
+          "method": "POST",
+          "options": {
+            "timeout": 180000
+          },
+          "sendHeaders": true,
+          "url": "http://paddleocr-vlm-server:8118/wake_up"
+        },
+        "position": [
+          -1456,
+          128
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4
+      },
+      {
+        "alwaysOutputData": false,
+        "id": "e92cc706-5081-4118-a8c6-5ec35d9d280d",
+        "name": "HTTP - sleep paddle-vl",
+        "onError": "continueRegularOutput",
+        "parameters": {
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Accept",
+                "value": "application/json"
+              }
+            ]
+          },
+          "method": "POST",
+          "options": {
+            "timeout": 180000
+          },
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "level",
+                "value": "1"
+              }
+            ]
+          },
+          "sendHeaders": true,
+          "sendQuery": true,
+          "url": "http://paddleocr-vlm-server:8118/sleep"
+        },
+        "position": [
+          -448,
+          160
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.4
+      },
+      {
+        "id": "ccf72608-0c15-4967-9853-42280a9b4bfc",
+        "name": "Wait",
+        "parameters": {
+          "amount": 20
+        },
+        "position": [
+          -1264,
+          64
+        ],
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1.1,
+        "webhookId": "4aef3614-24a1-4471-93bc-a743bafd4c77"
+      },
+      {
+        "id": "7e7518de-a1e3-4295-9c4f-b2c9855c5f86",
+        "name": "Merge",
+        "parameters": {
+          "combineBy": "combineByPosition",
+          "mode": "combine",
+          "options": {
+            "includeUnpaired": true
+          }
+        },
+        "position": [
+          -1008,
+          368
+        ],
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.2
+      },
+      {
+        "id": "7604f30e-6710-4e5c-b23b-ab87020d2241",
+        "name": "Code - get PDF page count",
+        "parameters": {
+          "jsCode": "const item = $input.first();\n\nif (!item.binary?.data) {\n  throw new Error('PDF im Binary-Feld \"data\" nicht gefunden');\n}\n\nconst buffer = await this.helpers.getBinaryDataBuffer(\n  0,\n  'data'\n);\n\nconst { PDFDocument } = require('pdf-lib');\n\nconst pdf = await PDFDocument.load(buffer, {\n  ignoreEncryption: false,\n});\n\nconst pages = pdf.getPageCount();\n\nreturn [\n  {\n    json: {\n      pages,\n      fileSizeBytes: buffer.length,\n    },\n    binary: item.binary,\n  },\n];"
+        },
+        "position": [
+          -2272,
+          -720
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "b1f77769-263f-4456-a1bb-110161ad84a9",
+        "name": "Code - create extraction parts",
+        "parameters": {
+          "jsCode": "const source =\n  $('MySQL - claim one pending row').first().json;\n\nconst input = $input.first();\nconst totalPages = Number(input.json.pages);\n\nconst MAX_PAGES_PER_PART = 50;\n\nif (!Number.isInteger(totalPages) || totalPages < 1) {\n  throw new Error(\n    `Ungültige PDF-Seitenzahl: ${input.json.pages}`\n  );\n}\n\nconst totalParts =\n  Math.ceil(totalPages / MAX_PAGES_PER_PART);\n\nconst parts = [];\n\nfor (\n  let partNumber = 1;\n  partNumber <= totalParts;\n  partNumber++\n) {\n  const pageFrom =\n    (partNumber - 1) * MAX_PAGES_PER_PART + 1;\n\n  const pageTo =\n    Math.min(\n      partNumber * MAX_PAGES_PER_PART,\n      totalPages\n    );\n\n  parts.push({\n    json: {\n      QueueID: source.QueueID,\n      TextUUID: source.TextUUID,\n      Filepath: source.Filepath,\n\n      PartNumber: partNumber,\n      PageFrom: pageFrom,\n      PageTo: pageTo,\n\n      PageCount: pageTo - pageFrom + 1,\n      TotalPages: totalPages,\n      TotalParts: totalParts\n    },\n\n    // PDF hier nicht mehr vervielfältigen.\n    // Der Part-Worker lädt sie später anhand Filepath neu.\n    pairedItem: {\n      item: 0\n    }\n  });\n}\n\nreturn parts;"
+        },
+        "position": [
+          -2064,
+          -720
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "7be9b975-78e9-40c5-86ba-72edf8e7fb51",
+        "name": "MySQL - create extraction part",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $json.QueueID,\n  $json.TextUUID,\n  $json.PartNumber,\n  $json.PageFrom,\n  $json.PageTo\n] }}"
+          },
+          "query": "INSERT INTO infofee01_rag.if_extraction_parts\n(\n    QueueID,\n    TextUUIDBin,\n    PartNumber,\n    PageFrom,\n    PageTo,\n    Status,\n    Attempts\n)\nVALUES\n(\n    $1,\n    UUID_TO_BIN_MDB($2),\n    $3,\n    $4,\n    $5,\n    'pending',\n    0\n)\nON DUPLICATE KEY UPDATE\n    TextUUIDBin = VALUES(TextUUIDBin),\n    PageFrom = VALUES(PageFrom),\n    PageTo = VALUES(PageTo);"
+        },
+        "position": [
+          -1856,
+          -720
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "id": "bc8231f5-53b4-4bd1-afaa-cd7f41d60aef",
+        "name": "Code - collapse parts",
+        "parameters": {
+          "jsCode": "const source =\n  $('MySQL - claim one pending row').first().json;\n\nconst parts =\n  $('Code - create extraction parts').all();\n\nreturn [{\n  json: {\n    QueueID: source.QueueID,\n    TextUUID: source.TextUUID,\n    TotalParts: parts.length\n  }\n}];"
+        },
+        "position": [
+          -1648,
+          -720
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "60d59f6b-b964-4fb3-b945-d80e60575051",
+        "name": "MySQL - mark parts pending",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $json.QueueID\n] }}"
+          },
+          "query": "UPDATE infofee01_rag.if_extraction_queue\nSET\n    Status = 'parts_pending',\n    StartedAt = NULL,\n    FinishedAt = NULL,\n    LastError = NULL\nWHERE\n    QueueID = $1\n    AND Status = 'processing';"
+        },
+        "position": [
+          -1440,
+          -720
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "id": "0f35da9e-38fd-43eb-b293-bddddaa7f048",
+        "name": "Sticky Note2",
+        "parameters": {
+          "content": "## Dispatcher",
+          "height": 576,
+          "width": 2208
+        },
+        "position": [
+          -3328,
+          -864
+        ],
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1
+      },
+      {
+        "id": "9e16efad-1754-412e-8959-1e26eff56a29",
+        "name": "Schedule Trigger Part Worker",
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "expression": "*/30 * * * * *",
+                "field": "cronExpression"
+              }
+            ]
+          }
+        },
+        "position": [
+          -4416,
+          976
+        ],
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "95c50da6-862f-4536-9e2e-ee123ef7db23",
+        "name": "MySQL - claim one pending part",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "SELECT\n    p.PartID,\n    p.QueueID,\n    BIN_TO_UUID_MDB(p.TextUUIDBin) AS TextUUID,\n    p.PartNumber,\n    p.PageFrom,\n    p.PageTo,\n    p.Attempts,\n    q.Filepath\nFROM infofee01_rag.if_extraction_parts p\nINNER JOIN infofee01_rag.if_extraction_queue q\n    ON q.QueueID = p.QueueID\nWHERE\n    p.Status = 'pending'\n    AND q.Status = 'parts_pending'\nORDER BY\n    q.CreatedAt ASC,\n    p.PartNumber ASC\nLIMIT 1;"
+        },
+        "position": [
+          -4032,
+          976
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "id": "1604e332-3946-4769-b87a-412c5dd3e2c7",
+        "name": "If part found",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "if-no-row",
+                "leftValue": "={{ $('MySQL - claim one pending part').item?.json?.PartID }}",
+                "operator": {
+                  "operation": "exists",
+                  "singleValue": true,
+                  "type": "number"
+                },
+                "rightValue": ""
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          -3856,
+          976
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "e77929d6-13b5-45ac-9d3e-f0fc369c4363",
+        "name": "MySQL - mark part processing",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.PartID\n] }}"
+          },
+          "query": "UPDATE infofee01_rag.if_extraction_parts\nSET\n    Status = 'processing',\n    StartedAt = NOW(),\n    FinishedAt = NULL,\n    Attempts = Attempts + 1,\n    LastError = NULL\nWHERE\n    PartID = $1\n    AND Status = 'pending';"
+        },
+        "position": [
+          -3632,
+          896
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "id": "4d8b891e-4f8c-4d95-9274-4229d41312d3",
+        "name": "HTTP - fetch part source PDF",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Accept",
+                "value": "application/pdf"
+              }
+            ]
+          },
+          "options": {
+            "allowUnauthorizedCerts": true,
+            "response": {
+              "response": {
+                "responseFormat": "file"
+              }
+            },
+            "timeout": 60000
+          },
+          "sendHeaders": true,
+          "url": "={{ $('MySQL - claim one pending part').first().json.Filepath }}"
+        },
+        "position": [
+          -3440,
+          896
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "cb08e072-8ca5-452c-8f0c-1a59da1f0da1",
+        "name": "Code - slice PDF",
+        "parameters": {
+          "jsCode": "const item = $input.first();\n\nconst part =\n  $('MySQL - claim one pending part').first().json;\n\nif (!item.binary?.data) {\n  throw new Error(\n    'PDF im Binary-Feld \"data\" nicht gefunden'\n  );\n}\n\nconst sourceBuffer =\n  await this.helpers.getBinaryDataBuffer(\n    0,\n    'data'\n  );\n\nconst { PDFDocument } = require('pdf-lib');\n\nconst sourcePdf =\n  await PDFDocument.load(sourceBuffer);\n\nconst totalPages =\n  sourcePdf.getPageCount();\n\nconst pageFrom =\n  Number(part.PageFrom);\n\nconst pageTo =\n  Number(part.PageTo);\n\nif (\n  !Number.isInteger(pageFrom) ||\n  !Number.isInteger(pageTo) ||\n  pageFrom < 1 ||\n  pageTo < pageFrom ||\n  pageTo > totalPages\n) {\n  throw new Error(\n    `Ungültiger Seitenbereich ${pageFrom}-${pageTo}; ` +\n    `PDF enthält ${totalPages} Seiten`\n  );\n}\n\nconst partPages =\n  pageTo - pageFrom + 1;\n\nif (partPages > 50) {\n  throw new Error(\n    `Safety Limit verletzt: ${partPages} Seiten`\n  );\n}\n\nconst targetPdf =\n  await PDFDocument.create();\n\n/*\n * ENTSCHEIDEND:\n * Array von pdf-lib erzeugen lassen.\n *\n * Nicht selbst mit [], Array.from() etc. erzeugen,\n * weil n8n Task Runner und pdf-lib unterschiedliche\n * JavaScript Realms verwenden.\n */\nconst allPageIndices =\n  sourcePdf.getPageIndices();\n\nconst pageIndices =\n  allPageIndices.slice(\n    pageFrom - 1,\n    pageTo\n  );\n\nif (pageIndices.length !== partPages) {\n  throw new Error(\n    `Page-Slice inkonsistent: ` +\n    `${pageIndices.length} statt ${partPages}`\n  );\n}\n\nconst copiedPages =\n  await targetPdf.copyPages(\n    sourcePdf,\n    pageIndices\n  );\n\nfor (const page of copiedPages) {\n  targetPdf.addPage(page);\n}\n\nconst bytes =\n  await targetPdf.save();\n\nconst outputBuffer =\n  Buffer.from(bytes);\n\nconst binaryData =\n  await this.helpers.prepareBinaryData(\n    outputBuffer,\n    `part-${part.PartNumber}-pages-${pageFrom}-${pageTo}.pdf`,\n    'application/pdf'\n  );\n\nreturn [{\n  json: {\n    PartID: part.PartID,\n    QueueID: part.QueueID,\n    TextUUID: part.TextUUID,\n\n    PartNumber: part.PartNumber,\n\n    PageFrom: pageFrom,\n    PageTo: pageTo,\n\n    PartPages: partPages,\n    SourcePages: totalPages,\n\n    FirstPdfIndex:\n      pageIndices[0],\n\n    LastPdfIndex:\n      pageIndices[pageIndices.length - 1],\n\n    SourceBytes:\n      sourceBuffer.length,\n\n    PartBytes:\n      outputBuffer.length\n  },\n\n  binary: {\n    data: binaryData\n  }\n}];"
+        },
+        "position": [
+          -3232,
+          800
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "8e82f110-47ca-43ab-a51b-24f9f86e284a",
+        "name": "MySQL - save extraction part",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $json.DoclingJSON ?? null,\n  $json.DoclingMD ?? null,\n  $json.PaddleJSON ?? null,\n  $json.Extractor,\n  $json.PartID\n] }}"
+          },
+          "query": "UPDATE infofee01_rag.if_extraction_parts\nSET\n    DoclingJSON = $1,\n    DoclingMD = $2,\n    PaddleJSON = $3,\n    Extractor = $4,\n    Status = 'done',\n    LastError = NULL,\n    FinishedAt = NOW()\nWHERE PartID = $5;"
+        },
+        "position": [
+          -80,
+          560
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "id": "ba384265-5167-4e11-9651-1004f77e1f2c",
+        "name": "If dead parts?",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "5e5b00a8-aa26-471b-8021-37cfdb1a64d9",
+                "leftValue": "={{ Number($json.DeadParts ?? 0) > 0 }}",
+                "operator": {
+                  "operation": "true",
+                  "singleValue": true,
+                  "type": "boolean"
+                },
+                "rightValue": ""
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          1056,
+          464
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3
+      },
+      {
+        "id": "3c215150-a8da-479d-a169-835f12a51c73",
+        "name": "If all parts finished?",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "b133988d-3aa0-4a52-baa7-1375077e9b56",
+                "leftValue": "={{   Number($json.PendingParts ?? 0) === 0   &&   Number($json.ProcessingParts ?? 0) === 0   &&   Number($json.FailedParts ?? 0) === 0 }}",
+                "operator": {
+                  "operation": "true",
+                  "singleValue": true,
+                  "type": "boolean"
+                },
+                "rightValue": ""
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          848,
+          560
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "90e395ea-24b7-459e-8ce5-7ef311b41394",
+        "name": "MySQL - check part states",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.QueueID\n] }}"
+          },
+          "query": "SELECT\n    COUNT(*) AS TotalParts,\n    SUM(Status = 'done') AS DoneParts,\n    SUM(Status = 'pending') AS PendingParts,\n    SUM(Status = 'processing') AS ProcessingParts,\n    SUM(Status = 'failed') AS FailedParts,\n    SUM(Status = 'dead_letter') AS DeadParts\nFROM infofee01_rag.if_extraction_parts\nWHERE QueueID = $1;"
+        },
+        "position": [
+          640,
+          560
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "395c7b9c-3c09-4e90-8af0-4bfd63e5eace",
+        "name": "MySQL - mark parent dead-letter",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.QueueID\n] }}"
+          },
+          "query": "UPDATE infofee01_rag.if_extraction_queue\nSET\n    Status = 'dead_letter',\n    FinishedAt = NOW(),\n    LastError = CONCAT(\n        'EXTRACTION_PART_DEAD_LETTER: ',\n        (\n            SELECT COUNT(*)\n            FROM infofee01_rag.if_extraction_parts\n            WHERE QueueID = $1\n              AND Status = 'dead_letter'\n        ),\n        ' part(s) failed permanently'\n    )\nWHERE QueueID = $1;"
+        },
+        "position": [
+          1280,
+          368
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "74f50916-e4ea-453b-8782-67fd9f35903e",
+        "name": "MySQL - mark parent done",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.QueueID\n] }}"
+          },
+          "query": "UPDATE infofee01_rag.if_extraction_queue\nSET\n    Status = 'done',\n    FinishedAt = NOW(),\n    LastError = NULL\nWHERE QueueID = $1\n  AND Status = 'parts_pending';"
+        },
+        "position": [
+          1280,
+          560
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "c515d35c-59b9-4094-9171-9330b79549a9",
+        "name": "MySQL - mark part failed",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  (\n    $json.error?.message\n    ?? $json.message\n    ?? $json.error\n    ?? 'Unknown extraction error'\n  ).toString(),\n  $('MySQL - claim one pending part').first().json.PartID\n] }}"
+          },
+          "query": "UPDATE infofee01_rag.if_extraction_parts\nSET\n    Status = 'failed',\n    LastError = $1,\n    FinishedAt = NOW()\nWHERE PartID = $2\n  AND Status = 'processing';"
+        },
+        "position": [
+          -320,
+          784
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "122616f4-6a88-49c0-9018-190e3857398f",
+        "name": "MySQL - read part attempts",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.PartID\n] }}"
+          },
+          "query": "SELECT\n    PartID,\n    QueueID,\n    Attempts,\n    LastError\nFROM infofee01_rag.if_extraction_parts\nWHERE PartID = $1;"
+        },
+        "position": [
+          -80,
+          784
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "01a5cd7f-80a9-4bfa-92ac-1e305cad38b0",
+        "name": "MySQL - requeue part",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.PartID\n] }}"
+          },
+          "query": "UPDATE infofee01_rag.if_extraction_parts\nSET\n    Status = 'pending',\n    StartedAt = NULL,\n    FinishedAt = NULL,\n    LastError = CONCAT(\n        'RETRY: ',\n        IFNULL(LastError, 'unknown error')\n    )\nWHERE PartID = $1\n  AND Status = 'failed';"
+        },
+        "position": [
+          400,
+          880
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "5bc34da4-c18f-40fb-a5f1-57483fc9c70c",
+        "name": "MySQL - mark part dead-letter",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.PartID\n] }}"
+          },
+          "query": "UPDATE infofee01_rag.if_extraction_parts\nSET\n    Status = 'dead_letter',\n    FinishedAt = NOW(),\n    LastError = CONCAT(\n        IFNULL(LastError, 'unknown error'),\n        ' | DEAD_LETTER: exceeded 3 attempts'\n    )\nWHERE PartID = $1\n  AND Status = 'failed';"
+        },
+        "position": [
+          400,
+          688
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "ad567d87-6588-4e55-8ee9-21387153f1ba",
+        "name": "MySQL - mark text failed",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.TextUUID\n] }}"
+          },
+          "query": "UPDATE infofee01_rag.if_texts\nSET\n    TextStatus = 'failed',\n    TextFailedReason = 'EXTRACTION_PART_DEAD_LETTER'\nWHERE TextUUIDBin = UUID_TO_BIN_MDB($1);"
+        },
+        "position": [
+          1472,
+          368
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "id": "efc9175e-c023-45cf-b51e-e1295442b69a",
+        "name": "Sticky Note",
+        "parameters": {
+          "content": "## Extractor",
+          "height": 1296,
+          "width": 6640
+        },
+        "position": [
+          -4512,
+          -32
+        ],
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "bd0e53e0-ffd1-47b5-86c1-ce09f8cf66fd",
+        "name": "MySQL - recover stale parts",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "UPDATE infofee01_rag.if_extraction_parts\nSET\n    Status = 'pending',\n    Attempts = GREATEST(Attempts - 1, 0),\n\n    LastError = CONCAT(\n        IFNULL(LastError, ''),\n        CASE\n            WHEN LastError IS NULL OR LastError = ''\n                THEN ''\n            ELSE ' | '\n        END,\n        'STALE_PROCESSING_RECOVERY: worker did not finish'\n    ),\n\n    StartedAt = NULL,\n    FinishedAt = NULL\n\nWHERE Status = 'processing'\n  AND StartedAt < NOW() - INTERVAL 30 MINUTE;"
+        },
+        "position": [
+          -4224,
+          976
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "f52200f7-4ee9-4d5a-90f8-2aebff7bd3ce",
+        "name": "MySQL - enqueue chunk job",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.QueueID,\n  $('MySQL - claim one pending part').first().json.TextUUID\n] }}"
+          },
+          "query": "INSERT INTO infofee01_rag.if_chunk_queue\n(\n    QueueID,\n    TextUUIDBin,\n    Status,\n    Attempts\n)\nVALUES\n(\n    $1,\n    UUID_TO_BIN_MDB($2),\n    'pending',\n    0\n)\nON DUPLICATE KEY UPDATE\n    QueueID = VALUES(QueueID),\n    Status = CASE\n        WHEN Status IN ('done', 'processing')\n            THEN Status\n        ELSE 'pending'\n    END;"
+        },
+        "position": [
+          1472,
+          560
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      }
+    ],
+    "updatedAt": "2026-08-14T07:56:59.000Z",
+    "versionId": "3ab065a6-941f-4d6a-8cfd-43a38d5434aa",
+    "workflowId": "1SLIzml9Qf3I6UDO"
+  },
+  "activeVersionId": "3ab065a6-941f-4d6a-8cfd-43a38d5434aa",
+  "connections": {
+    "Code - collapse parts": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark parts pending",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Code - create extraction parts": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - create extraction part",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Code - extract json": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - save extraction part",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Code - extract json & markdown": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - save extraction part",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Code - get PDF page count": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code - create extraction parts",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Code - slice PDF": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "HTTP - call docling",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP - call docling": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "requiresForcedOcr?",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark part failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP - call docling with forced OCR": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "requiresVLM?",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark part failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP - call paddle-vl": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code - extract json",
+            "type": "main"
+          },
+          {
+            "index": 0,
+            "node": "HTTP - sleep paddle-vl",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "HTTP - sleep paddle-vl",
+            "type": "main"
+          },
+          {
+            "index": 0,
+            "node": "MySQL - mark part failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP - fetch PDF": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code - get PDF page count",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark part failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP - fetch part source PDF": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code - slice PDF",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark part failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP - paddle-vl sleeping?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Sleepting?",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark part failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP - wake up paddle-vl": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Wait",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark part failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If all parts finished?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If dead parts?",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If attempts >= 3 (give up)": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark part dead-letter",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - requeue part",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If dead parts?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark parent dead-letter",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark parent done",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If part found": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark part processing",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If row found": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark processing",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Prepare for VLM",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - check part states": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If all parts finished?",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - claim one pending part": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If part found",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - claim one pending row": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If row found",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - create extraction part": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code - collapse parts",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - enqueue chunk job": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark text pending",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - mark parent dead-letter": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark text failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - mark parent done": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - enqueue chunk job",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - mark part dead-letter": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - check part states",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - mark part failed": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - read part attempts",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - mark part processing": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "HTTP - fetch part source PDF",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - mark processing": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "HTTP - fetch PDF",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - mark text pending": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - log done",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - read part attempts": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If attempts >= 3 (give up)",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - recover stale parts": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - claim one pending part",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - requeue part": {
+      "main": [
+        []
+      ]
+    },
+    "MySQL - save extraction part": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - check part states",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "OCR Run?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "HTTP - call docling with forced OCR",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Code - extract json & markdown",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Prepare for VLM": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "HTTP - call paddle-vl",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger Extractor": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - claim one pending row",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger Part Worker": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - recover stale parts",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Sleepting?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "HTTP - wake up paddle-vl",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Merge",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "VLM Run?": {
+      "main": [
+        [
+          {
+            "index": 1,
+            "node": "Merge",
+            "type": "main"
+          },
+          {
+            "index": 0,
+            "node": "HTTP - paddle-vl sleeping?",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Code - extract json & markdown",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Merge",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "requiresForcedOcr?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "OCR Run?",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "requiresVLM?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "VLM Run?",
+            "type": "main"
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-08-13T07:32:57.823Z",
+  "id": "1SLIzml9Qf3I6UDO",
+  "isArchived": false,
+  "name": "RAG PDF Extractor",
+  "nodes": [
+    {
+      "id": "c63e497a-e75f-41ec-b3a0-e792a0b302e9",
+      "name": "If attempts >= 3 (give up)",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "if-attempts-over-limit",
+              "leftValue": "={{ Number($json.Attempts ?? 0) }}",
+              "operator": {
+                "operation": "gte",
+                "type": "number"
+              },
+              "rightValue": 3
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        160,
+        784
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "24486799-de24-4255-aa4e-b827e10cfeaf",
+      "name": "MySQL - log done",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.TextUUID,\n  `Extraction completed successfully: ${\n    $('MySQL - check part states').first().json.DoneParts\n  } part(s)`\n] }}"
+        },
+        "query": "INSERT INTO infofee01_rag.if_extraction_log\n(\n    TextUUIDBin,\n    Stage,\n    Status,\n    Message,\n    LoggedAt\n)\nVALUES\n(\n    UUID_TO_BIN_MDB($1),\n    'extract',\n    'done',\n    $2,\n    NOW()\n);"
+      },
+      "position": [
+        1856,
+        560
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "137e6a11-cbb8-4893-a09e-2da368e34384",
+      "name": "MySQL - mark text pending",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.TextUUID\n] }}"
+        },
+        "query": "UPDATE infofee01_rag.if_texts\nSET\n    TextStatus = 'pending',\n    TextFailedReason = NULL\nWHERE TextUUIDBin = UUID_TO_BIN_MDB($1);"
+      },
+      "position": [
+        1664,
+        560
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "alwaysOutputData": true,
+      "id": "46a7c376-2a9a-4cbd-b16b-4931496a129d",
+      "name": "HTTP - call docling",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "bodyParameters": {
+          "parameters": [
+            {
+              "inputDataFieldName": "data",
+              "name": "files",
+              "parameterType": "formBinaryData"
+            },
+            {
+              "name": "image_export_mode",
+              "value": "placeholder"
+            },
+            {
+              "name": "do_ocr",
+              "value": "true"
+            },
+            {
+              "name": "pdf_backend",
+              "value": "dlparse_v4"
+            },
+            {
+              "name": "table_mode",
+              "value": "accurate"
+            },
+            {
+              "name": "do_table_structure",
+              "value": "true"
+            },
+            {
+              "name": "include_images",
+              "value": "false"
+            },
+            {
+              "name": "to_formats",
+              "value": "md"
+            },
+            {
+              "name": "to_formats",
+              "value": "json"
+            },
+            {
+              "name": "pipeline",
+              "value": "standard"
+            }
+          ]
+        },
+        "contentType": "multipart-form-data",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "method": "POST",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 300000
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "url": "http://10.4.190.16:5001/v1/convert/file"
+      },
+      "position": [
+        -3008,
+        800
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "82be4c21-feea-4680-9de0-020e1deefedb",
+      "name": "HTTP - fetch PDF",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/pdf"
+            }
+          ]
+        },
+        "options": {
+          "allowUnauthorizedCerts": true,
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          },
+          "timeout": 60000
+        },
+        "sendHeaders": true,
+        "url": "={{ $('MySQL - claim one pending row').item.json.Filepath }}"
+      },
+      "position": [
+        -2480,
+        -624
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "f5be2581-7c52-4ba1-a7af-85bb2a896260",
+      "name": "MySQL - mark processing",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "UPDATE infofee01_rag.if_extraction_queue\nSET\n    Status = 'processing',\n    StartedAt = NOW(),\n    FinishedAt = NULL,\n    Attempts = Attempts + 1,\n    LastError = NULL\n  \nWHERE QueueID =\n    {{ $('MySQL - claim one pending row').first().json.QueueID }};"
+      },
+      "position": [
+        -2656,
+        -624
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "id": "e701c79f-dc76-4b45-8be4-13fd3df20790",
+      "name": "If row found",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "if-no-row",
+              "leftValue": "={{ $('MySQL - claim one pending row').item?.json?.QueueID }}",
+              "operator": {
+                "operation": "exists",
+                "singleValue": true,
+                "type": "number"
+              },
+              "rightValue": ""
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        -2880,
+        -528
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "d41ab615-1f86-4c0b-ab2c-2d627251fe5d",
+      "name": "MySQL - claim one pending row",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "SELECT QueueID, BIN_TO_UUID_MDB(TextUUIDBin) AS TextUUID, Filepath, Attempts\n\nFROM infofee01_rag.if_extraction_queue\n\nWHERE Status = 'pending' \n  AND (StartedAt IS NULL OR StartedAt < (NOW() - INTERVAL 30 MINUTE)) \n\nORDER BY CreatedAt ASC \n\nLIMIT 1 FOR UPDATE SKIP LOCKED;"
+      },
+      "position": [
+        -3056,
+        -528
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "id": "258a1461-027b-4f8e-b91b-c8e5ae6aafea",
+      "name": "Schedule Trigger Extractor",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "expression": "*/30 * * * * *",
+              "field": "cronExpression"
+            }
+          ]
+        }
+      },
+      "position": [
+        -3232,
+        -528
+      ],
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2
+    },
+    {
+      "alwaysOutputData": true,
+      "id": "92682636-f676-4641-b7b0-d84d94cecdcd",
+      "name": "HTTP - call docling with forced OCR",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "bodyParameters": {
+          "parameters": [
+            {
+              "inputDataFieldName": "data",
+              "name": "files",
+              "parameterType": "formBinaryData"
+            },
+            {
+              "name": "image_export_mode",
+              "value": "placeholder"
+            },
+            {
+              "name": "do_ocr",
+              "value": "true"
+            },
+            {
+              "name": "pdf_backend",
+              "value": "dlparse_v4"
+            },
+            {
+              "name": "table_mode",
+              "value": "accurate"
+            },
+            {
+              "name": "do_table_structure",
+              "value": "true"
+            },
+            {
+              "name": "include_images",
+              "value": "false"
+            },
+            {
+              "name": "to_formats",
+              "value": "md"
+            },
+            {
+              "name": "to_formats",
+              "value": "json"
+            },
+            {
+              "name": "pipeline",
+              "value": "standard"
+            },
+            {
+              "name": "force_ocr",
+              "value": "true"
+            },
+            {
+              "name": "ocr_preset",
+              "value": "rapidocr"
+            }
+          ]
+        },
+        "contentType": "multipart-form-data",
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "method": "POST",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 300000
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "url": "http://10.4.190.16:5001/v1/convert/file"
+      },
+      "position": [
+        -2432,
+        528
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "edfb903e-4502-4b4f-8a1e-c900a9056414",
+      "name": "requiresForcedOcr?",
+      "parameters": {
+        "jsCode": "/**\n * n8n Code-Node: requiresForcedOcr?\n *\n * Aufgaben:\n * 1. Qualität der Docling-Textextraktion bewerten\n * 2. requiresForcedOcr setzen\n * 3. Original-PDF aus \"HTTP - fetch PDF\" wieder anhängen\n */\n\nconst CONFIG = {\n  minimumCharacters: 80,\n  minimumAlphanumericRatio: 0.52,\n  maximumSuspiciousRatio: 0.10,\n  maximumSymbolTokenRatio: 0.25,\n  minimumWordCoverage: 0.30,\n  fallbackScoreThreshold: 3,\n};\n\nfunction firstNonEmpty(values) {\n  for (const value of values) {\n    if (\n      typeof value === 'string' &&\n      value.trim() !== ''\n    ) {\n      return value;\n    }\n  }\n\n  return '';\n}\n\nfunction decodeBasicHtmlEntities(text) {\n  return text\n    .replace(/&amp;/gi, '&')\n    .replace(/&lt;/gi, '<')\n    .replace(/&gt;/gi, '>')\n    .replace(/&quot;/gi, '\"')\n    .replace(/&#39;/gi, \"'\")\n    .replace(/&nbsp;/gi, ' ');\n}\n\nfunction removeMarkdownStructure(text) {\n  return text\n    // Bilder und Kommentare entfernen\n    .replace(/<!--[\\s\\S]*?-->/g, ' ')\n\n    // Markdown-Tabellentrennlinien entfernen\n    .replace(\n      /^\\s*\\|?(?:\\s*:?-{3,}:?\\s*\\|)+\\s*$/gm,\n      ' ',\n    )\n\n    // Markdown-Strukturzeichen entfernen\n    .replace(/[|#*_`~]/g, ' ')\n\n    // Leerzeichen vereinheitlichen\n    .replace(/\\s+/g, ' ')\n    .trim();\n}\n\nfunction round(value) {\n  return Math.round(value * 1000) / 1000;\n}\n\nfunction assessTextQuality(json) {\n  const rawText = firstNonEmpty([\n    json?.document?.md_content,\n    json?.document?.text_content,\n    json?.md_content,\n    json?.text_content,\n    json?.text,\n  ]);\n\n  if (!rawText) {\n    return {\n      requiresForcedOcr: true,\n      score: 10,\n      reasons: ['no_text_returned'],\n      metrics: {\n        rawCharacters: 0,\n        evaluatedCharacters: 0,\n      },\n    };\n  }\n\n  const decodedText =\n    decodeBasicHtmlEntities(rawText);\n\n  const evaluatedText =\n    removeMarkdownStructure(decodedText);\n\n  const compactText =\n    evaluatedText.replace(/\\s/g, '');\n\n  const characterCount = compactText.length;\n\n  if (characterCount === 0) {\n    return {\n      requiresForcedOcr: true,\n      score: 10,\n      reasons: ['no_evaluable_text'],\n      metrics: {\n        rawCharacters: rawText.length,\n        evaluatedCharacters: 0,\n      },\n    };\n  }\n\n  const alphanumericCount =\n    (\n      compactText.match(\n        /[\\p{L}\\p{N}]/gu,\n      ) || []\n    ).length;\n\n  const letterCount =\n    (\n      compactText.match(\n        /\\p{L}/gu,\n      ) || []\n    ).length;\n\n  const suspiciousCount =\n    (\n      compactText.match(\n        /[!$%&+\\/<=>?@\\\\^{}]/g,\n      ) || []\n    ).length;\n\n  const replacementCharacterCount =\n    (\n      compactText.match(\n        /[\\uFFFD\\u0000]/g,\n      ) || []\n    ).length;\n\n  const tokens = evaluatedText\n    .split(/\\s+/)\n    .filter(Boolean);\n\n  const symbolTokens = tokens.filter(\n    token =>\n      /^[^\\p{L}\\p{N}]+$/u.test(token),\n  );\n\n  const words =\n    evaluatedText.match(/\\p{L}{2,}/gu) || [];\n\n  const wordCharacterCount =\n    words.reduce(\n      (sum, word) => sum + word.length,\n      0,\n    );\n\n  const alphanumericRatio =\n    alphanumericCount / characterCount;\n\n  const letterRatio =\n    letterCount / characterCount;\n\n  const suspiciousRatio =\n    suspiciousCount / characterCount;\n\n  const replacementRatio =\n    replacementCharacterCount /\n    characterCount;\n\n  const symbolTokenRatio =\n    tokens.length > 0\n      ? symbolTokens.length / tokens.length\n      : 1;\n\n  const wordCoverage =\n    wordCharacterCount / characterCount;\n\n  let score = 0;\n  const reasons = [];\n\n  if (\n    characterCount <\n    CONFIG.minimumCharacters\n  ) {\n    score += 4;\n    reasons.push('too_little_text');\n  }\n\n  if (\n    alphanumericRatio <\n    CONFIG.minimumAlphanumericRatio\n  ) {\n    score += 2;\n    reasons.push(\n      'low_alphanumeric_ratio',\n    );\n  }\n\n  if (\n    suspiciousRatio >\n    CONFIG.maximumSuspiciousRatio\n  ) {\n    score += 2;\n    reasons.push(\n      'many_suspicious_characters',\n    );\n  }\n\n  if (\n    symbolTokenRatio >\n    CONFIG.maximumSymbolTokenRatio\n  ) {\n    score += 1;\n    reasons.push('many_symbol_tokens');\n  }\n\n  if (\n    wordCoverage <\n    CONFIG.minimumWordCoverage\n  ) {\n    score += 1;\n    reasons.push('low_word_coverage');\n  }\n\n  if (replacementCharacterCount > 0) {\n    score +=\n      replacementRatio > 0.01 ? 4 : 2;\n\n    reasons.push(\n      'invalid_or_replacement_characters',\n    );\n  }\n\n  if (\n    letterRatio < 0.35 &&\n    suspiciousRatio > 0.06\n  ) {\n    score += 2;\n    reasons.push(\n      'probable_broken_font_mapping',\n    );\n  }\n\n  return {\n    requiresForcedOcr:\n      score >=\n      CONFIG.fallbackScoreThreshold,\n\n    score,\n    reasons,\n\n    metrics: {\n      rawCharacters: rawText.length,\n      evaluatedCharacters:\n        characterCount,\n      tokens: tokens.length,\n      alphanumericRatio:\n        round(alphanumericRatio),\n      letterRatio:\n        round(letterRatio),\n      suspiciousRatio:\n        round(suspiciousRatio),\n      symbolTokenRatio:\n        round(symbolTokenRatio),\n      wordCoverage:\n        round(wordCoverage),\n      replacementRatio:\n        round(replacementRatio),\n    },\n  };\n}\n\n/*\n * Verarbeitung der n8n-Items\n */\n\nconst items = $input.all();\n\n/*\n * WICHTIG:\n * Der Name muss exakt dem Node entsprechen,\n * der die PDF herunterlädt.\n */\nconst pdfItems =\n  $('Code - slice PDF').all();\n\nreturn items.map((item, index) => {\n  const assessment =\n    assessTextQuality(item.json);\n\n  /*\n   * Original-PDF auswählen.\n   * Dein Workflow verarbeitet normalerweise\n   * nur ein Dokument, deshalb ist Index 0\n   * ein zulässiger Fallback.\n   */\n  const pdfItem =\n    pdfItems[index] ?? pdfItems[0];\n\n  /*\n   * Wenn die Binary noch am aktuellen Item\n   * hängt, diese verwenden. Andernfalls die\n   * Binary aus \"HTTP - fetch PDF\" übernehmen.\n   */\n  const binary =\n    item.binary?.data\n      ? item.binary\n      : pdfItem?.binary;\n\n  if (!binary?.data) {\n    throw new Error(\n      `Item ${index}: Die Original-PDF wurde ` +\n      `im Binary-Feld \"data\" nicht gefunden. ` +\n      `Prüfe den Output des Nodes ` +\n      `\"HTTP - fetch PDF\".`,\n    );\n  }\n\n  return {\n    json: {\n      ...item.json,\n\n      requiresForcedOcr:\n        assessment.requiresForcedOcr,\n\n      textQuality: assessment,\n    },\n\n    /*\n     * Hier wird die PDF tatsächlich\n     * an den nächsten Node weitergegeben.\n     */\n    binary,\n\n    pairedItem: {\n      item: index,\n    },\n  };\n});"
+      },
+      "position": [
+        -2784,
+        672
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "6dca62a4-f389-444a-a73d-4f5e7fe7686f",
+      "name": "OCR Run?",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "7f6b0caf-ca9d-430d-94f3-3b0567f2036a",
+              "leftValue": "={{ $json.requiresForcedOcr }}",
+              "operator": {
+                "operation": "true",
+                "singleValue": true,
+                "type": "boolean"
+              },
+              "rightValue": false
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        -2624,
+        672
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3
+    },
+    {
+      "id": "b2ae5cff-f4f6-4012-9087-ae6dc1d2cd30",
+      "name": "requiresVLM?",
+      "parameters": {
+        "jsCode": "/**\n * n8n Code-Node: requiresVLM?\n *\n * Dieser Node wird nach der Forced-OCR-Ausführung aufgerufen.\n *\n * Ergebnis:\n *   requiresVLM: true\n *     OCR-Ergebnis ist grundsätzlich unbrauchbar.\n *     Aktuell: Dokument als failed markieren.\n *     Später: PaddleOCR-VL aufrufen.\n *\n *   requiresVLM: false\n *     OCR-Ergebnis kann weiterverarbeitet werden.\n */\n\nconst CONFIG = {\n  minimumCharacters: 50,\n  minimumAlphanumericRatio: 0.48,\n  maximumSuspiciousRatio: 0.12,\n  maximumSymbolTokenRatio: 0.30,\n  minimumWordCoverage: 0.22,\n\n  // Bewusst höher als beim ersten OCR-Gate:\n  // VLM soll nur bei klar unbrauchbarer OCR ausgelöst werden.\n  vlmScoreThreshold: 5,\n};\n\nfunction firstNonEmpty(values) {\n  for (const value of values) {\n    if (\n      typeof value === 'string' &&\n      value.trim() !== ''\n    ) {\n      return value;\n    }\n  }\n\n  return '';\n}\n\nfunction decodeBasicHtmlEntities(text) {\n  return text\n    .replace(/&amp;/gi, '&')\n    .replace(/&lt;/gi, '<')\n    .replace(/&gt;/gi, '>')\n    .replace(/&quot;/gi, '\"')\n    .replace(/&#39;/gi, \"'\")\n    .replace(/&nbsp;/gi, ' ');\n}\n\nfunction removeMarkdownStructure(text) {\n  return text\n    // HTML-Kommentare und Bildplatzhalter entfernen\n    .replace(/<!--[\\s\\S]*?-->/g, ' ')\n\n    // Markdown-Tabellentrennzeilen entfernen\n    .replace(\n      /^\\s*\\|?(?:\\s*:?-{3,}:?\\s*\\|)+\\s*$/gm,\n      ' ',\n    )\n\n    // Markdown-Strukturzeichen entfernen\n    .replace(/[|#*_`~]/g, ' ')\n\n    // Leerzeichen vereinheitlichen\n    .replace(/\\s+/g, ' ')\n    .trim();\n}\n\nfunction round(value) {\n  return Math.round(value * 1000) / 1000;\n}\n\nfunction assessVlmRequirement(json) {\n  const rawText = firstNonEmpty([\n    json?.document?.md_content,\n    json?.document?.text_content,\n    json?.md_content,\n    json?.text_content,\n    json?.text,\n  ]);\n\n  /*\n   * Forced OCR hat gar keinen Text geliefert.\n   */\n  if (!rawText) {\n    return {\n      requiresVLM: true,\n      score: 10,\n      status: 'failed_requires_vlm',\n      reasons: ['forced_ocr_returned_no_text'],\n      metrics: {\n        rawCharacters: 0,\n        evaluatedCharacters: 0,\n      },\n    };\n  }\n\n  const decodedText =\n    decodeBasicHtmlEntities(rawText);\n\n  const evaluatedText =\n    removeMarkdownStructure(decodedText);\n\n  const compactText =\n    evaluatedText.replace(/\\s/g, '');\n\n  const characterCount = compactText.length;\n\n  if (characterCount === 0) {\n    return {\n      requiresVLM: true,\n      score: 10,\n      status: 'failed_requires_vlm',\n      reasons: ['forced_ocr_returned_no_evaluable_text'],\n      metrics: {\n        rawCharacters: rawText.length,\n        evaluatedCharacters: 0,\n      },\n    };\n  }\n\n  const alphanumericCount =\n    (\n      compactText.match(\n        /[\\p{L}\\p{N}]/gu,\n      ) || []\n    ).length;\n\n  const letterCount =\n    (\n      compactText.match(\n        /\\p{L}/gu,\n      ) || []\n    ).length;\n\n  const suspiciousCount =\n    (\n      compactText.match(\n        /[!$%&+\\/<=>?@\\\\^{}]/g,\n      ) || []\n    ).length;\n\n  const replacementCharacterCount =\n    (\n      compactText.match(\n        /[\\uFFFD\\u0000]/g,\n      ) || []\n    ).length;\n\n  const tokens = evaluatedText\n    .split(/\\s+/)\n    .filter(Boolean);\n\n  const symbolTokens = tokens.filter(\n    token =>\n      /^[^\\p{L}\\p{N}]+$/u.test(token),\n  );\n\n  const words =\n    evaluatedText.match(/\\p{L}{2,}/gu) || [];\n\n  const wordCharacterCount =\n    words.reduce(\n      (sum, word) => sum + word.length,\n      0,\n    );\n\n  const alphanumericRatio =\n    alphanumericCount / characterCount;\n\n  const letterRatio =\n    letterCount / characterCount;\n\n  const suspiciousRatio =\n    suspiciousCount / characterCount;\n\n  const symbolTokenRatio =\n    tokens.length > 0\n      ? symbolTokens.length / tokens.length\n      : 1;\n\n  const wordCoverage =\n    wordCharacterCount / characterCount;\n\n  const replacementRatio =\n    replacementCharacterCount /\n    characterCount;\n\n  let score = 0;\n  const reasons = [];\n\n  if (\n    characterCount <\n    CONFIG.minimumCharacters\n  ) {\n    score += 5;\n    reasons.push(\n      'forced_ocr_returned_too_little_text',\n    );\n  }\n\n  if (\n    alphanumericRatio <\n    CONFIG.minimumAlphanumericRatio\n  ) {\n    score += 3;\n    reasons.push(\n      'forced_ocr_low_alphanumeric_ratio',\n    );\n  }\n\n  if (\n    suspiciousRatio >\n    CONFIG.maximumSuspiciousRatio\n  ) {\n    score += 3;\n    reasons.push(\n      'forced_ocr_many_suspicious_characters',\n    );\n  }\n\n  if (\n    symbolTokenRatio >\n    CONFIG.maximumSymbolTokenRatio\n  ) {\n    score += 2;\n    reasons.push(\n      'forced_ocr_many_symbol_tokens',\n    );\n  }\n\n  if (\n    wordCoverage <\n    CONFIG.minimumWordCoverage\n  ) {\n    score += 2;\n    reasons.push(\n      'forced_ocr_low_word_coverage',\n    );\n  }\n\n  if (replacementCharacterCount > 0) {\n    score +=\n      replacementRatio > 0.01 ? 5 : 3;\n\n    reasons.push(\n      'forced_ocr_contains_invalid_characters',\n    );\n  }\n\n  /*\n   * Typischer Zeichensalat:\n   * wenige Buchstaben und gleichzeitig\n   * ungewöhnlich viele Sonderzeichen.\n   */\n  if (\n    letterRatio < 0.30 &&\n    suspiciousRatio > 0.08\n  ) {\n    score += 4;\n    reasons.push(\n      'forced_ocr_probable_character_garbage',\n    );\n  }\n\n  const requiresVLM =\n    score >= CONFIG.vlmScoreThreshold;\n\n  return {\n    requiresVLM,\n    score,\n\n    status: requiresVLM\n      ? 'failed_requires_vlm'\n      : 'ocr_accepted',\n\n    reasons,\n\n    metrics: {\n      rawCharacters: rawText.length,\n      evaluatedCharacters: characterCount,\n      tokens: tokens.length,\n      alphanumericRatio:\n        round(alphanumericRatio),\n      letterRatio:\n        round(letterRatio),\n      suspiciousRatio:\n        round(suspiciousRatio),\n      symbolTokenRatio:\n        round(symbolTokenRatio),\n      wordCoverage:\n        round(wordCoverage),\n      replacementRatio:\n        round(replacementRatio),\n    },\n  };\n}\n\n/*\n * Eingehende Docling-OCR-Ergebnisse\n */\nconst items = $input.all();\n\n/*\n * Original-PDF erneut aus dem Download-Node holen.\n * Dadurch steht sie später auch für PaddleOCR-VL bereit.\n */\nconst pdfItems =\n  $('Code - slice PDF').all();\n\nreturn items.map((item, index) => {\n  const assessment =\n    assessVlmRequirement(item.json);\n\n  const pdfItem =\n    pdfItems[index] ?? pdfItems[0];\n\n  const binary =\n    item.binary?.data\n      ? item.binary\n      : pdfItem?.binary;\n\n  if (!binary?.data) {\n    throw new Error(\n      `Item ${index}: Original-PDF im Binary-Feld ` +\n      `\"data\" nicht gefunden.`,\n    );\n  }\n\n  return {\n    json: {\n      ...item.json,\n\n      requiresVLM:\n        assessment.requiresVLM,\n\n      vlmQualityAssessment:\n        assessment,\n\n      processingStatus:\n        assessment.status,\n\n      fallbackStage:\n        assessment.requiresVLM\n          ? 'paddleocr_vl_pending'\n          : null,\n    },\n\n    binary,\n\n    pairedItem: {\n      item: index,\n    },\n  };\n});"
+      },
+      "position": [
+        -2256,
+        448
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "32e778a4-820b-4feb-b1e7-14a27979e3e4",
+      "name": "Code - extract json & markdown",
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\n\nconst part =\n  $('MySQL - claim one pending part').first().json;\n\nconst markdown =\n  response?.document?.md_content\n  ?? response?.md_content\n  ?? response?.md\n  ?? '';\n\nconst json =\n  response?.document?.json_content\n  ?? {};\n\nconst forcedOcrUsed =\n  $('HTTP - call docling with forced OCR').isExecuted;\n\nreturn [{\n  json: {\n    PartID: part.PartID,\n    QueueID: part.QueueID,\n    TextUUID: part.TextUUID,\n\n    PartNumber: part.PartNumber,\n    PageFrom: part.PageFrom,\n    PageTo: part.PageTo,\n\n    Extractor: forcedOcrUsed\n      ? 'docling_ocr'\n      : 'docling',\n\n    DoclingJSON: JSON.stringify(json),\n    DoclingMD: markdown,\n    PaddleJSON: null\n  }\n}];"
+      },
+      "position": [
+        -320,
+        560
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "alwaysOutputData": false,
+      "id": "b17845d8-b2ea-4a0b-a762-8e341ff09ba2",
+      "name": "HTTP - call paddle-vl",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "jsonBody": "={{ {\n  file: $json.PaddleFileBase64,\n  fileType: $json.PaddleFileType,\n\n  useLayoutDetection: true,\n  useOcrForImageBlock: true,\n\n  useDocOrientationClassify: false,\n  useDocUnwarping: false,\n  useChartRecognition: false,\n\n  formatBlockContent: true,\n  returnMarkdownImages: false\n} }}",
+        "method": "POST",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 900000
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "url": "http://10.4.190.16:8021/layout-parsing"
+      },
+      "position": [
+        -672,
+        368
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "837eb2c4-d3ca-417c-9de0-53ab43414698",
+      "name": "Prepare for VLM",
+      "parameters": {
+        "jsCode": "const item = $input.first();\n\nconst binaryProperties = Object.keys(item.binary ?? {});\n\nif (binaryProperties.length === 0) {\n  throw new Error('Keine Binärdatei für PaddleOCR-VL vorhanden');\n}\n\nconst binaryPropertyName = binaryProperties.includes('data')\n  ? 'data'\n  : binaryProperties[0];\n\nconst fileBuffer = await this.helpers.getBinaryDataBuffer(\n  0,\n  binaryPropertyName\n);\n\nif (!fileBuffer?.length) {\n  throw new Error('Die Binärdatei für PaddleOCR-VL ist leer');\n}\n\nreturn [\n  {\n    json: {\n      ...item.json,\n      PaddleFileBase64: fileBuffer.toString('base64'),\n      PaddleFileType: 0,\n    },\n    binary: item.binary,\n  },\n];"
+      },
+      "position": [
+        -848,
+        368
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "14b300e1-4790-4310-a9b1-d3f0760d464a",
+      "name": "Code - extract json",
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\n\nconst part =\n  $('MySQL - claim one pending part').first().json;\n\nif (\n  response?.errorCode !== undefined\n  && Number(response.errorCode) !== 0\n) {\n  throw new Error(\n    `PaddleOCR-VL Fehler ${response.errorCode}: `\n    + `${response.errorMsg || 'Unbekannter Fehler'}`\n  );\n}\n\nconst layoutParsingResults =\n  response?.result?.layoutParsingResults;\n\nif (!Array.isArray(layoutParsingResults)) {\n  throw new Error(\n    'PaddleOCR-VL-Antwort enthält keine layoutParsingResults'\n  );\n}\n\nfunction cleanText(value) {\n  return String(value ?? '')\n    .replace(/<img\\b[^>]*>/gi, '')\n    .replace(/<\\/?div\\b[^>]*>/gi, '')\n    .replace(/\\r\\n?/g, '\\n')\n    .replace(/[ \\t]+\\n/g, '\\n')\n    .replace(/\\n{3,}/g, '\\n\\n')\n    .trim();\n}\n\n/**\n * Erkennt eingebettete Bilder anhand typischer Base64-Signaturen.\n */\nfunction isEmbeddedImage(value) {\n  if (typeof value !== 'string') {\n    return false;\n  }\n\n  const content = value.trim();\n\n  return (\n    /^data:image\\//i.test(content)\n    || /^\\/9j\\//.test(content)       // JPEG\n    || /^iVBORw0KGgo/.test(content)  // PNG\n    || /^R0lGOD/.test(content)       // GIF\n    || /^UklGR/.test(content)        // WebP\n    || /^Qk/.test(content)           // BMP\n  );\n}\n\n/**\n * Diese Feldnamen enthalten typischerweise Bilddaten oder\n * Bildsammlungen. Die Normalisierung entfernt _, - und Großschreibung.\n */\nconst imageFieldNames = new Set([\n  'image',\n  'images',\n  'img',\n  'imgs',\n  'inputimage',\n  'inputimages',\n  'outputimage',\n  'outputimages',\n  'imagebase64',\n  'base64image',\n  'imagebytes',\n  'imageblob',\n  'imagedata',\n  'markdownimages',\n]);\n\nfunction normalizeFieldName(name) {\n  return String(name ?? '')\n    .toLowerCase()\n    .replace(/[^a-z0-9]/g, '');\n}\n\n/**\n * Entfernt Bilder rekursiv, unabhängig davon, an welcher Stelle\n * Paddle sie in layoutParsingResults zurückgibt.\n */\nfunction removeEmbeddedImages(value) {\n  if (Array.isArray(value)) {\n    for (let index = value.length - 1; index >= 0; index--) {\n      if (isEmbeddedImage(value[index])) {\n        value.splice(index, 1);\n      } else {\n        removeEmbeddedImages(value[index]);\n      }\n    }\n\n    return value;\n  }\n\n  if (\n    value === null\n    || typeof value !== 'object'\n  ) {\n    return value;\n  }\n\n  for (const key of Object.keys(value)) {\n    const child = value[key];\n    const normalizedKey = normalizeFieldName(key);\n\n    if (\n      imageFieldNames.has(normalizedKey)\n      || isEmbeddedImage(child)\n    ) {\n      delete value[key];\n      continue;\n    }\n\n    removeEmbeddedImages(child);\n\n    /*\n     * Leere Bildcontainer nach der rekursiven Bereinigung entfernen.\n     */\n    if (\n      imageFieldNames.has(normalizedKey)\n      && (\n        value[key] === null\n        || (\n          typeof value[key] === 'object'\n          && Object.keys(value[key]).length === 0\n        )\n      )\n    ) {\n      delete value[key];\n    }\n  }\n\n  return value;\n}\n\n/**\n * Tiefe JSON-kompatible Kopie erstellen.\n */\nconst cleanedLayoutParsingResults =\n  JSON.parse(JSON.stringify(layoutParsingResults));\n\nfor (const page of cleanedLayoutParsingResults) {\n  /*\n   * Markdown-Text bereinigen.\n   */\n  if (\n    page?.markdown\n    && typeof page.markdown === 'object'\n  ) {\n    page.markdown.text =\n      cleanText(page.markdown.text);\n  } else if (typeof page?.markdown === 'string') {\n    page.markdown = {\n      text: cleanText(page.markdown),\n    };\n  }\n\n  const blocks =\n    page?.prunedResult?.parsing_res_list\n    ?? page?.prunedResult?.parsingResList\n    ?? page?.parsing_res_list\n    ?? page?.parsingResList\n    ?? [];\n\n  if (!Array.isArray(blocks)) {\n    continue;\n  }\n\n  for (const block of blocks) {\n    const contentProperty =\n      Object.prototype.hasOwnProperty.call(\n        block,\n        'block_content'\n      )\n        ? 'block_content'\n        : Object.prototype.hasOwnProperty.call(\n            block,\n            'content'\n          )\n          ? 'content'\n          : Object.prototype.hasOwnProperty.call(\n              block,\n              'text'\n            )\n            ? 'text'\n            : 'block_content';\n\n    const cleanedContent =\n      cleanText(block?.[contentProperty]);\n\n    block[contentProperty] = cleanedContent;\n\n    const currentLabel = String(\n      block?.block_label\n      ?? block?.label\n      ?? ''\n    ).toLowerCase();\n\n    /*\n     * OCR-haltige Bildblöcke für den Chunker als Text kennzeichnen.\n     * Das ursprüngliche Label bleibt erhalten.\n     */\n    if (\n      ['image', 'picture'].includes(currentLabel)\n      && cleanedContent\n    ) {\n      if (block.block_label !== undefined) {\n        block.original_block_label =\n          block.block_label;\n\n        block.block_label = 'text';\n      } else {\n        block.original_label = block.label;\n        block.label = 'text';\n      }\n    }\n  }\n}\n\n/*\n * Jetzt sämtliche eingebetteten Bilder rekursiv entfernen,\n * insbesondere page.inputImage.\n */\nremoveEmbeddedImages(cleanedLayoutParsingResults);\n\nconst paddleText = cleanedLayoutParsingResults\n  .map(page => {\n    const markdownText =\n      page?.markdown?.text;\n\n    if (\n      typeof markdownText === 'string'\n      && markdownText.trim()\n    ) {\n      return markdownText;\n    }\n\n    const blocks =\n      page?.prunedResult?.parsing_res_list\n      ?? page?.prunedResult?.parsingResList\n      ?? page?.parsing_res_list\n      ?? page?.parsingResList\n      ?? [];\n\n    return Array.isArray(blocks)\n      ? blocks\n          .map(block =>\n            block?.block_content\n            ?? block?.content\n            ?? block?.text\n            ?? ''\n          )\n          .filter(Boolean)\n          .join('\\n\\n')\n      : '';\n  })\n  .filter(Boolean)\n  .join('\\n\\n')\n  .trim();\n\nif (!paddleText) {\n  throw new Error(\n    'PaddleOCR-VL hat keinen Text erkannt'\n  );\n}\n\nconst compactPaddleResult = {\n  schemaVersion: 1,\n  layoutParsingResults:\n    cleanedLayoutParsingResults,\n};\n\nconst serializedPaddleResult =\n  JSON.stringify(compactPaddleResult);\n\n/*\n * Sicherheitsprüfung: Es dürfen keine bekannten Bildsignaturen\n * mehr im gespeicherten JSON vorkommen.\n */\nif (\n  /data:image\\//i.test(serializedPaddleResult)\n  || /\\/9j\\//.test(serializedPaddleResult)\n  || /iVBORw0KGgo/.test(serializedPaddleResult)\n  || /R0lGOD/.test(serializedPaddleResult)\n) {\n  throw new Error(\n    'PaddleJSON enthält nach der Bereinigung weiterhin Bilddaten'\n  );\n}\n\nreturn [{\n  json: {\n    PartID: part.PartID,\n    QueueID: part.QueueID,\n    TextUUID: part.TextUUID,\n\n    PartNumber: part.PartNumber,\n    PageFrom: part.PageFrom,\n    PageTo: part.PageTo,\n\n    Extractor: 'paddle_vl',\n\n    DoclingJSON: null,\n    DoclingMD: null,\n    PaddleJSON: serializedPaddleResult\n  }\n}];"
+      },
+      "position": [
+        -320,
+        352
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "5793d2d0-72b4-4c0e-8ed0-e7cfb0a3e163",
+      "name": "VLM Run?",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "bb238b34-4e77-4f27-810b-eea067571a4d",
+              "leftValue": "={{ $json.vlmQualityAssessment.requiresVLM }}",
+              "operator": {
+                "operation": "true",
+                "singleValue": true,
+                "type": "boolean"
+              },
+              "rightValue": false
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        -2096,
+        448
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3
+    },
+    {
+      "id": "df51f19e-ce15-43d8-87d1-979f81d62183",
+      "name": "Sleepting?",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "b3660438-9876-4963-9895-b8ba06966265",
+              "leftValue": "={{ $json.is_sleeping }}",
+              "operator": {
+                "operation": "true",
+                "singleValue": true,
+                "type": "boolean"
+              },
+              "rightValue": false
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        -1680,
+        208
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3
+    },
+    {
+      "alwaysOutputData": true,
+      "id": "5bfde664-637c-4251-8519-148736e61f61",
+      "name": "HTTP - paddle-vl sleeping?",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 60000
+        },
+        "sendHeaders": true,
+        "url": "http://paddleocr-vlm-server:8118/is_sleeping"
+      },
+      "position": [
+        -1888,
+        272
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4
+    },
+    {
+      "alwaysOutputData": true,
+      "id": "0694c143-b159-454d-892f-bcda0bc6642e",
+      "name": "HTTP - wake up paddle-vl",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "method": "POST",
+        "options": {
+          "timeout": 180000
+        },
+        "sendHeaders": true,
+        "url": "http://paddleocr-vlm-server:8118/wake_up"
+      },
+      "position": [
+        -1456,
+        128
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4
+    },
+    {
+      "alwaysOutputData": false,
+      "id": "e92cc706-5081-4118-a8c6-5ec35d9d280d",
+      "name": "HTTP - sleep paddle-vl",
+      "onError": "continueRegularOutput",
+      "parameters": {
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "method": "POST",
+        "options": {
+          "timeout": 180000
+        },
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "level",
+              "value": "1"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "sendQuery": true,
+        "url": "http://paddleocr-vlm-server:8118/sleep"
+      },
+      "position": [
+        -448,
+        160
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4
+    },
+    {
+      "id": "ccf72608-0c15-4967-9853-42280a9b4bfc",
+      "name": "Wait",
+      "parameters": {
+        "amount": 20
+      },
+      "position": [
+        -1264,
+        64
+      ],
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "webhookId": "4aef3614-24a1-4471-93bc-a743bafd4c77"
+    },
+    {
+      "id": "7e7518de-a1e3-4295-9c4f-b2c9855c5f86",
+      "name": "Merge",
+      "parameters": {
+        "combineBy": "combineByPosition",
+        "mode": "combine",
+        "options": {
+          "includeUnpaired": true
+        }
+      },
+      "position": [
+        -1008,
+        368
+      ],
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2
+    },
+    {
+      "id": "7604f30e-6710-4e5c-b23b-ab87020d2241",
+      "name": "Code - get PDF page count",
+      "parameters": {
+        "jsCode": "const item = $input.first();\n\nif (!item.binary?.data) {\n  throw new Error('PDF im Binary-Feld \"data\" nicht gefunden');\n}\n\nconst buffer = await this.helpers.getBinaryDataBuffer(\n  0,\n  'data'\n);\n\nconst { PDFDocument } = require('pdf-lib');\n\nconst pdf = await PDFDocument.load(buffer, {\n  ignoreEncryption: false,\n});\n\nconst pages = pdf.getPageCount();\n\nreturn [\n  {\n    json: {\n      pages,\n      fileSizeBytes: buffer.length,\n    },\n    binary: item.binary,\n  },\n];"
+      },
+      "position": [
+        -2272,
+        -720
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "b1f77769-263f-4456-a1bb-110161ad84a9",
+      "name": "Code - create extraction parts",
+      "parameters": {
+        "jsCode": "const source =\n  $('MySQL - claim one pending row').first().json;\n\nconst input = $input.first();\nconst totalPages = Number(input.json.pages);\n\nconst MAX_PAGES_PER_PART = 50;\n\nif (!Number.isInteger(totalPages) || totalPages < 1) {\n  throw new Error(\n    `Ungültige PDF-Seitenzahl: ${input.json.pages}`\n  );\n}\n\nconst totalParts =\n  Math.ceil(totalPages / MAX_PAGES_PER_PART);\n\nconst parts = [];\n\nfor (\n  let partNumber = 1;\n  partNumber <= totalParts;\n  partNumber++\n) {\n  const pageFrom =\n    (partNumber - 1) * MAX_PAGES_PER_PART + 1;\n\n  const pageTo =\n    Math.min(\n      partNumber * MAX_PAGES_PER_PART,\n      totalPages\n    );\n\n  parts.push({\n    json: {\n      QueueID: source.QueueID,\n      TextUUID: source.TextUUID,\n      Filepath: source.Filepath,\n\n      PartNumber: partNumber,\n      PageFrom: pageFrom,\n      PageTo: pageTo,\n\n      PageCount: pageTo - pageFrom + 1,\n      TotalPages: totalPages,\n      TotalParts: totalParts\n    },\n\n    // PDF hier nicht mehr vervielfältigen.\n    // Der Part-Worker lädt sie später anhand Filepath neu.\n    pairedItem: {\n      item: 0\n    }\n  });\n}\n\nreturn parts;"
+      },
+      "position": [
+        -2064,
+        -720
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "7be9b975-78e9-40c5-86ba-72edf8e7fb51",
+      "name": "MySQL - create extraction part",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $json.QueueID,\n  $json.TextUUID,\n  $json.PartNumber,\n  $json.PageFrom,\n  $json.PageTo\n] }}"
+        },
+        "query": "INSERT INTO infofee01_rag.if_extraction_parts\n(\n    QueueID,\n    TextUUIDBin,\n    PartNumber,\n    PageFrom,\n    PageTo,\n    Status,\n    Attempts\n)\nVALUES\n(\n    $1,\n    UUID_TO_BIN_MDB($2),\n    $3,\n    $4,\n    $5,\n    'pending',\n    0\n)\nON DUPLICATE KEY UPDATE\n    TextUUIDBin = VALUES(TextUUIDBin),\n    PageFrom = VALUES(PageFrom),\n    PageTo = VALUES(PageTo);"
+      },
+      "position": [
+        -1856,
+        -720
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "id": "bc8231f5-53b4-4bd1-afaa-cd7f41d60aef",
+      "name": "Code - collapse parts",
+      "parameters": {
+        "jsCode": "const source =\n  $('MySQL - claim one pending row').first().json;\n\nconst parts =\n  $('Code - create extraction parts').all();\n\nreturn [{\n  json: {\n    QueueID: source.QueueID,\n    TextUUID: source.TextUUID,\n    TotalParts: parts.length\n  }\n}];"
+      },
+      "position": [
+        -1648,
+        -720
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "60d59f6b-b964-4fb3-b945-d80e60575051",
+      "name": "MySQL - mark parts pending",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $json.QueueID\n] }}"
+        },
+        "query": "UPDATE infofee01_rag.if_extraction_queue\nSET\n    Status = 'parts_pending',\n    StartedAt = NULL,\n    FinishedAt = NULL,\n    LastError = NULL\nWHERE\n    QueueID = $1\n    AND Status = 'processing';"
+      },
+      "position": [
+        -1440,
+        -720
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "id": "0f35da9e-38fd-43eb-b293-bddddaa7f048",
+      "name": "Sticky Note2",
+      "parameters": {
+        "content": "## Dispatcher",
+        "height": 576,
+        "width": 2208
+      },
+      "position": [
+        -3328,
+        -864
+      ],
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1
+    },
+    {
+      "id": "9e16efad-1754-412e-8959-1e26eff56a29",
+      "name": "Schedule Trigger Part Worker",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "expression": "*/30 * * * * *",
+              "field": "cronExpression"
+            }
+          ]
+        }
+      },
+      "position": [
+        -4416,
+        976
+      ],
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "95c50da6-862f-4536-9e2e-ee123ef7db23",
+      "name": "MySQL - claim one pending part",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "SELECT\n    p.PartID,\n    p.QueueID,\n    BIN_TO_UUID_MDB(p.TextUUIDBin) AS TextUUID,\n    p.PartNumber,\n    p.PageFrom,\n    p.PageTo,\n    p.Attempts,\n    q.Filepath\nFROM infofee01_rag.if_extraction_parts p\nINNER JOIN infofee01_rag.if_extraction_queue q\n    ON q.QueueID = p.QueueID\nWHERE\n    p.Status = 'pending'\n    AND q.Status = 'parts_pending'\nORDER BY\n    q.CreatedAt ASC,\n    p.PartNumber ASC\nLIMIT 1;"
+      },
+      "position": [
+        -4032,
+        976
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "id": "1604e332-3946-4769-b87a-412c5dd3e2c7",
+      "name": "If part found",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "if-no-row",
+              "leftValue": "={{ $('MySQL - claim one pending part').item?.json?.PartID }}",
+              "operator": {
+                "operation": "exists",
+                "singleValue": true,
+                "type": "number"
+              },
+              "rightValue": ""
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        -3856,
+        976
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "e77929d6-13b5-45ac-9d3e-f0fc369c4363",
+      "name": "MySQL - mark part processing",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.PartID\n] }}"
+        },
+        "query": "UPDATE infofee01_rag.if_extraction_parts\nSET\n    Status = 'processing',\n    StartedAt = NOW(),\n    FinishedAt = NULL,\n    Attempts = Attempts + 1,\n    LastError = NULL\nWHERE\n    PartID = $1\n    AND Status = 'pending';"
+      },
+      "position": [
+        -3632,
+        896
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "id": "4d8b891e-4f8c-4d95-9274-4229d41312d3",
+      "name": "HTTP - fetch part source PDF",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Accept",
+              "value": "application/pdf"
+            }
+          ]
+        },
+        "options": {
+          "allowUnauthorizedCerts": true,
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          },
+          "timeout": 60000
+        },
+        "sendHeaders": true,
+        "url": "={{ $('MySQL - claim one pending part').first().json.Filepath }}"
+      },
+      "position": [
+        -3440,
+        896
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "cb08e072-8ca5-452c-8f0c-1a59da1f0da1",
+      "name": "Code - slice PDF",
+      "parameters": {
+        "jsCode": "const item = $input.first();\n\nconst part =\n  $('MySQL - claim one pending part').first().json;\n\nif (!item.binary?.data) {\n  throw new Error(\n    'PDF im Binary-Feld \"data\" nicht gefunden'\n  );\n}\n\nconst sourceBuffer =\n  await this.helpers.getBinaryDataBuffer(\n    0,\n    'data'\n  );\n\nconst { PDFDocument } = require('pdf-lib');\n\nconst sourcePdf =\n  await PDFDocument.load(sourceBuffer);\n\nconst totalPages =\n  sourcePdf.getPageCount();\n\nconst pageFrom =\n  Number(part.PageFrom);\n\nconst pageTo =\n  Number(part.PageTo);\n\nif (\n  !Number.isInteger(pageFrom) ||\n  !Number.isInteger(pageTo) ||\n  pageFrom < 1 ||\n  pageTo < pageFrom ||\n  pageTo > totalPages\n) {\n  throw new Error(\n    `Ungültiger Seitenbereich ${pageFrom}-${pageTo}; ` +\n    `PDF enthält ${totalPages} Seiten`\n  );\n}\n\nconst partPages =\n  pageTo - pageFrom + 1;\n\nif (partPages > 50) {\n  throw new Error(\n    `Safety Limit verletzt: ${partPages} Seiten`\n  );\n}\n\nconst targetPdf =\n  await PDFDocument.create();\n\n/*\n * ENTSCHEIDEND:\n * Array von pdf-lib erzeugen lassen.\n *\n * Nicht selbst mit [], Array.from() etc. erzeugen,\n * weil n8n Task Runner und pdf-lib unterschiedliche\n * JavaScript Realms verwenden.\n */\nconst allPageIndices =\n  sourcePdf.getPageIndices();\n\nconst pageIndices =\n  allPageIndices.slice(\n    pageFrom - 1,\n    pageTo\n  );\n\nif (pageIndices.length !== partPages) {\n  throw new Error(\n    `Page-Slice inkonsistent: ` +\n    `${pageIndices.length} statt ${partPages}`\n  );\n}\n\nconst copiedPages =\n  await targetPdf.copyPages(\n    sourcePdf,\n    pageIndices\n  );\n\nfor (const page of copiedPages) {\n  targetPdf.addPage(page);\n}\n\nconst bytes =\n  await targetPdf.save();\n\nconst outputBuffer =\n  Buffer.from(bytes);\n\nconst binaryData =\n  await this.helpers.prepareBinaryData(\n    outputBuffer,\n    `part-${part.PartNumber}-pages-${pageFrom}-${pageTo}.pdf`,\n    'application/pdf'\n  );\n\nreturn [{\n  json: {\n    PartID: part.PartID,\n    QueueID: part.QueueID,\n    TextUUID: part.TextUUID,\n\n    PartNumber: part.PartNumber,\n\n    PageFrom: pageFrom,\n    PageTo: pageTo,\n\n    PartPages: partPages,\n    SourcePages: totalPages,\n\n    FirstPdfIndex:\n      pageIndices[0],\n\n    LastPdfIndex:\n      pageIndices[pageIndices.length - 1],\n\n    SourceBytes:\n      sourceBuffer.length,\n\n    PartBytes:\n      outputBuffer.length\n  },\n\n  binary: {\n    data: binaryData\n  }\n}];"
+      },
+      "position": [
+        -3232,
+        800
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "8e82f110-47ca-43ab-a51b-24f9f86e284a",
+      "name": "MySQL - save extraction part",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $json.DoclingJSON ?? null,\n  $json.DoclingMD ?? null,\n  $json.PaddleJSON ?? null,\n  $json.Extractor,\n  $json.PartID\n] }}"
+        },
+        "query": "UPDATE infofee01_rag.if_extraction_parts\nSET\n    DoclingJSON = $1,\n    DoclingMD = $2,\n    PaddleJSON = $3,\n    Extractor = $4,\n    Status = 'done',\n    LastError = NULL,\n    FinishedAt = NOW()\nWHERE PartID = $5;"
+      },
+      "position": [
+        -80,
+        560
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "id": "ba384265-5167-4e11-9651-1004f77e1f2c",
+      "name": "If dead parts?",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "5e5b00a8-aa26-471b-8021-37cfdb1a64d9",
+              "leftValue": "={{ Number($json.DeadParts ?? 0) > 0 }}",
+              "operator": {
+                "operation": "true",
+                "singleValue": true,
+                "type": "boolean"
+              },
+              "rightValue": ""
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        1056,
+        464
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3
+    },
+    {
+      "id": "3c215150-a8da-479d-a169-835f12a51c73",
+      "name": "If all parts finished?",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "b133988d-3aa0-4a52-baa7-1375077e9b56",
+              "leftValue": "={{   Number($json.PendingParts ?? 0) === 0   &&   Number($json.ProcessingParts ?? 0) === 0   &&   Number($json.FailedParts ?? 0) === 0 }}",
+              "operator": {
+                "operation": "true",
+                "singleValue": true,
+                "type": "boolean"
+              },
+              "rightValue": ""
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        848,
+        560
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "90e395ea-24b7-459e-8ce5-7ef311b41394",
+      "name": "MySQL - check part states",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.QueueID\n] }}"
+        },
+        "query": "SELECT\n    COUNT(*) AS TotalParts,\n    SUM(Status = 'done') AS DoneParts,\n    SUM(Status = 'pending') AS PendingParts,\n    SUM(Status = 'processing') AS ProcessingParts,\n    SUM(Status = 'failed') AS FailedParts,\n    SUM(Status = 'dead_letter') AS DeadParts\nFROM infofee01_rag.if_extraction_parts\nWHERE QueueID = $1;"
+      },
+      "position": [
+        640,
+        560
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "395c7b9c-3c09-4e90-8af0-4bfd63e5eace",
+      "name": "MySQL - mark parent dead-letter",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.QueueID\n] }}"
+        },
+        "query": "UPDATE infofee01_rag.if_extraction_queue\nSET\n    Status = 'dead_letter',\n    FinishedAt = NOW(),\n    LastError = CONCAT(\n        'EXTRACTION_PART_DEAD_LETTER: ',\n        (\n            SELECT COUNT(*)\n            FROM infofee01_rag.if_extraction_parts\n            WHERE QueueID = $1\n              AND Status = 'dead_letter'\n        ),\n        ' part(s) failed permanently'\n    )\nWHERE QueueID = $1;"
+      },
+      "position": [
+        1280,
+        368
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "74f50916-e4ea-453b-8782-67fd9f35903e",
+      "name": "MySQL - mark parent done",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.QueueID\n] }}"
+        },
+        "query": "UPDATE infofee01_rag.if_extraction_queue\nSET\n    Status = 'done',\n    FinishedAt = NOW(),\n    LastError = NULL\nWHERE QueueID = $1\n  AND Status = 'parts_pending';"
+      },
+      "position": [
+        1280,
+        560
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "c515d35c-59b9-4094-9171-9330b79549a9",
+      "name": "MySQL - mark part failed",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  (\n    $json.error?.message\n    ?? $json.message\n    ?? $json.error\n    ?? 'Unknown extraction error'\n  ).toString(),\n  $('MySQL - claim one pending part').first().json.PartID\n] }}"
+        },
+        "query": "UPDATE infofee01_rag.if_extraction_parts\nSET\n    Status = 'failed',\n    LastError = $1,\n    FinishedAt = NOW()\nWHERE PartID = $2\n  AND Status = 'processing';"
+      },
+      "position": [
+        -320,
+        784
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "122616f4-6a88-49c0-9018-190e3857398f",
+      "name": "MySQL - read part attempts",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.PartID\n] }}"
+        },
+        "query": "SELECT\n    PartID,\n    QueueID,\n    Attempts,\n    LastError\nFROM infofee01_rag.if_extraction_parts\nWHERE PartID = $1;"
+      },
+      "position": [
+        -80,
+        784
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "01a5cd7f-80a9-4bfa-92ac-1e305cad38b0",
+      "name": "MySQL - requeue part",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.PartID\n] }}"
+        },
+        "query": "UPDATE infofee01_rag.if_extraction_parts\nSET\n    Status = 'pending',\n    StartedAt = NULL,\n    FinishedAt = NULL,\n    LastError = CONCAT(\n        'RETRY: ',\n        IFNULL(LastError, 'unknown error')\n    )\nWHERE PartID = $1\n  AND Status = 'failed';"
+      },
+      "position": [
+        400,
+        880
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "5bc34da4-c18f-40fb-a5f1-57483fc9c70c",
+      "name": "MySQL - mark part dead-letter",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.PartID\n] }}"
+        },
+        "query": "UPDATE infofee01_rag.if_extraction_parts\nSET\n    Status = 'dead_letter',\n    FinishedAt = NOW(),\n    LastError = CONCAT(\n        IFNULL(LastError, 'unknown error'),\n        ' | DEAD_LETTER: exceeded 3 attempts'\n    )\nWHERE PartID = $1\n  AND Status = 'failed';"
+      },
+      "position": [
+        400,
+        688
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "ad567d87-6588-4e55-8ee9-21387153f1ba",
+      "name": "MySQL - mark text failed",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.TextUUID\n] }}"
+        },
+        "query": "UPDATE infofee01_rag.if_texts\nSET\n    TextStatus = 'failed',\n    TextFailedReason = 'EXTRACTION_PART_DEAD_LETTER'\nWHERE TextUUIDBin = UUID_TO_BIN_MDB($1);"
+      },
+      "position": [
+        1472,
+        368
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "id": "efc9175e-c023-45cf-b51e-e1295442b69a",
+      "name": "Sticky Note",
+      "parameters": {
+        "content": "## Extractor",
+        "height": 1296,
+        "width": 6640
+      },
+      "position": [
+        -4512,
+        -32
+      ],
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "bd0e53e0-ffd1-47b5-86c1-ce09f8cf66fd",
+      "name": "MySQL - recover stale parts",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "UPDATE infofee01_rag.if_extraction_parts\nSET\n    Status = 'pending',\n    Attempts = GREATEST(Attempts - 1, 0),\n\n    LastError = CONCAT(\n        IFNULL(LastError, ''),\n        CASE\n            WHEN LastError IS NULL OR LastError = ''\n                THEN ''\n            ELSE ' | '\n        END,\n        'STALE_PROCESSING_RECOVERY: worker did not finish'\n    ),\n\n    StartedAt = NULL,\n    FinishedAt = NULL\n\nWHERE Status = 'processing'\n  AND StartedAt < NOW() - INTERVAL 30 MINUTE;"
+      },
+      "position": [
+        -4224,
+        976
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "f52200f7-4ee9-4d5a-90f8-2aebff7bd3ce",
+      "name": "MySQL - enqueue chunk job",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $('MySQL - claim one pending part').first().json.QueueID,\n  $('MySQL - claim one pending part').first().json.TextUUID\n] }}"
+        },
+        "query": "INSERT INTO infofee01_rag.if_chunk_queue\n(\n    QueueID,\n    TextUUIDBin,\n    Status,\n    Attempts\n)\nVALUES\n(\n    $1,\n    UUID_TO_BIN_MDB($2),\n    'pending',\n    0\n)\nON DUPLICATE KEY UPDATE\n    QueueID = VALUES(QueueID),\n    Status = CASE\n        WHEN Status IN ('done', 'processing')\n            THEN Status\n        ELSE 'pending'\n    END;"
+      },
+      "position": [
+        1472,
+        560
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    }
+  ],
+  "settings": {
+    "binaryMode": "separate",
+    "executionOrder": "v1"
+  },
+  "tags": [
+    {
+      "createdAt": "2026-06-16T05:48:49.435Z",
+      "id": "Dz5cI4qGPy822fko",
+      "name": "rag",
+      "updatedAt": "2026-06-16T05:48:49.435Z"
+    }
+  ],
+  "triggerCount": 2,
+  "updatedAt": "2026-08-14T07:56:52.763Z",
+  "versionId": "3ab065a6-941f-4d6a-8cfd-43a38d5434aa"
+}

@@ -1,0 +1,974 @@
+{
+  "active": true,
+  "activeVersion": {
+    "authors": "Lars Komorowski",
+    "autosaved": true,
+    "connections": {
+      "Collapse FDA Seeds": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "HTTP Request  PMNLSTMN",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Compression": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Extract from File",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "DB Seeds": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Collapse FDA Seeds",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Extract Columns": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "KeyMatch",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Extract Headers and Lines": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Extract Columns",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Extract from File": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Extract Headers and Lines",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP Request  PMN7680": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Compression",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP Request  PMN8185": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Compression",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP Request  PMN8690": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Compression",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP Request  PMN9195": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Compression",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP Request  PMN96CUR": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Compression",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP Request  PMNLSTMN": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Compression",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Execute a SQL query",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "KeyMatch": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "DB Seeds",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "When clicking ‘Execute workflow’": {
+        "main": [
+          []
+        ]
+      }
+    },
+    "createdAt": "2026-09-18T06:58:14.973Z",
+    "description": "",
+    "name": "Version dd9da049",
+    "nodes": [
+      {
+        "id": "6ce37ce8-008f-4200-add9-d9c8beece1f8",
+        "name": "Compression",
+        "parameters": {
+          "outputPrefix": "file_fda"
+        },
+        "position": [
+          -64,
+          -64
+        ],
+        "type": "n8n-nodes-base.compression",
+        "typeVersion": 1.1
+      },
+      {
+        "id": "47dc5917-f3bc-4320-b0b2-97cf4ddded86",
+        "name": "Extract from File",
+        "parameters": {
+          "binaryPropertyName": "file_fda0",
+          "destinationKey": "text",
+          "operation": "text",
+          "options": {}
+        },
+        "position": [
+          144,
+          -64
+        ],
+        "type": "n8n-nodes-base.extractFromFile",
+        "typeVersion": 1
+      },
+      {
+        "id": "ad60ca03-1c2b-4143-ad64-8101f1987077",
+        "name": "Extract Headers and Lines",
+        "parameters": {
+          "jsCode": "const text = $json[\"text\"] || \"\";\n\n// alle Zeilen (Windows/Unix)\nconst allLines = text.split(/\\r?\\n/).filter(l => l.trim().length > 0);\n\nif (allLines.length === 0) {\n  return [];\n}\n\n// 1. Zeile = Header\nconst headerLine = allLines[0];\nconst headers = headerLine.split(\"|\").map(h => h.trim());\n\n// Rest = Daten\nconst dataLines = allLines.slice(1);\n\nreturn dataLines.map((line, idx) => ({\n  json: {\n    row: idx + 1,\n    line,\n    headers\n  }\n}));"
+        },
+        "position": [
+          352,
+          -64
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "fb1fd34b-6255-4878-8343-9b18bb7e6007",
+        "name": "Extract Columns",
+        "parameters": {
+          "jsCode": "function sqlEscape(v) {\n  if (v === undefined || v === null || v === '') {\n    return \"NULL\";\n  }\n\n  const s = String(v)\n    .replace(/\\\\/g, '\\\\\\\\')   // Backslashes\n    .replace(/'/g, \"''\")     // Single Quotes\n    .replace(/\\u0000/g, '')  // Null Bytes\n    .replace(/\\r?\\n/g, ' ')  // Zeilenumbrüche\n    .replace(/\\t/g, ' ')\n    .trim();\n\n  return `${s}`;\n}\n\nconst line = $json.line || '';\nconst headers = $json.headers || [];\nconst values = line.split('|');\n\nconst out = { row: $json.row };\n\nheaders.forEach((name, idx) => {\n  const key = name || `col_${idx + 1}`;\n  out[key] = sqlEscape(values[idx]);\n});\n\nreturn out;",
+          "mode": "runOnceForEachItem"
+        },
+        "position": [
+          560,
+          -64
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "80c73a45-db4d-4408-bb33-fde990a8e742",
+        "name": "KeyMatch",
+        "parameters": {
+          "jsCode": "function jsonArray(v) {\n\n  if (v === null || v === undefined || v === '') {\n    return [];\n  }\n\n  if (Array.isArray(v)) {\n    return v;\n  }\n\n  try {\n    const parsed = JSON.parse(v);\n    return Array.isArray(parsed) ? parsed : [];\n  } catch {\n    return [];\n  }\n}\n\nconst keywords = $('DB Seeds')\n  .all()\n  .map(item => {\n\n    const r = item.json;\n\n    return {\n      id: Number(r.id),\n\n      name:\n        String(r.name || '').trim(),\n\n      whitelist:\n        jsonArray(r.whitelist),\n\n      blacklist:\n        jsonArray(r.blacklist)\n    };\n  });\n\nconst productcodes = [\n  \"DBE\",\n  \"DBJ\",\n  \"DBL\",\n  \"DBM\",\n  \"DDN\",\n  \"MID\",\n  \"MOB\",\n  \"MSV\",\n  \"MVJ\",\n  \"MVM\",\n  \"NBO\",\n  \"NBS\",\n  \"NBT\",\n  \"NHX\",\n  \"NIY\",\n  \"NJF\",\n  \"NRI\",\n  \"NST\",\n  \"NUM\",\n  \"NWG\",\n  \"NXO\",\n  \"NYO\",\n  \"OCN\",\n  \"OEG\",\n  \"OIF\",\n  \"OPN\",\n  \"OQZ\",\n  \"OSK\",\n  \"OYL\",\n  \"PAF\",\n  \"PET\",\n  \"PGV\",\n  \"PHF\",\n  \"PIV\",\n  \"SET\",\n];\n\nconst applicant   = ($json.APPLICANT || \"\").toUpperCase();\nconst device      = ($json.DEVICENAME || \"\").toUpperCase();\nconst productcode = ($json.PRODUCTCODE || \"\").toUpperCase().trim();\n\nfunction txtIncludes(text, term) {\n  return text.includes(String(term).toUpperCase());\n}\n\nfunction matchesRule(rule) {\n  // 1. Herstellername muss im APPLICANT vorkommen\n  if (!txtIncludes(applicant, rule.name)) {\n    return false;\n  }\n\n  // 2. Whitelist: wenn vorhanden, mindestens ein Begriff im DEVICENAME\n  if (Array.isArray(rule.whitelist) && rule.whitelist.length > 0) {\n    const anyWhite = rule.whitelist.some(w => txtIncludes(device, w));\n    if (!anyWhite) {\n      return false;\n    }\n  }\n\n  // 3. Blacklist: wenn vorhanden, kein Begriff darf im DEVICENAME vorkommen\n  if (Array.isArray(rule.blacklist) && rule.blacklist.length > 0) {\n    const anyBlack = rule.blacklist.some(b => txtIncludes(device, b));\n    if (anyBlack) {\n      return false;\n    }\n  }\n\n  return true;\n}\n\n// Keyword-Match\nconst matchedKeyword = keywords.find(k => matchesRule(k)) || null;\n\n// Productcode-Match unabhängig vom Keyword-Match\nconst matchedProductcode = productcodes.find(pc => productcode === pc.toUpperCase()) || null;\n\n// Gesamtlogik: true, wenn EINES von beidem matched\nconst overallMatch = Boolean(matchedKeyword || matchedProductcode);\n\nreturn {\n  ...$json,\n\n  keywordMatch: Boolean(matchedKeyword),\n  matchedId: matchedKeyword ? matchedKeyword.id : null,\n  matchedName: matchedKeyword ? matchedKeyword.name : null,\n\n  productcodeMatch: Boolean(matchedProductcode),\n  matchedProductcode: matchedProductcode,\n\n  overallMatch: overallMatch\n};",
+          "mode": "runOnceForEachItem"
+        },
+        "position": [
+          768,
+          -64
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "0a1c52d7-7517-4cb5-b3d3-0cbe59fb170a",
+        "name": "If",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "0706e847-fc7c-47f3-a2d0-583e7d8a8c17",
+                "leftValue": "={{ $json.overallMatch }}",
+                "operator": {
+                  "operation": "true",
+                  "singleValue": true,
+                  "type": "boolean"
+                },
+                "rightValue": ""
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          976,
+          -64
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "b3d69dbf-04de-42d5-ad0b-841461087c1e",
+        "name": "Execute a SQL query",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "INSERT IGNORE INTO if_fda (\n  KNUMBER,\n  KFILE_AVAILABLE,\n  APPLICANT_ID,\n  CONTACT,\n  DATERECEIVED,\n  DECISIONDATE,\n  DECISION,\n  REVIEWADVISECOMM,\n  PRODUCTCODE,\n  STATEORSUMM,\n  CLASSADVISECOMM,\n  SSPINDICATOR,\n  TYPE,\n  THIRDPARTY,\n  EXPEDITEDREVIEW,\n  DEVICENAME\n) VALUES (\n  '{{$json[\"KNUMBER\"]}}',\n  'N',\n  {{$json[\"matchedId\"] || \"NULL\"}},\n  '{{$json[\"CONTACT\"]}}',\n  '{{$json[\"DATERECEIVED\"]}}',\n  '{{$json[\"DECISIONDATE\"]}}',\n  '{{$json[\"DECISION\"]}}',\n  '{{$json[\"REVIEWADVISECOMM\"]}}',\n  '{{$json[\"PRODUCTCODE\"]}}',\n  '{{$json[\"STATORSUMM\"] || $json[\"STATEORSUMM\"]}}',\n  '{{$json[\"CLASSADVISECOMM\"]}}',\n  '{{$json[\"SSPINDICATOR\"]}}',\n  '{{$json[\"TYPE\"]}}',\n  '{{$json[\"THIRDPARTY\"]}}',\n  '{{$json[\"EXPEDITEDREVIEW\"]}}',\n  '{{$json[\"DEVICENAME\"]}}'\n);"
+        },
+        "position": [
+          1184,
+          -144
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "id": "e20d8f7f-df62-4df7-bbc6-9e72f8f02148",
+        "name": "Schedule Trigger",
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "weeks",
+                "triggerAtHour": 5
+              }
+            ]
+          }
+        },
+        "position": [
+          -832,
+          -64
+        ],
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2
+      },
+      {
+        "id": "c3a05835-89cb-473f-b018-6eed457b5c0b",
+        "name": "HTTP Request  PMN96CUR",
+        "parameters": {
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "file"
+              }
+            }
+          },
+          "url": "https://www.accessdata.fda.gov/premarket/ftparea/pmn96cur.zip"
+        },
+        "position": [
+          -464,
+          -320
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "3edae594-d85c-4bea-b101-dba4cbf0b6a3",
+        "name": "HTTP Request  PMNLSTMN",
+        "parameters": {
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "file"
+              }
+            }
+          },
+          "url": "https://www.accessdata.fda.gov/premarket/ftparea/pmnlstmn.zip"
+        },
+        "position": [
+          -256,
+          -64
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "63402237-9596-4157-8247-28652bdd81b3",
+        "name": "HTTP Request  PMN8690",
+        "parameters": {
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "file"
+              }
+            }
+          },
+          "url": "https://www.accessdata.fda.gov/premarket/ftparea/pmn8690.zip"
+        },
+        "position": [
+          -464,
+          -640
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "3efb27c1-7815-4e92-8e55-92cdb2354c1c",
+        "name": "HTTP Request  PMN9195",
+        "parameters": {
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "file"
+              }
+            }
+          },
+          "url": "https://www.accessdata.fda.gov/premarket/ftparea/pmn9195.zip"
+        },
+        "position": [
+          -464,
+          -480
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "3679b5dd-0824-4e4c-a3cf-d2a1a906892e",
+        "name": "HTTP Request  PMN8185",
+        "parameters": {
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "file"
+              }
+            }
+          },
+          "url": "https://www.accessdata.fda.gov/premarket/ftparea/pmn8185.zip"
+        },
+        "position": [
+          -464,
+          -800
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "c7c3cd50-40aa-454c-9761-3f726ca73814",
+        "name": "HTTP Request  PMN7680",
+        "parameters": {
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "file"
+              }
+            }
+          },
+          "url": "https://www.accessdata.fda.gov/premarket/ftparea/pmn7680.zip"
+        },
+        "position": [
+          -464,
+          -960
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "f9bc64ba-d2bf-48d3-84a1-c29c5925f9b5",
+        "name": "When clicking ‘Execute workflow’",
+        "parameters": {},
+        "position": [
+          -752,
+          -592
+        ],
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "a2255334-0a11-45a6-b71b-0d4947935aa1",
+        "name": "DB Seeds",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "SELECT\n    APPLICANT_ID AS id,\n    FDA_MATCH_NAME AS name,\n    FDA_WHITELIST AS whitelist,\n    FDA_BLACKLIST AS blacklist\nFROM infofee01_fda.if_regulatory_company\nWHERE FDA_ACTIVE = 1\nORDER BY APPLICANT_ID;"
+        },
+        "position": [
+          -640,
+          -64
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "id": "9fa4b710-1d1c-465e-9a8c-2d2dd58df674",
+        "name": "Collapse FDA Seeds",
+        "parameters": {
+          "jsCode": "const seeds = $input.all();\n\nreturn [{\n  json: {\n    seed_count: seeds.length\n  }\n}];"
+        },
+        "position": [
+          -448,
+          -64
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      }
+    ],
+    "updatedAt": "2026-09-18T08:19:43.000Z",
+    "versionId": "dd9da049-0eea-43ac-b498-435e36c6445d",
+    "workflowId": "qe0Qvok2PRLjDXmI"
+  },
+  "activeVersionId": "dd9da049-0eea-43ac-b498-435e36c6445d",
+  "connections": {
+    "Collapse FDA Seeds": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "HTTP Request  PMNLSTMN",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Compression": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Extract from File",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "DB Seeds": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Collapse FDA Seeds",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Extract Columns": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "KeyMatch",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Extract Headers and Lines": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Extract Columns",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Extract Headers and Lines",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP Request  PMN7680": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Compression",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP Request  PMN8185": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Compression",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP Request  PMN8690": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Compression",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP Request  PMN9195": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Compression",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP Request  PMN96CUR": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Compression",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP Request  PMNLSTMN": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Compression",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Execute a SQL query",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "KeyMatch": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "DB Seeds",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "createdAt": "2025-12-03T09:10:21.234Z",
+  "id": "qe0Qvok2PRLjDXmI",
+  "isArchived": false,
+  "name": "FDA 510(k) Download",
+  "nodes": [
+    {
+      "id": "6ce37ce8-008f-4200-add9-d9c8beece1f8",
+      "name": "Compression",
+      "parameters": {
+        "outputPrefix": "file_fda"
+      },
+      "position": [
+        -64,
+        -64
+      ],
+      "type": "n8n-nodes-base.compression",
+      "typeVersion": 1.1
+    },
+    {
+      "id": "47dc5917-f3bc-4320-b0b2-97cf4ddded86",
+      "name": "Extract from File",
+      "parameters": {
+        "binaryPropertyName": "file_fda0",
+        "destinationKey": "text",
+        "operation": "text",
+        "options": {}
+      },
+      "position": [
+        144,
+        -64
+      ],
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1
+    },
+    {
+      "id": "ad60ca03-1c2b-4143-ad64-8101f1987077",
+      "name": "Extract Headers and Lines",
+      "parameters": {
+        "jsCode": "const text = $json[\"text\"] || \"\";\n\n// alle Zeilen (Windows/Unix)\nconst allLines = text.split(/\\r?\\n/).filter(l => l.trim().length > 0);\n\nif (allLines.length === 0) {\n  return [];\n}\n\n// 1. Zeile = Header\nconst headerLine = allLines[0];\nconst headers = headerLine.split(\"|\").map(h => h.trim());\n\n// Rest = Daten\nconst dataLines = allLines.slice(1);\n\nreturn dataLines.map((line, idx) => ({\n  json: {\n    row: idx + 1,\n    line,\n    headers\n  }\n}));"
+      },
+      "position": [
+        352,
+        -64
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "fb1fd34b-6255-4878-8343-9b18bb7e6007",
+      "name": "Extract Columns",
+      "parameters": {
+        "jsCode": "function sqlEscape(v) {\n  if (v === undefined || v === null || v === '') {\n    return \"NULL\";\n  }\n\n  const s = String(v)\n    .replace(/\\\\/g, '\\\\\\\\')   // Backslashes\n    .replace(/'/g, \"''\")     // Single Quotes\n    .replace(/\\u0000/g, '')  // Null Bytes\n    .replace(/\\r?\\n/g, ' ')  // Zeilenumbrüche\n    .replace(/\\t/g, ' ')\n    .trim();\n\n  return `${s}`;\n}\n\nconst line = $json.line || '';\nconst headers = $json.headers || [];\nconst values = line.split('|');\n\nconst out = { row: $json.row };\n\nheaders.forEach((name, idx) => {\n  const key = name || `col_${idx + 1}`;\n  out[key] = sqlEscape(values[idx]);\n});\n\nreturn out;",
+        "mode": "runOnceForEachItem"
+      },
+      "position": [
+        560,
+        -64
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "80c73a45-db4d-4408-bb33-fde990a8e742",
+      "name": "KeyMatch",
+      "parameters": {
+        "jsCode": "function jsonArray(v) {\n\n  if (v === null || v === undefined || v === '') {\n    return [];\n  }\n\n  if (Array.isArray(v)) {\n    return v;\n  }\n\n  try {\n    const parsed = JSON.parse(v);\n    return Array.isArray(parsed) ? parsed : [];\n  } catch {\n    return [];\n  }\n}\n\nconst keywords = $('DB Seeds')\n  .all()\n  .map(item => {\n\n    const r = item.json;\n\n    return {\n      id: Number(r.id),\n\n      name:\n        String(r.name || '').trim(),\n\n      whitelist:\n        jsonArray(r.whitelist),\n\n      blacklist:\n        jsonArray(r.blacklist)\n    };\n  });\n\nconst productcodes = [\n  \"DBE\",\n  \"DBJ\",\n  \"DBL\",\n  \"DBM\",\n  \"DDN\",\n  \"MID\",\n  \"MOB\",\n  \"MSV\",\n  \"MVJ\",\n  \"MVM\",\n  \"NBO\",\n  \"NBS\",\n  \"NBT\",\n  \"NHX\",\n  \"NIY\",\n  \"NJF\",\n  \"NRI\",\n  \"NST\",\n  \"NUM\",\n  \"NWG\",\n  \"NXO\",\n  \"NYO\",\n  \"OCN\",\n  \"OEG\",\n  \"OIF\",\n  \"OPN\",\n  \"OQZ\",\n  \"OSK\",\n  \"OYL\",\n  \"PAF\",\n  \"PET\",\n  \"PGV\",\n  \"PHF\",\n  \"PIV\",\n  \"SET\",\n];\n\nconst applicant   = ($json.APPLICANT || \"\").toUpperCase();\nconst device      = ($json.DEVICENAME || \"\").toUpperCase();\nconst productcode = ($json.PRODUCTCODE || \"\").toUpperCase().trim();\n\nfunction txtIncludes(text, term) {\n  return text.includes(String(term).toUpperCase());\n}\n\nfunction matchesRule(rule) {\n  // 1. Herstellername muss im APPLICANT vorkommen\n  if (!txtIncludes(applicant, rule.name)) {\n    return false;\n  }\n\n  // 2. Whitelist: wenn vorhanden, mindestens ein Begriff im DEVICENAME\n  if (Array.isArray(rule.whitelist) && rule.whitelist.length > 0) {\n    const anyWhite = rule.whitelist.some(w => txtIncludes(device, w));\n    if (!anyWhite) {\n      return false;\n    }\n  }\n\n  // 3. Blacklist: wenn vorhanden, kein Begriff darf im DEVICENAME vorkommen\n  if (Array.isArray(rule.blacklist) && rule.blacklist.length > 0) {\n    const anyBlack = rule.blacklist.some(b => txtIncludes(device, b));\n    if (anyBlack) {\n      return false;\n    }\n  }\n\n  return true;\n}\n\n// Keyword-Match\nconst matchedKeyword = keywords.find(k => matchesRule(k)) || null;\n\n// Productcode-Match unabhängig vom Keyword-Match\nconst matchedProductcode = productcodes.find(pc => productcode === pc.toUpperCase()) || null;\n\n// Gesamtlogik: true, wenn EINES von beidem matched\nconst overallMatch = Boolean(matchedKeyword || matchedProductcode);\n\nreturn {\n  ...$json,\n\n  keywordMatch: Boolean(matchedKeyword),\n  matchedId: matchedKeyword ? matchedKeyword.id : null,\n  matchedName: matchedKeyword ? matchedKeyword.name : null,\n\n  productcodeMatch: Boolean(matchedProductcode),\n  matchedProductcode: matchedProductcode,\n\n  overallMatch: overallMatch\n};",
+        "mode": "runOnceForEachItem"
+      },
+      "position": [
+        768,
+        -64
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "0a1c52d7-7517-4cb5-b3d3-0cbe59fb170a",
+      "name": "If",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "0706e847-fc7c-47f3-a2d0-583e7d8a8c17",
+              "leftValue": "={{ $json.overallMatch }}",
+              "operator": {
+                "operation": "true",
+                "singleValue": true,
+                "type": "boolean"
+              },
+              "rightValue": ""
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        976,
+        -64
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "b3d69dbf-04de-42d5-ad0b-841461087c1e",
+      "name": "Execute a SQL query",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "INSERT IGNORE INTO if_fda (\n  KNUMBER,\n  KFILE_AVAILABLE,\n  APPLICANT_ID,\n  CONTACT,\n  DATERECEIVED,\n  DECISIONDATE,\n  DECISION,\n  REVIEWADVISECOMM,\n  PRODUCTCODE,\n  STATEORSUMM,\n  CLASSADVISECOMM,\n  SSPINDICATOR,\n  TYPE,\n  THIRDPARTY,\n  EXPEDITEDREVIEW,\n  DEVICENAME\n) VALUES (\n  '{{$json[\"KNUMBER\"]}}',\n  'N',\n  {{$json[\"matchedId\"] || \"NULL\"}},\n  '{{$json[\"CONTACT\"]}}',\n  '{{$json[\"DATERECEIVED\"]}}',\n  '{{$json[\"DECISIONDATE\"]}}',\n  '{{$json[\"DECISION\"]}}',\n  '{{$json[\"REVIEWADVISECOMM\"]}}',\n  '{{$json[\"PRODUCTCODE\"]}}',\n  '{{$json[\"STATORSUMM\"] || $json[\"STATEORSUMM\"]}}',\n  '{{$json[\"CLASSADVISECOMM\"]}}',\n  '{{$json[\"SSPINDICATOR\"]}}',\n  '{{$json[\"TYPE\"]}}',\n  '{{$json[\"THIRDPARTY\"]}}',\n  '{{$json[\"EXPEDITEDREVIEW\"]}}',\n  '{{$json[\"DEVICENAME\"]}}'\n);"
+      },
+      "position": [
+        1184,
+        -144
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "id": "e20d8f7f-df62-4df7-bbc6-9e72f8f02148",
+      "name": "Schedule Trigger",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtHour": 5
+            }
+          ]
+        }
+      },
+      "position": [
+        -832,
+        -64
+      ],
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2
+    },
+    {
+      "id": "c3a05835-89cb-473f-b018-6eed457b5c0b",
+      "name": "HTTP Request  PMN96CUR",
+      "parameters": {
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        },
+        "url": "https://www.accessdata.fda.gov/premarket/ftparea/pmn96cur.zip"
+      },
+      "position": [
+        -464,
+        -320
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "3edae594-d85c-4bea-b101-dba4cbf0b6a3",
+      "name": "HTTP Request  PMNLSTMN",
+      "parameters": {
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        },
+        "url": "https://www.accessdata.fda.gov/premarket/ftparea/pmnlstmn.zip"
+      },
+      "position": [
+        -256,
+        -64
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "63402237-9596-4157-8247-28652bdd81b3",
+      "name": "HTTP Request  PMN8690",
+      "parameters": {
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        },
+        "url": "https://www.accessdata.fda.gov/premarket/ftparea/pmn8690.zip"
+      },
+      "position": [
+        -464,
+        -640
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "3efb27c1-7815-4e92-8e55-92cdb2354c1c",
+      "name": "HTTP Request  PMN9195",
+      "parameters": {
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        },
+        "url": "https://www.accessdata.fda.gov/premarket/ftparea/pmn9195.zip"
+      },
+      "position": [
+        -464,
+        -480
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "3679b5dd-0824-4e4c-a3cf-d2a1a906892e",
+      "name": "HTTP Request  PMN8185",
+      "parameters": {
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        },
+        "url": "https://www.accessdata.fda.gov/premarket/ftparea/pmn8185.zip"
+      },
+      "position": [
+        -464,
+        -800
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "c7c3cd50-40aa-454c-9761-3f726ca73814",
+      "name": "HTTP Request  PMN7680",
+      "parameters": {
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        },
+        "url": "https://www.accessdata.fda.gov/premarket/ftparea/pmn7680.zip"
+      },
+      "position": [
+        -464,
+        -960
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "f9bc64ba-d2bf-48d3-84a1-c29c5925f9b5",
+      "name": "When clicking ‘Execute workflow’",
+      "parameters": {},
+      "position": [
+        -752,
+        -592
+      ],
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "a2255334-0a11-45a6-b71b-0d4947935aa1",
+      "name": "DB Seeds",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "SELECT\n    APPLICANT_ID AS id,\n    FDA_MATCH_NAME AS name,\n    FDA_WHITELIST AS whitelist,\n    FDA_BLACKLIST AS blacklist\nFROM infofee01_fda.if_regulatory_company\nWHERE FDA_ACTIVE = 1\nORDER BY APPLICANT_ID;"
+      },
+      "position": [
+        -640,
+        -64
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "id": "9fa4b710-1d1c-465e-9a8c-2d2dd58df674",
+      "name": "Collapse FDA Seeds",
+      "parameters": {
+        "jsCode": "const seeds = $input.all();\n\nreturn [{\n  json: {\n    seed_count: seeds.length\n  }\n}];"
+      },
+      "position": [
+        -448,
+        -64
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    }
+  ],
+  "settings": {
+    "binaryMode": "separate",
+    "executionOrder": "v1"
+  },
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-09-18T06:58:14.972Z",
+  "versionId": "dd9da049-0eea-43ac-b498-435e36c6445d"
+}

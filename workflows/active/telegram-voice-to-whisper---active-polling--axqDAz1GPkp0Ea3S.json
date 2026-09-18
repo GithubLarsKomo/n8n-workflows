@@ -1,0 +1,1150 @@
+{
+  "active": true,
+  "activeVersion": {
+    "authors": "Lars Komorowski",
+    "autosaved": true,
+    "connections": {
+      "Build file URL": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Download audio",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Download audio": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Send to Parakeet",
+              "type": "main"
+            }
+          ],
+          []
+        ]
+      },
+      "Extract updates": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Has voice/audio?",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Has voice/audio?": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Telegram getFile",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Send no-audio hint",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Normalize Whisper response": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Send transcription back",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Poll every minute": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Token",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Prepare offset": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Telegram getUpdates",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Send no-audio hint": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Save offset - no audio",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Send to Parakeet": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Normalize Whisper response",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Send to Whisper": {
+        "main": [
+          []
+        ]
+      },
+      "Send transcription back": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Save offset - processed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Telegram getFile": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Build file URL",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Telegram getUpdates": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Extract updates",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Token": "__REDACTED__"
+    },
+    "createdAt": "2026-05-12T10:23:56.513Z",
+    "description": "",
+    "name": "Version 243d5b76",
+    "nodes": [
+      {
+        "id": "b0b041e6-43e9-4c11-a58f-1f4da01f7a89",
+        "name": "Poll every minute",
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "expression": "10 * * * * *",
+                "field": "cronExpression"
+              }
+            ]
+          }
+        },
+        "position": [
+          -880,
+          96
+        ],
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2
+      },
+      {
+        "id": "46a03f2e-d4b5-46e8-ab7a-da82886f28b3",
+        "name": "Prepare offset",
+        "parameters": {
+          "jsCode": "// Active polling state.\n// Requires workflow static data. Stores last processed Telegram update_id.\nconst data = $getWorkflowStaticData('global');\n\nif (data.telegram_offset === undefined || data.telegram_offset === null) {\n  data.telegram_offset = 0;\n}\n\nreturn [{\n  json: {\n    offset: Number(data.telegram_offset),\n    limit: 20,\n    timeout: 0\n  }\n}];"
+        },
+        "position": [
+          -448,
+          96
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "3a8a2cb1-c0f5-4930-bedb-36d427293e71",
+        "name": "Telegram getUpdates",
+        "parameters": {
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "json"
+              }
+            }
+          },
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "offset",
+                "value": "={{ $json.offset }}"
+              },
+              {
+                "name": "limit",
+                "value": "={{$json.limit}}"
+              },
+              {
+                "name": "timeout",
+                "value": "={{$json.timeout}}"
+              },
+              {
+                "name": "allowed_updates",
+                "value": "=[\"message\"]"
+              }
+            ]
+          },
+          "sendQuery": true,
+          "url": "=https://api.telegram.org/bot{{$('Token').item.json.TelegramToken}}/getUpdates"
+        },
+        "position": [
+          -240,
+          96
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "9c6ab7c1-4165-4707-a822-924a6bda4c3b",
+        "name": "Extract updates",
+        "parameters": {
+          "jsCode": "const updates = $json.result || [];\nreturn updates.map(u => {\n  const msg = u.message || {};\n  const voice = msg.voice || null;\n  const audio = msg.audio || null;\n  const document = msg.document || null;\n\n  let file_id = null;\n  let input_type = null;\n\n  if (voice?.file_id) {\n    file_id = voice.file_id;\n    input_type = 'voice';\n  } else if (audio?.file_id) {\n    file_id = audio.file_id;\n    input_type = 'audio';\n  } else if (document?.file_id && String(document.mime_type || '').startsWith('audio/')) {\n    file_id = document.file_id;\n    input_type = 'audio_document';\n  }\n\n  return {\n    json: {\n      update_id: u.update_id,\n      next_offset: Number(u.update_id) + 1,\n      chat_id: msg.chat?.id,\n      message_id: msg.message_id,\n      from_username: msg.from?.username || '',\n      file_id,\n      input_type,\n      has_audio: Boolean(file_id),\n      original_text: msg.text || ''\n    }\n  };\n});"
+        },
+        "position": [
+          -16,
+          96
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "b1d99f65-ee5f-4d52-8c96-a493498eb1f3",
+        "name": "Has voice/audio?",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "has_audio_condition",
+                "leftValue": "={{$json.has_audio}}",
+                "operator": {
+                  "operation": "true",
+                  "singleValue": true,
+                  "type": "boolean"
+                },
+                "rightValue": true
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 1
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          208,
+          96
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2
+      },
+      {
+        "id": "4198a0e5-b1cb-4bac-b576-415686244ffd",
+        "name": "Telegram getFile",
+        "parameters": {
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "json"
+              }
+            }
+          },
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "file_id",
+                "value": "={{$json.file_id}}"
+              }
+            ]
+          },
+          "sendQuery": true,
+          "url": "=https://api.telegram.org/bot{{$('Token').item.json.TelegramToken}}/getFile"
+        },
+        "position": [
+          448,
+          -32
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "e112e996-85ef-4e12-be64-e342740f7eed",
+        "name": "Build file URL",
+        "parameters": {
+          "jsCode": "// Preserve metadata and attach Telegram file_path.\nconst src = $items('Extract updates')[$itemIndex].json;\nconst filePath = $json.result?.file_path;\nconst token = $('Token').item.json.TelegramToken;\n\nif (!filePath) {\n  throw new Error('Telegram getFile did not return result.file_path');\n}\n\nreturn [{\n  json: {\n    ...src,\n    file_path: filePath,\n    file_url: `https://api.telegram.org/file/bot${token}/${filePath}`\n  }\n}];"
+        },
+        "position": [
+          688,
+          -32
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "cbe75be9-63a8-4903-b194-e7edfde6f716",
+        "name": "Download audio",
+        "parameters": {
+          "options": {
+            "response": {
+              "response": {
+                "outputPropertyName": "audio",
+                "responseFormat": "file"
+              }
+            }
+          },
+          "url": "={{$json.file_url}}"
+        },
+        "position": [
+          928,
+          -32
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "041550f7-2fa2-428e-ab5b-b8bfa23dbc51",
+        "name": "Send to Whisper",
+        "parameters": {
+          "bodyParameters": {
+            "parameters": [
+              {
+                "inputDataFieldName": "audio",
+                "name": "file",
+                "parameterType": "formBinaryData"
+              },
+              {
+                "name": "language",
+                "value": "de"
+              },
+              {
+                "name": "task",
+                "value": "transcribe"
+              }
+            ]
+          },
+          "contentType": "multipart-form-data",
+          "method": "POST",
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "json"
+              }
+            },
+            "timeout": 300000
+          },
+          "sendBody": true,
+          "url": "=http://10.4.190.16:8008/transcribe"
+        },
+        "position": [
+          1168,
+          -32
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "e3a6c838-41dc-467e-8c8f-93ef67d9eb1e",
+        "name": "Normalize Whisper response",
+        "parameters": {
+          "jsCode": "const meta = $items('Build file URL')[$itemIndex].json;\n\n// Accept common Whisper API shapes:\n// { text: \"...\" }\n// { transcription: \"...\" }\n// { segments: [{text:\"...\"}] }\nlet text = '';\n\nif (typeof $json.text === 'string') {\n  text = $json.text;\n} else if (typeof $json.transcription === 'string') {\n  text = $json.transcription;\n} else if (Array.isArray($json.segments)) {\n  text = $json.segments.map(s => s.text || '').join(' ');\n}\n\ntext = String(text || '').trim();\n\nif (!text) {\n  text = '[Keine Transkription erkannt]';\n}\n\nconst maxLen = 3900;\nconst reply = text.length > maxLen\n  ? text.slice(0, maxLen) + '\\n\\n… [gekürzt]'\n  : text;\n\nreturn [{\n  json: {\n    ...meta,\n    transcription: text,\n    telegram_reply: reply\n  }\n}];"
+        },
+        "position": [
+          1408,
+          -32
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "3f643292-56df-49f6-be17-3033cfb0cceb",
+        "name": "Send transcription back",
+        "parameters": {
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "text",
+                "value": "={{ $json.telegram_reply }}"
+              },
+              {
+                "name": "chat_id",
+                "value": "={{ $json.chat_id }}"
+              },
+              {
+                "name": "reply_to_message_id",
+                "value": "={{ $json.message_id }}"
+              },
+              {
+                "name": "disable_web_page_preview",
+                "value": "=true"
+              }
+            ]
+          },
+          "method": "POST",
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "json"
+              }
+            }
+          },
+          "sendBody": true,
+          "url": "=https://api.telegram.org/bot{{$('Token').item.json.TelegramToken}}/sendMessage"
+        },
+        "position": [
+          1648,
+          -32
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "636b5c4c-5833-43c3-9d8e-aa453a35939e",
+        "name": "Save offset - processed",
+        "parameters": {
+          "jsCode": "const data = $getWorkflowStaticData('global');\nconst source = $json.next_offset ? $json : $items('Normalize Whisper response')[$itemIndex]?.json || $json;\n\nif (source.next_offset !== undefined) {\n  data.telegram_offset = Math.max(Number(data.telegram_offset || 0), Number(source.next_offset));\n}\n\nreturn [{\n  json: {\n    ok: true,\n    saved_offset: data.telegram_offset,\n    update_id: source.update_id\n  }\n}];"
+        },
+        "position": [
+          1888,
+          -32
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "194587f3-5203-4cb5-92e5-a34a9e6e66ab",
+        "name": "Send no-audio hint",
+        "parameters": {
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "=chat_id",
+                "value": "={{ $('Extract updates').item.json.chat_id }}"
+              },
+              {
+                "name": "reply_to_message_id",
+                "value": "={{ $('Extract updates').item.json.message_id }}"
+              },
+              {
+                "name": "disable_web_page_preview",
+                "value": "=true"
+              },
+              {
+                "name": "text",
+                "value": "No audio was sent"
+              }
+            ]
+          },
+          "method": "POST",
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "json"
+              }
+            }
+          },
+          "sendBody": true,
+          "url": "=https://api.telegram.org/bot{{$('Token').item.json.TelegramToken}}/sendMessage"
+        },
+        "position": [
+          448,
+          240
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "c55dbddb-10fa-427c-b05d-bbf8674205d9",
+        "name": "Save offset - no audio",
+        "parameters": {
+          "jsCode": "const data = $getWorkflowStaticData('global');\n\nif ($json.next_offset !== undefined) {\n  data.telegram_offset = Math.max(Number(data.telegram_offset || 0), Number($json.next_offset));\n}\n\nreturn [{\n  json: {\n    ok: true,\n    saved_offset: data.telegram_offset,\n    update_id: $json.update_id\n  }\n}];"
+        },
+        "position": [
+          688,
+          240
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "ac6f5400-ae18-438b-9d39-393bd0a5f37f",
+        "name": "Token",
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "58ef7427-2fa5-4214-bb92-56d4b33edc53",
+                "name": "TelegramToken",
+                "type": "string",
+                "value": "8756562876:AAG3q5y14prb-1Qi4ct3zrpjqHt5DZVwb9Y"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "position": [
+          -672,
+          96
+        ],
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4
+      },
+      {
+        "id": "f8361eb4-a99b-4d8f-846a-af8224a30684",
+        "name": "Send to Parakeet",
+        "parameters": {
+          "bodyParameters": {
+            "parameters": [
+              {
+                "inputDataFieldName": "audio",
+                "name": "file",
+                "parameterType": "formBinaryData"
+              },
+              {
+                "name": "language",
+                "value": "de"
+              },
+              {
+                "name": "task",
+                "value": "transcribe"
+              }
+            ]
+          },
+          "contentType": "multipart-form-data",
+          "method": "POST",
+          "options": {
+            "response": {
+              "response": {
+                "responseFormat": "json"
+              }
+            },
+            "timeout": 300000
+          },
+          "sendBody": true,
+          "url": "=http://10.4.190.16:8009/transcribe"
+        },
+        "position": [
+          1168,
+          176
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      }
+    ],
+    "updatedAt": "2026-05-12T10:24:45.000Z",
+    "versionId": "243d5b76-466f-4b72-8ee5-bfae8a148de3",
+    "workflowId": "axqDAz1GPkp0Ea3S"
+  },
+  "activeVersionId": "243d5b76-466f-4b72-8ee5-bfae8a148de3",
+  "connections": {
+    "Build file URL": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Download audio",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Download audio": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Send to Parakeet",
+            "type": "main"
+          }
+        ],
+        []
+      ]
+    },
+    "Extract updates": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Has voice/audio?",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Has voice/audio?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Telegram getFile",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Send no-audio hint",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Normalize Whisper response": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Send transcription back",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Poll every minute": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Token",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Prepare offset": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Telegram getUpdates",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Send no-audio hint": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Save offset - no audio",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Send to Parakeet": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Normalize Whisper response",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Send to Whisper": {
+      "main": [
+        []
+      ]
+    },
+    "Send transcription back": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Save offset - processed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Telegram getFile": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Build file URL",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Telegram getUpdates": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Extract updates",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Token": "__REDACTED__"
+  },
+  "createdAt": "2026-05-04T20:36:23.801Z",
+  "id": "axqDAz1GPkp0Ea3S",
+  "isArchived": false,
+  "name": "Telegram Voice to Whisper - Active Polling",
+  "nodes": [
+    {
+      "id": "b0b041e6-43e9-4c11-a58f-1f4da01f7a89",
+      "name": "Poll every minute",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "expression": "10 * * * * *",
+              "field": "cronExpression"
+            }
+          ]
+        }
+      },
+      "position": [
+        -880,
+        96
+      ],
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2
+    },
+    {
+      "id": "46a03f2e-d4b5-46e8-ab7a-da82886f28b3",
+      "name": "Prepare offset",
+      "parameters": {
+        "jsCode": "// Active polling state.\n// Requires workflow static data. Stores last processed Telegram update_id.\nconst data = $getWorkflowStaticData('global');\n\nif (data.telegram_offset === undefined || data.telegram_offset === null) {\n  data.telegram_offset = 0;\n}\n\nreturn [{\n  json: {\n    offset: Number(data.telegram_offset),\n    limit: 20,\n    timeout: 0\n  }\n}];"
+      },
+      "position": [
+        -448,
+        96
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "3a8a2cb1-c0f5-4930-bedb-36d427293e71",
+      "name": "Telegram getUpdates",
+      "parameters": {
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        },
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "offset",
+              "value": "={{ $json.offset }}"
+            },
+            {
+              "name": "limit",
+              "value": "={{$json.limit}}"
+            },
+            {
+              "name": "timeout",
+              "value": "={{$json.timeout}}"
+            },
+            {
+              "name": "allowed_updates",
+              "value": "=[\"message\"]"
+            }
+          ]
+        },
+        "sendQuery": true,
+        "url": "=https://api.telegram.org/bot{{$('Token').item.json.TelegramToken}}/getUpdates"
+      },
+      "position": [
+        -240,
+        96
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "9c6ab7c1-4165-4707-a822-924a6bda4c3b",
+      "name": "Extract updates",
+      "parameters": {
+        "jsCode": "const updates = $json.result || [];\nreturn updates.map(u => {\n  const msg = u.message || {};\n  const voice = msg.voice || null;\n  const audio = msg.audio || null;\n  const document = msg.document || null;\n\n  let file_id = null;\n  let input_type = null;\n\n  if (voice?.file_id) {\n    file_id = voice.file_id;\n    input_type = 'voice';\n  } else if (audio?.file_id) {\n    file_id = audio.file_id;\n    input_type = 'audio';\n  } else if (document?.file_id && String(document.mime_type || '').startsWith('audio/')) {\n    file_id = document.file_id;\n    input_type = 'audio_document';\n  }\n\n  return {\n    json: {\n      update_id: u.update_id,\n      next_offset: Number(u.update_id) + 1,\n      chat_id: msg.chat?.id,\n      message_id: msg.message_id,\n      from_username: msg.from?.username || '',\n      file_id,\n      input_type,\n      has_audio: Boolean(file_id),\n      original_text: msg.text || ''\n    }\n  };\n});"
+      },
+      "position": [
+        -16,
+        96
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "b1d99f65-ee5f-4d52-8c96-a493498eb1f3",
+      "name": "Has voice/audio?",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "has_audio_condition",
+              "leftValue": "={{$json.has_audio}}",
+              "operator": {
+                "operation": "true",
+                "singleValue": true,
+                "type": "boolean"
+              },
+              "rightValue": true
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        208,
+        96
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2
+    },
+    {
+      "id": "4198a0e5-b1cb-4bac-b576-415686244ffd",
+      "name": "Telegram getFile",
+      "parameters": {
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        },
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "file_id",
+              "value": "={{$json.file_id}}"
+            }
+          ]
+        },
+        "sendQuery": true,
+        "url": "=https://api.telegram.org/bot{{$('Token').item.json.TelegramToken}}/getFile"
+      },
+      "position": [
+        448,
+        -32
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "e112e996-85ef-4e12-be64-e342740f7eed",
+      "name": "Build file URL",
+      "parameters": {
+        "jsCode": "// Preserve metadata and attach Telegram file_path.\nconst src = $items('Extract updates')[$itemIndex].json;\nconst filePath = $json.result?.file_path;\nconst token = $('Token').item.json.TelegramToken;\n\nif (!filePath) {\n  throw new Error('Telegram getFile did not return result.file_path');\n}\n\nreturn [{\n  json: {\n    ...src,\n    file_path: filePath,\n    file_url: `https://api.telegram.org/file/bot${token}/${filePath}`\n  }\n}];"
+      },
+      "position": [
+        688,
+        -32
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "cbe75be9-63a8-4903-b194-e7edfde6f716",
+      "name": "Download audio",
+      "parameters": {
+        "options": {
+          "response": {
+            "response": {
+              "outputPropertyName": "audio",
+              "responseFormat": "file"
+            }
+          }
+        },
+        "url": "={{$json.file_url}}"
+      },
+      "position": [
+        928,
+        -32
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "041550f7-2fa2-428e-ab5b-b8bfa23dbc51",
+      "name": "Send to Whisper",
+      "parameters": {
+        "bodyParameters": {
+          "parameters": [
+            {
+              "inputDataFieldName": "audio",
+              "name": "file",
+              "parameterType": "formBinaryData"
+            },
+            {
+              "name": "language",
+              "value": "de"
+            },
+            {
+              "name": "task",
+              "value": "transcribe"
+            }
+          ]
+        },
+        "contentType": "multipart-form-data",
+        "method": "POST",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 300000
+        },
+        "sendBody": true,
+        "url": "=http://10.4.190.16:8008/transcribe"
+      },
+      "position": [
+        1168,
+        -32
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "e3a6c838-41dc-467e-8c8f-93ef67d9eb1e",
+      "name": "Normalize Whisper response",
+      "parameters": {
+        "jsCode": "const meta = $items('Build file URL')[$itemIndex].json;\n\n// Accept common Whisper API shapes:\n// { text: \"...\" }\n// { transcription: \"...\" }\n// { segments: [{text:\"...\"}] }\nlet text = '';\n\nif (typeof $json.text === 'string') {\n  text = $json.text;\n} else if (typeof $json.transcription === 'string') {\n  text = $json.transcription;\n} else if (Array.isArray($json.segments)) {\n  text = $json.segments.map(s => s.text || '').join(' ');\n}\n\ntext = String(text || '').trim();\n\nif (!text) {\n  text = '[Keine Transkription erkannt]';\n}\n\nconst maxLen = 3900;\nconst reply = text.length > maxLen\n  ? text.slice(0, maxLen) + '\\n\\n… [gekürzt]'\n  : text;\n\nreturn [{\n  json: {\n    ...meta,\n    transcription: text,\n    telegram_reply: reply\n  }\n}];"
+      },
+      "position": [
+        1408,
+        -32
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "3f643292-56df-49f6-be17-3033cfb0cceb",
+      "name": "Send transcription back",
+      "parameters": {
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "text",
+              "value": "={{ $json.telegram_reply }}"
+            },
+            {
+              "name": "chat_id",
+              "value": "={{ $json.chat_id }}"
+            },
+            {
+              "name": "reply_to_message_id",
+              "value": "={{ $json.message_id }}"
+            },
+            {
+              "name": "disable_web_page_preview",
+              "value": "=true"
+            }
+          ]
+        },
+        "method": "POST",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        },
+        "sendBody": true,
+        "url": "=https://api.telegram.org/bot{{$('Token').item.json.TelegramToken}}/sendMessage"
+      },
+      "position": [
+        1648,
+        -32
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "636b5c4c-5833-43c3-9d8e-aa453a35939e",
+      "name": "Save offset - processed",
+      "parameters": {
+        "jsCode": "const data = $getWorkflowStaticData('global');\nconst source = $json.next_offset ? $json : $items('Normalize Whisper response')[$itemIndex]?.json || $json;\n\nif (source.next_offset !== undefined) {\n  data.telegram_offset = Math.max(Number(data.telegram_offset || 0), Number(source.next_offset));\n}\n\nreturn [{\n  json: {\n    ok: true,\n    saved_offset: data.telegram_offset,\n    update_id: source.update_id\n  }\n}];"
+      },
+      "position": [
+        1888,
+        -32
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "194587f3-5203-4cb5-92e5-a34a9e6e66ab",
+      "name": "Send no-audio hint",
+      "parameters": {
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "=chat_id",
+              "value": "={{ $('Extract updates').item.json.chat_id }}"
+            },
+            {
+              "name": "reply_to_message_id",
+              "value": "={{ $('Extract updates').item.json.message_id }}"
+            },
+            {
+              "name": "disable_web_page_preview",
+              "value": "=true"
+            },
+            {
+              "name": "text",
+              "value": "No audio was sent"
+            }
+          ]
+        },
+        "method": "POST",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          }
+        },
+        "sendBody": true,
+        "url": "=https://api.telegram.org/bot{{$('Token').item.json.TelegramToken}}/sendMessage"
+      },
+      "position": [
+        448,
+        240
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "c55dbddb-10fa-427c-b05d-bbf8674205d9",
+      "name": "Save offset - no audio",
+      "parameters": {
+        "jsCode": "const data = $getWorkflowStaticData('global');\n\nif ($json.next_offset !== undefined) {\n  data.telegram_offset = Math.max(Number(data.telegram_offset || 0), Number($json.next_offset));\n}\n\nreturn [{\n  json: {\n    ok: true,\n    saved_offset: data.telegram_offset,\n    update_id: $json.update_id\n  }\n}];"
+      },
+      "position": [
+        688,
+        240
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "ac6f5400-ae18-438b-9d39-393bd0a5f37f",
+      "name": "Token",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "58ef7427-2fa5-4214-bb92-56d4b33edc53",
+              "name": "TelegramToken",
+              "type": "string",
+              "value": "8756562876:AAG3q5y14prb-1Qi4ct3zrpjqHt5DZVwb9Y"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "position": [
+        -672,
+        96
+      ],
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4
+    },
+    {
+      "id": "f8361eb4-a99b-4d8f-846a-af8224a30684",
+      "name": "Send to Parakeet",
+      "parameters": {
+        "bodyParameters": {
+          "parameters": [
+            {
+              "inputDataFieldName": "audio",
+              "name": "file",
+              "parameterType": "formBinaryData"
+            },
+            {
+              "name": "language",
+              "value": "de"
+            },
+            {
+              "name": "task",
+              "value": "transcribe"
+            }
+          ]
+        },
+        "contentType": "multipart-form-data",
+        "method": "POST",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "json"
+            }
+          },
+          "timeout": 300000
+        },
+        "sendBody": true,
+        "url": "=http://10.4.190.16:8009/transcribe"
+      },
+      "position": [
+        1168,
+        176
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    }
+  ],
+  "settings": {
+    "binaryMode": "separate",
+    "executionOrder": "v1"
+  },
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-05-12T10:23:56.511Z",
+  "versionId": "243d5b76-466f-4b72-8ee5-bfae8a148de3"
+}

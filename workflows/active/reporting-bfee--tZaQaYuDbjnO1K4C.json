@@ -1,0 +1,1143 @@
+{
+  "active": true,
+  "activeVersion": {
+    "authors": "Lars Komorowski",
+    "autosaved": true,
+    "connections": {
+      "Build Mail Payload": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "HTTP Request",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Convert to File": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Mail or Download?",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Execute a SQL query": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Session existiert?",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Execute a SQL query1": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Convert to File",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Gateway Success?": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Respond Success",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Respond Gateway Error",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP Request": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Gateway Success?",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Mail or Download?": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Build Mail Payload",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Respond to Webhook",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Payload Valid?": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Execute a SQL query1",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Respond Validation Error",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Session existiert?": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Validate Payload",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Respond Session nicht vorhanden",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Validate Payload": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Payload Valid?",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Webhook": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Webhook Token Valid?",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Webhook Token Valid?": "__REDACTED__"
+    },
+    "createdAt": "2026-07-14T07:32:41.244Z",
+    "description": "",
+    "name": "Version 912faf9a",
+    "nodes": [
+      {
+        "id": "32b24950-7f6c-4d24-8619-63b14a8595ff",
+        "name": "Convert to File",
+        "parameters": {
+          "operation": "xlsx",
+          "options": {
+            "fileName": "={{\n(() => {\n  const report = $('Payload Valid?').first().json.normalized.report;\n\n  const map = {\n    vi_report_bestellungen: \"report_bestellungen\",\n    vi_report_lieferungen: \"report_lieferungen\",\n    vi_report_rechnungen: \"report_rechnungen\",\n    vi_report_bestellungen_vr: \"report_bestellungen\",\n    vi_report_rechnungen_vr: \"report_rechnungen\",\n  };\n\n  const prefix = map[report] || \"report\";\n\n  return `${prefix}_${$now.toFormat('yyyy-LL-dd_HH-mm-ss')}.xlsx`;\n})()\n}}"
+          }
+        },
+        "position": [
+          240,
+          48
+        ],
+        "type": "n8n-nodes-base.convertToFile",
+        "typeVersion": 1.1
+      },
+      {
+        "id": "66c88978-febb-4bdc-ba3e-65020f83b421",
+        "name": "Build Mail Payload",
+        "parameters": {
+          "jsCode": "const bin = $input.first().binary?.data;\n\nif (!bin) {\n  throw new Error('Keine Binärdatei unter binary.data gefunden');\n}\n\nconst payload = $('Payload Valid?').first().json;\nconst uservorname = payload.normalized.uservorname;\nconst to = payload.normalized.email;\nconst report = payload.normalized.report;\n\nlet subject = \"\";\nlet text = \"\";\nlet html = \"\";\nlet report_name = \"\";\nlet workflow = \"\";\n\nswitch (report) {\n  case \"bestellungen\":\n    subject = `Report Bestellungen ${$now.toFormat('yyyy-LL-dd')}`;\n    text = \"Im Anhang befindet sich der aktuelle Bestellreport.\";\n    html = `<p>Hallo ${uservorname},</p>\n            <p>im Anhang befindet sich der aktuelle <b>Bestellreport</b> für die letzten vier Wochen.</p>\n            <p>Erzeugt am: ${$now.toFormat('dd.LL.yyyy HH:mm:ss')}</p>`;\n    report_name = \"vi_report_bestellungen\";\n    workflow = \"Bestellreport Export\";\n    break;\n\n  case \"lieferungen\":\n    subject = `Report Warenannahmen ${$now.toFormat('yyyy-LL-dd')}`;\n    text = \"Im Anhang befindet sich der aktuelle Warenannahmereport.\";\n    html = `<p>Hallo ${uservorname},</p>\n            <p>im Anhang befindet sich der aktuelle <b>Warenannahmereport</b> für die letzten vier Wochen.</p>\n            <p>Erzeugt am: ${$now.toFormat('dd.LL.yyyy HH:mm:ss')}</p>`;\n    report_name = \"vi_report_lieferungen\";\n    workflow = \"Warenannahmereport Export\";\n    break;\n\n  case \"rechnungen\":\n    subject = `Report Rechnungen ${$now.toFormat('yyyy-LL-dd')}`;\n    text = \"Im Anhang befindet sich der aktuelle Rechnungenreport.\";\n    html = `<p>Hallo ${uservorname},</p>\n            <p>im Anhang befindet sich der aktuelle <b>Rechnungenreport</b> für die letzten vier Wochen.</p>\n            <p>Erzeugt am: ${$now.toFormat('dd.LL.yyyy HH:mm:ss')}</p>`;\n    report_name = \"vi_report_rechnungen\";\n    workflow = \"Rechnungenreport Export\";\n    break;\n\n  default:\n    throw new Error(`Unbekannter Report-Typ: ${report}`);\n}\n\nconst finalFilename =\n  bin.fileName ||\n  `report_${report}_${$now.toFormat('yyyy-LL-dd_HH-mm-ss')}.xlsx`;\n\nreturn [\n  {\n    json: {\n      to: [to],\n      cc: [],\n      bcc: [],\n      from: \"infofee@euroimmun.de\",\n      from_name: \"BestellFee Reporting\",\n      subject,\n      text,\n      html,\n      attachments: [\n        {\n          filename: finalFilename,\n          mimeType: bin.mimeType || \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\n          contentBase64: bin.data\n        }\n      ],\n      meta: {\n        report_name,\n        workflow,\n        generated_at: $now.toISO(),\n        file_name: finalFilename\n      }\n    }\n  }\n];"
+        },
+        "position": [
+          672,
+          -96
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "5d923b0d-53f7-48a5-8ca2-004b4bdc9760",
+        "name": "HTTP Request",
+        "parameters": {
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "x-webhook-token",
+                "value": "W0sp9w27iCtEcXOiWFiE8KfhfmJQ0YZd3tDC4EbPxsQ"
+              }
+            ]
+          },
+          "jsonBody": "={{ $json }}",
+          "method": "POST",
+          "options": {},
+          "sendBody": true,
+          "sendHeaders": true,
+          "specifyBody": "json",
+          "url": "http://10.4.190.16:5678/webhook/internal-mail/send"
+        },
+        "position": [
+          880,
+          -96
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "2d35b149-8def-4089-9d5f-7c87c5759a86",
+        "name": "Webhook",
+        "parameters": {
+          "httpMethod": "POST",
+          "options": {},
+          "path": "reporting",
+          "responseMode": "responseNode"
+        },
+        "position": [
+          -1392,
+          352
+        ],
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "webhookId": "internal-mail-send"
+      },
+      {
+        "id": "d4b7f90e-bc87-4586-bc78-f698abb84f9b",
+        "name": "Webhook Token Valid?",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "2fb778e2-a93a-41fe-aa57-0a6b898584e1",
+                "leftValue": "={{ $json.headers[\"x-webhook-token\"] }}",
+                "operator": {
+                  "operation": "equals",
+                  "type": "string"
+                },
+                "rightValue": "W0sp9w27iCtEcXOiWFiE8KfhfmJQ0YZd3tDC4EbPxsQ"
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 1
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          -1168,
+          352
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2
+      },
+      {
+        "id": "13f02c34-a638-47f2-bd87-7664f46d4ee7",
+        "name": "Validate Payload",
+        "parameters": {
+          "jsCode": "const body = $('Webhook').first().json.body || {};\nconst uservorname = $input.first().json.UserVorname;\nconst email = $input.first().json.UserMail;\nconst errors = [];\n\n// ---- EMAIL VALIDATION ----\nconst s = String(email || '').trim();\nconst parts = s.toLowerCase().split('@');\n\nconst valid =\n  parts.length === 2 &&\n  ['euroimmun.de', 'euroimmun.com', 'revvity.com'].includes(parts[1]);\n\nif (!valid) {\n  errors.push(`Invalid or not allowed recipient: ${email}`);\n}\n\n// ---- REPORT VALIDATION ----\nconst allowedReports = ['vi_report_bestellungen', 'vi_report_rechnungen', 'vi_report_lieferungen', 'vi_report_bestellungen_vr', 'vi_report_rechnungen_vr'];\nconst normalizedReport = typeof body.report === 'string' ? 'vi_report_' + body.report.trim().toLowerCase() : null;\n\nif (!normalizedReport || normalizedReport === '') {\n  errors.push('Field \"report\" must be a non-empty string');\n} else {\n  if (!allowedReports.includes(normalizedReport)) {\n    errors.push(`Invalid report type: ${normalizedReport}`);\n  }\n}\n// ---- REPORT VALIDATION ----\nconst allowedTargets = ['download', 'mail'];\nconst normalizedTarget = typeof body.target === 'string' ? body.target.trim().toLowerCase() : null;\n\nif (!normalizedTarget || normalizedTarget === '') {\n  errors.push('Field \"target\" must be a non-empty string');\n} else {\n  if (!allowedTargets.includes(normalizedTarget)) {\n    errors.push(`Invalid report type: ${normalizedTarget}`);\n  }\n}\n\n// ---- FILTERDATE VALIDATION ----\n\nfunction parseGermanDate(value, fieldName) {\n\n  if (typeof value !== 'string' || value.trim() === '') {\n    errors.push(`Field \"${fieldName}\" must be a non-empty date string DD.MM.YYYY`);\n    return null;\n  }\n\n  const s = value.trim();\n\n  // Format prüfen\n  if (!/^\\d{2}\\.\\d{2}\\.\\d{4}$/.test(s)) {\n    errors.push(`Field \"${fieldName}\" must use format DD.MM.YYYY`);\n    return null;\n  }\n\n  const [dd, mm, yyyy] = s.split('.').map(Number);\n\n  // UTC verhindert TZ-Probleme\n  const d = new Date(Date.UTC(yyyy, mm - 1, dd));\n\n  // Prüft echte Kalenderdaten (31.02. etc.)\n  if (\n    d.getUTCFullYear() !== yyyy ||\n    d.getUTCMonth() !== (mm - 1) ||\n    d.getUTCDate() !== dd\n  ) {\n    errors.push(`Field \"${fieldName}\" is not a valid calendar date`);\n    return null;\n  }\n\n  return d;\n}\n\nconst fromDate = parseGermanDate(body.fromdate, 'fromdate');\nconst toDate   = parseGermanDate(body.todate, 'todate');\n\nif (fromDate && toDate) {\n\n  const today = new Date();\n  const todayUtc = new Date(Date.UTC(\n      today.getUTCFullYear(),\n      today.getUTCMonth(),\n      today.getUTCDate()\n  ));\n\n  // From <= To\n  if (fromDate > toDate) {\n    errors.push('\"fromdate\" must be before or equal to \"todate\"');\n  }\n\n  // To <= today\n  if (toDate > todayUtc) {\n    errors.push('\"todate\" may not be in the future');\n  }\n\n  // Max 2 Jahre Abstand\n  const maxRangeStart = new Date(toDate);\n  maxRangeStart.setUTCFullYear(\n      maxRangeStart.getUTCFullYear() - 2\n  );\n\n  if (fromDate < maxRangeStart) {\n    errors.push('Date interval may not exceed 2 years');\n  }\n}\n\n// Normalisierung nach YYYY-MM-DD\nconst normalizedFromDate =\n  fromDate\n   ? fromDate.toISOString().slice(0,10)\n   : null;\n\nconst normalizedToDate =\n  toDate\n   ? toDate.toISOString().slice(0,10)\n   : null;\n\n// Validiere Datum -> From <= To <= heute; Max interval = 2 Jahre\n\n// ---- RESULT ----\nreturn [{\n  json: {\n    valid: errors.length === 0,\n    errors,\n    body,\n    normalized: {\n      report: normalizedReport,\n      target: normalizedTarget,\n      fromdate: normalizedFromDate,\n      todate: normalizedToDate,\n      uservorname: uservorname,\n      email: email\n    }\n  }\n}];"
+        },
+        "position": [
+          -528,
+          144
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "b0b763a5-b0da-4b37-9937-0fa195fa6cd4",
+        "name": "Payload Valid?",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "09864d46-240d-4151-807c-88f0f858657b",
+                "leftValue": "={{$json.valid}}",
+                "operator": {
+                  "operation": "true",
+                  "singleValue": true,
+                  "type": "boolean"
+                },
+                "rightValue": true
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 1
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          -288,
+          144
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2
+      },
+      {
+        "id": "e3f61e7e-c6f7-4025-ad98-21dc5c2b22c0",
+        "name": "Respond Validation Error",
+        "parameters": {
+          "options": {
+            "responseCode": 400
+          },
+          "respondWith": "json",
+          "responseBody": "={{ { success: false, error: 'Invalid payload', details: $json.errors } }}"
+        },
+        "position": [
+          -64,
+          240
+        ],
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1
+      },
+      {
+        "id": "d9e277b2-c6da-4162-b8db-5839ac337140",
+        "name": "Respond Unauthorized",
+        "parameters": {
+          "options": {
+            "responseCode": 401
+          },
+          "respondWith": "json",
+          "responseBody": "={{ { success: false, error: 'Unauthorized' } }}"
+        },
+        "position": [
+          -960,
+          512
+        ],
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1
+      },
+      {
+        "id": "b3b47d5d-e7d5-4ed7-8fec-84c3b07b3e7c",
+        "name": "Gateway Success?",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "0c73da8d-cab1-4b1b-b047-a3440051da17",
+                "leftValue": "={{ $json.success }}",
+                "operator": {
+                  "operation": "true",
+                  "singleValue": true,
+                  "type": "boolean"
+                },
+                "rightValue": ""
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 1
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          1072,
+          -96
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2
+      },
+      {
+        "id": "be023cc7-aada-4cb5-a78d-a74e81625054",
+        "name": "Respond Success",
+        "parameters": {
+          "options": {
+            "responseCode": 200
+          },
+          "respondWith": "json",
+          "responseBody": "={{ { success: true, message: 'Mail queued/sent successfully', gateway: $json } }}"
+        },
+        "position": [
+          1312,
+          -176
+        ],
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1
+      },
+      {
+        "id": "1e2ab8c3-264c-4dc0-bddc-9e293dfe96a6",
+        "name": "Respond Gateway Error",
+        "parameters": {
+          "options": {
+            "responseCode": 502
+          },
+          "respondWith": "json",
+          "responseBody": "={{ { success: false, error: $json.error || 'Gateway call failed', gateway: $json } }}"
+        },
+        "position": [
+          1312,
+          -16
+        ],
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1
+      },
+      {
+        "id": "bd965def-161a-4c75-bfa5-0c82848ab804",
+        "name": "Mail or Download?",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "65c06fc5-584d-47d0-943f-98c248101571",
+                "leftValue": "={{ $('Validate Payload').item.json.normalized.target }}",
+                "operator": {
+                  "name": "filter.operator.equals",
+                  "operation": "equals",
+                  "type": "string"
+                },
+                "rightValue": "mail"
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          448,
+          48
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2
+      },
+      {
+        "id": "c42d0738-b538-41b7-a60d-bcbc54b0589d",
+        "name": "Respond to Webhook",
+        "parameters": {
+          "options": {},
+          "respondWith": "binary"
+        },
+        "position": [
+          656,
+          144
+        ],
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1.4
+      },
+      {
+        "alwaysOutputData": true,
+        "credentials": "__REDACTED__",
+        "id": "78a1d54b-49c9-4d26-9f63-06225f83ef88",
+        "name": "Execute a SQL query",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ \n[\n  $json.body.session\n]\n}}"
+          },
+          "query": "SELECT UserVorname, UserName, UserMail\nFROM if_sessions as A\nINNER JOIN if_user as B ON A.UserNr=B.UserNr\nWHERE SessionDatum = CURDATE() AND SessionID = $1\nLIMIT 1"
+        },
+        "position": [
+          -960,
+          256
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "id": "ce7f673f-9fb5-4726-ae76-03d85ffe00e7",
+        "name": "Session existiert?",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "400c950e-ba8a-48bc-9703-348083fe369e",
+                "leftValue": "={{ $json.UserMail }}",
+                "operator": {
+                  "operation": "exists",
+                  "singleValue": true,
+                  "type": "string"
+                },
+                "rightValue": ""
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          -752,
+          256
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2
+      },
+      {
+        "id": "618a1f79-f054-4ccb-89d9-a1452492d930",
+        "name": "Respond Session nicht vorhanden",
+        "parameters": {
+          "options": {
+            "responseCode": 401
+          },
+          "respondWith": "json",
+          "responseBody": "={{ { success: false, error: 'Session does not exist or is not active' } }}"
+        },
+        "position": [
+          -528,
+          384
+        ],
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "c4620cc6-dd31-4bbf-99f6-be67030d52c1",
+        "name": "Execute a SQL query1",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{\n[\n  $json.normalized.report,\n  $json.normalized.fromdate,\n  $json.normalized.todate\n]\n}}"
+          },
+          "query": "SELECT *\nFROM {{ $json.normalized.report }}\nWHERE FilterDatum >= $2\n  AND FilterDatum <= $3"
+        },
+        "position": [
+          32,
+          48
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      }
+    ],
+    "updatedAt": "2026-07-14T07:39:30.000Z",
+    "versionId": "912faf9a-a447-4268-9ae0-21ebb572a204",
+    "workflowId": "tZaQaYuDbjnO1K4C"
+  },
+  "activeVersionId": "912faf9a-a447-4268-9ae0-21ebb572a204",
+  "connections": {
+    "Build Mail Payload": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "HTTP Request",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Convert to File": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Mail or Download?",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Session existiert?",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query1": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Convert to File",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Gateway Success?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Respond Success",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Respond Gateway Error",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Gateway Success?",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Mail or Download?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Build Mail Payload",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Respond to Webhook",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Payload Valid?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Execute a SQL query1",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Respond Validation Error",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Session existiert?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Validate Payload",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Respond Session nicht vorhanden",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Validate Payload": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Payload Valid?",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Webhook Token Valid?",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Webhook Token Valid?": "__REDACTED__"
+  },
+  "createdAt": "2026-04-23T06:02:12.221Z",
+  "id": "tZaQaYuDbjnO1K4C",
+  "isArchived": false,
+  "name": "Reporting BFEE",
+  "nodes": [
+    {
+      "id": "32b24950-7f6c-4d24-8619-63b14a8595ff",
+      "name": "Convert to File",
+      "parameters": {
+        "operation": "xlsx",
+        "options": {
+          "fileName": "={{\n(() => {\n  const report = $('Payload Valid?').first().json.normalized.report;\n\n  const map = {\n    vi_report_bestellungen: \"report_bestellungen\",\n    vi_report_lieferungen: \"report_lieferungen\",\n    vi_report_rechnungen: \"report_rechnungen\",\n    vi_report_bestellungen_vr: \"report_bestellungen\",\n    vi_report_rechnungen_vr: \"report_rechnungen\",\n  };\n\n  const prefix = map[report] || \"report\";\n\n  return `${prefix}_${$now.toFormat('yyyy-LL-dd_HH-mm-ss')}.xlsx`;\n})()\n}}"
+        }
+      },
+      "position": [
+        240,
+        48
+      ],
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1
+    },
+    {
+      "id": "66c88978-febb-4bdc-ba3e-65020f83b421",
+      "name": "Build Mail Payload",
+      "parameters": {
+        "jsCode": "const bin = $input.first().binary?.data;\n\nif (!bin) {\n  throw new Error('Keine Binärdatei unter binary.data gefunden');\n}\n\nconst payload = $('Payload Valid?').first().json;\nconst uservorname = payload.normalized.uservorname;\nconst to = payload.normalized.email;\nconst report = payload.normalized.report;\n\nlet subject = \"\";\nlet text = \"\";\nlet html = \"\";\nlet report_name = \"\";\nlet workflow = \"\";\n\nswitch (report) {\n  case \"bestellungen\":\n    subject = `Report Bestellungen ${$now.toFormat('yyyy-LL-dd')}`;\n    text = \"Im Anhang befindet sich der aktuelle Bestellreport.\";\n    html = `<p>Hallo ${uservorname},</p>\n            <p>im Anhang befindet sich der aktuelle <b>Bestellreport</b> für die letzten vier Wochen.</p>\n            <p>Erzeugt am: ${$now.toFormat('dd.LL.yyyy HH:mm:ss')}</p>`;\n    report_name = \"vi_report_bestellungen\";\n    workflow = \"Bestellreport Export\";\n    break;\n\n  case \"lieferungen\":\n    subject = `Report Warenannahmen ${$now.toFormat('yyyy-LL-dd')}`;\n    text = \"Im Anhang befindet sich der aktuelle Warenannahmereport.\";\n    html = `<p>Hallo ${uservorname},</p>\n            <p>im Anhang befindet sich der aktuelle <b>Warenannahmereport</b> für die letzten vier Wochen.</p>\n            <p>Erzeugt am: ${$now.toFormat('dd.LL.yyyy HH:mm:ss')}</p>`;\n    report_name = \"vi_report_lieferungen\";\n    workflow = \"Warenannahmereport Export\";\n    break;\n\n  case \"rechnungen\":\n    subject = `Report Rechnungen ${$now.toFormat('yyyy-LL-dd')}`;\n    text = \"Im Anhang befindet sich der aktuelle Rechnungenreport.\";\n    html = `<p>Hallo ${uservorname},</p>\n            <p>im Anhang befindet sich der aktuelle <b>Rechnungenreport</b> für die letzten vier Wochen.</p>\n            <p>Erzeugt am: ${$now.toFormat('dd.LL.yyyy HH:mm:ss')}</p>`;\n    report_name = \"vi_report_rechnungen\";\n    workflow = \"Rechnungenreport Export\";\n    break;\n\n  default:\n    throw new Error(`Unbekannter Report-Typ: ${report}`);\n}\n\nconst finalFilename =\n  bin.fileName ||\n  `report_${report}_${$now.toFormat('yyyy-LL-dd_HH-mm-ss')}.xlsx`;\n\nreturn [\n  {\n    json: {\n      to: [to],\n      cc: [],\n      bcc: [],\n      from: \"infofee@euroimmun.de\",\n      from_name: \"BestellFee Reporting\",\n      subject,\n      text,\n      html,\n      attachments: [\n        {\n          filename: finalFilename,\n          mimeType: bin.mimeType || \"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet\",\n          contentBase64: bin.data\n        }\n      ],\n      meta: {\n        report_name,\n        workflow,\n        generated_at: $now.toISO(),\n        file_name: finalFilename\n      }\n    }\n  }\n];"
+      },
+      "position": [
+        672,
+        -96
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "5d923b0d-53f7-48a5-8ca2-004b4bdc9760",
+      "name": "HTTP Request",
+      "parameters": {
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-webhook-token",
+              "value": "W0sp9w27iCtEcXOiWFiE8KfhfmJQ0YZd3tDC4EbPxsQ"
+            }
+          ]
+        },
+        "jsonBody": "={{ $json }}",
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "url": "http://10.4.190.16:5678/webhook/internal-mail/send"
+      },
+      "position": [
+        880,
+        -96
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "2d35b149-8def-4089-9d5f-7c87c5759a86",
+      "name": "Webhook",
+      "parameters": {
+        "httpMethod": "POST",
+        "options": {},
+        "path": "reporting",
+        "responseMode": "responseNode"
+      },
+      "position": [
+        -1392,
+        352
+      ],
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "webhookId": "internal-mail-send"
+    },
+    {
+      "id": "d4b7f90e-bc87-4586-bc78-f698abb84f9b",
+      "name": "Webhook Token Valid?",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "2fb778e2-a93a-41fe-aa57-0a6b898584e1",
+              "leftValue": "={{ $json.headers[\"x-webhook-token\"] }}",
+              "operator": {
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "W0sp9w27iCtEcXOiWFiE8KfhfmJQ0YZd3tDC4EbPxsQ"
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        -1168,
+        352
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2
+    },
+    {
+      "id": "13f02c34-a638-47f2-bd87-7664f46d4ee7",
+      "name": "Validate Payload",
+      "parameters": {
+        "jsCode": "const body = $('Webhook').first().json.body || {};\nconst uservorname = $input.first().json.UserVorname;\nconst email = $input.first().json.UserMail;\nconst errors = [];\n\n// ---- EMAIL VALIDATION ----\nconst s = String(email || '').trim();\nconst parts = s.toLowerCase().split('@');\n\nconst valid =\n  parts.length === 2 &&\n  ['euroimmun.de', 'euroimmun.com', 'revvity.com'].includes(parts[1]);\n\nif (!valid) {\n  errors.push(`Invalid or not allowed recipient: ${email}`);\n}\n\n// ---- REPORT VALIDATION ----\nconst allowedReports = ['vi_report_bestellungen', 'vi_report_rechnungen', 'vi_report_lieferungen', 'vi_report_bestellungen_vr', 'vi_report_rechnungen_vr'];\nconst normalizedReport = typeof body.report === 'string' ? 'vi_report_' + body.report.trim().toLowerCase() : null;\n\nif (!normalizedReport || normalizedReport === '') {\n  errors.push('Field \"report\" must be a non-empty string');\n} else {\n  if (!allowedReports.includes(normalizedReport)) {\n    errors.push(`Invalid report type: ${normalizedReport}`);\n  }\n}\n// ---- REPORT VALIDATION ----\nconst allowedTargets = ['download', 'mail'];\nconst normalizedTarget = typeof body.target === 'string' ? body.target.trim().toLowerCase() : null;\n\nif (!normalizedTarget || normalizedTarget === '') {\n  errors.push('Field \"target\" must be a non-empty string');\n} else {\n  if (!allowedTargets.includes(normalizedTarget)) {\n    errors.push(`Invalid report type: ${normalizedTarget}`);\n  }\n}\n\n// ---- FILTERDATE VALIDATION ----\n\nfunction parseGermanDate(value, fieldName) {\n\n  if (typeof value !== 'string' || value.trim() === '') {\n    errors.push(`Field \"${fieldName}\" must be a non-empty date string DD.MM.YYYY`);\n    return null;\n  }\n\n  const s = value.trim();\n\n  // Format prüfen\n  if (!/^\\d{2}\\.\\d{2}\\.\\d{4}$/.test(s)) {\n    errors.push(`Field \"${fieldName}\" must use format DD.MM.YYYY`);\n    return null;\n  }\n\n  const [dd, mm, yyyy] = s.split('.').map(Number);\n\n  // UTC verhindert TZ-Probleme\n  const d = new Date(Date.UTC(yyyy, mm - 1, dd));\n\n  // Prüft echte Kalenderdaten (31.02. etc.)\n  if (\n    d.getUTCFullYear() !== yyyy ||\n    d.getUTCMonth() !== (mm - 1) ||\n    d.getUTCDate() !== dd\n  ) {\n    errors.push(`Field \"${fieldName}\" is not a valid calendar date`);\n    return null;\n  }\n\n  return d;\n}\n\nconst fromDate = parseGermanDate(body.fromdate, 'fromdate');\nconst toDate   = parseGermanDate(body.todate, 'todate');\n\nif (fromDate && toDate) {\n\n  const today = new Date();\n  const todayUtc = new Date(Date.UTC(\n      today.getUTCFullYear(),\n      today.getUTCMonth(),\n      today.getUTCDate()\n  ));\n\n  // From <= To\n  if (fromDate > toDate) {\n    errors.push('\"fromdate\" must be before or equal to \"todate\"');\n  }\n\n  // To <= today\n  if (toDate > todayUtc) {\n    errors.push('\"todate\" may not be in the future');\n  }\n\n  // Max 2 Jahre Abstand\n  const maxRangeStart = new Date(toDate);\n  maxRangeStart.setUTCFullYear(\n      maxRangeStart.getUTCFullYear() - 2\n  );\n\n  if (fromDate < maxRangeStart) {\n    errors.push('Date interval may not exceed 2 years');\n  }\n}\n\n// Normalisierung nach YYYY-MM-DD\nconst normalizedFromDate =\n  fromDate\n   ? fromDate.toISOString().slice(0,10)\n   : null;\n\nconst normalizedToDate =\n  toDate\n   ? toDate.toISOString().slice(0,10)\n   : null;\n\n// Validiere Datum -> From <= To <= heute; Max interval = 2 Jahre\n\n// ---- RESULT ----\nreturn [{\n  json: {\n    valid: errors.length === 0,\n    errors,\n    body,\n    normalized: {\n      report: normalizedReport,\n      target: normalizedTarget,\n      fromdate: normalizedFromDate,\n      todate: normalizedToDate,\n      uservorname: uservorname,\n      email: email\n    }\n  }\n}];"
+      },
+      "position": [
+        -528,
+        144
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "b0b763a5-b0da-4b37-9937-0fa195fa6cd4",
+      "name": "Payload Valid?",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "09864d46-240d-4151-807c-88f0f858657b",
+              "leftValue": "={{$json.valid}}",
+              "operator": {
+                "operation": "true",
+                "singleValue": true,
+                "type": "boolean"
+              },
+              "rightValue": true
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        -288,
+        144
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2
+    },
+    {
+      "id": "e3f61e7e-c6f7-4025-ad98-21dc5c2b22c0",
+      "name": "Respond Validation Error",
+      "parameters": {
+        "options": {
+          "responseCode": 400
+        },
+        "respondWith": "json",
+        "responseBody": "={{ { success: false, error: 'Invalid payload', details: $json.errors } }}"
+      },
+      "position": [
+        -64,
+        240
+      ],
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1
+    },
+    {
+      "id": "d9e277b2-c6da-4162-b8db-5839ac337140",
+      "name": "Respond Unauthorized",
+      "parameters": {
+        "options": {
+          "responseCode": 401
+        },
+        "respondWith": "json",
+        "responseBody": "={{ { success: false, error: 'Unauthorized' } }}"
+      },
+      "position": [
+        -960,
+        512
+      ],
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1
+    },
+    {
+      "id": "b3b47d5d-e7d5-4ed7-8fec-84c3b07b3e7c",
+      "name": "Gateway Success?",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "0c73da8d-cab1-4b1b-b047-a3440051da17",
+              "leftValue": "={{ $json.success }}",
+              "operator": {
+                "operation": "true",
+                "singleValue": true,
+                "type": "boolean"
+              },
+              "rightValue": ""
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        1072,
+        -96
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2
+    },
+    {
+      "id": "be023cc7-aada-4cb5-a78d-a74e81625054",
+      "name": "Respond Success",
+      "parameters": {
+        "options": {
+          "responseCode": 200
+        },
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'Mail queued/sent successfully', gateway: $json } }}"
+      },
+      "position": [
+        1312,
+        -176
+      ],
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1
+    },
+    {
+      "id": "1e2ab8c3-264c-4dc0-bddc-9e293dfe96a6",
+      "name": "Respond Gateway Error",
+      "parameters": {
+        "options": {
+          "responseCode": 502
+        },
+        "respondWith": "json",
+        "responseBody": "={{ { success: false, error: $json.error || 'Gateway call failed', gateway: $json } }}"
+      },
+      "position": [
+        1312,
+        -16
+      ],
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1
+    },
+    {
+      "id": "bd965def-161a-4c75-bfa5-0c82848ab804",
+      "name": "Mail or Download?",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "65c06fc5-584d-47d0-943f-98c248101571",
+              "leftValue": "={{ $('Validate Payload').item.json.normalized.target }}",
+              "operator": {
+                "name": "filter.operator.equals",
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "mail"
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        448,
+        48
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2
+    },
+    {
+      "id": "c42d0738-b538-41b7-a60d-bcbc54b0589d",
+      "name": "Respond to Webhook",
+      "parameters": {
+        "options": {},
+        "respondWith": "binary"
+      },
+      "position": [
+        656,
+        144
+      ],
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4
+    },
+    {
+      "alwaysOutputData": true,
+      "credentials": "__REDACTED__",
+      "id": "78a1d54b-49c9-4d26-9f63-06225f83ef88",
+      "name": "Execute a SQL query",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ \n[\n  $json.body.session\n]\n}}"
+        },
+        "query": "SELECT UserVorname, UserName, UserMail\nFROM if_sessions as A\nINNER JOIN if_user as B ON A.UserNr=B.UserNr\nWHERE SessionDatum = CURDATE() AND SessionID = $1\nLIMIT 1"
+      },
+      "position": [
+        -960,
+        256
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "id": "ce7f673f-9fb5-4726-ae76-03d85ffe00e7",
+      "name": "Session existiert?",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "400c950e-ba8a-48bc-9703-348083fe369e",
+              "leftValue": "={{ $json.UserMail }}",
+              "operator": {
+                "operation": "exists",
+                "singleValue": true,
+                "type": "string"
+              },
+              "rightValue": ""
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        -752,
+        256
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2
+    },
+    {
+      "id": "618a1f79-f054-4ccb-89d9-a1452492d930",
+      "name": "Respond Session nicht vorhanden",
+      "parameters": {
+        "options": {
+          "responseCode": 401
+        },
+        "respondWith": "json",
+        "responseBody": "={{ { success: false, error: 'Session does not exist or is not active' } }}"
+      },
+      "position": [
+        -528,
+        384
+      ],
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "c4620cc6-dd31-4bbf-99f6-be67030d52c1",
+      "name": "Execute a SQL query1",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{\n[\n  $json.normalized.report,\n  $json.normalized.fromdate,\n  $json.normalized.todate\n]\n}}"
+        },
+        "query": "SELECT *\nFROM {{ $json.normalized.report }}\nWHERE FilterDatum >= $2\n  AND FilterDatum <= $3"
+      },
+      "position": [
+        32,
+        48
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    }
+  ],
+  "settings": {
+    "binaryMode": "separate",
+    "executionOrder": "v1"
+  },
+  "tags": [
+    {
+      "createdAt": "2026-04-26T16:07:40.353Z",
+      "id": "7yA92eNGquGkG7yK",
+      "name": "bestellfee",
+      "updatedAt": "2026-04-26T16:08:08.712Z"
+    },
+    {
+      "createdAt": "2026-04-26T16:08:38.611Z",
+      "id": "YEi9guLv9pIKcAM9",
+      "name": "sendmail",
+      "updatedAt": "2026-04-26T16:08:38.611Z"
+    },
+    {
+      "createdAt": "2026-04-13T10:45:59.101Z",
+      "id": "dhutUOk6gjuZBrgq",
+      "name": "mariadb",
+      "updatedAt": "2026-04-13T10:45:59.101Z"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2026-07-14T07:32:41.242Z",
+  "versionId": "912faf9a-a447-4268-9ae0-21ebb572a204"
+}

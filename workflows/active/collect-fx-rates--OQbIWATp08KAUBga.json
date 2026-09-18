@@ -1,0 +1,1155 @@
+{
+  "active": true,
+  "activeVersion": {
+    "authors": "Lars Komorowski",
+    "autosaved": true,
+    "connections": {
+      "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Execute a SQL query",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript1": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items1",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript2": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Collect Rates": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code in JavaScript2",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Collect Rows w/o USD": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Execute a SQL query": {
+        "main": [
+          []
+        ]
+      },
+      "Execute a SQL query1": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items1",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP Request": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "XML",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP Request2": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "XML1",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Update USD",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Loop Over Items": {
+        "main": [
+          [],
+          [
+            {
+              "index": 0,
+              "node": "Collect Rates",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Loop Over Items1": {
+        "main": [
+          [],
+          [
+            {
+              "index": 0,
+              "node": "Execute a SQL query1",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "HTTP Request",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger1": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "HTTP Request2",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger2": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Collect Rows w/o USD",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Update USD": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "XML": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code in JavaScript",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "XML1": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code in JavaScript1",
+              "type": "main"
+            }
+          ]
+        ]
+      }
+    },
+    "createdAt": "2026-04-30T10:49:16.769Z",
+    "description": "",
+    "name": "Version e558cd59",
+    "nodes": [
+      {
+        "id": "a860efa1-3814-48e7-8109-ebb0b30c5893",
+        "name": "Schedule Trigger",
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "expression": "0 0 17 * * 1-5",
+                "field": "cronExpression"
+              }
+            ]
+          }
+        },
+        "position": [
+          -528,
+          -96
+        ],
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2
+      },
+      {
+        "id": "eb4f054d-c06c-4aa6-9f0e-780adb962e3e",
+        "name": "HTTP Request",
+        "parameters": {
+          "options": {},
+          "url": "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+        },
+        "position": [
+          -320,
+          -96
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "99cab833-b760-49f1-9570-9c370f1854b5",
+        "name": "XML",
+        "parameters": {
+          "options": {}
+        },
+        "position": [
+          -112,
+          -96
+        ],
+        "type": "n8n-nodes-base.xml",
+        "typeVersion": 1
+      },
+      {
+        "id": "0fa6df79-3d54-41b6-8940-8c15eab68975",
+        "name": "Code in JavaScript",
+        "parameters": {
+          "jsCode": "const sourceUrl = 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml';\n\nfunction first(x) {\n  return Array.isArray(x) ? x[0] : x;\n}\n\nfunction attr(obj, name) {\n  if (!obj) return undefined;\n  return obj[name] ?? obj.$?.[name] ?? obj.$?.[`@_${name}`] ?? obj[`@_${name}`];\n}\n\nconst root =\n  $json['gesmes:Envelope'] ??\n  $json.Envelope ??\n  $json;\n\nconst cubeRoot = first(root.Cube);\nconst timeCube = first(cubeRoot?.Cube);\n\nif (!timeCube) {\n  throw new Error(\n    'ECB timeCube nicht gefunden. XML-Struktur: ' +\n    JSON.stringify($json).slice(0, 2000)\n  );\n}\n\nconst rateDate = attr(timeCube, 'time');\n\nif (!rateDate) {\n  throw new Error(\n    'RateDate/time nicht gefunden. timeCube: ' +\n    JSON.stringify(timeCube).slice(0, 2000)\n  );\n}\n\nconst rates = Array.isArray(timeCube.Cube)\n  ? timeCube.Cube\n  : timeCube.Cube\n    ? [timeCube.Cube]\n    : [];\n\nconst out = [];\n\nout.push({\n  json: {\n    RateDate: rateDate,\n    BaseCurrencyISOCode: 'EUR',\n    QuoteCurrencyISOCode: 'EUR',\n    Rate: 1.0,\n    Source: 'ECB',\n    SourceUrl: sourceUrl\n  }\n});\n\nfor (const r of rates) {\n  const currency = attr(r, 'currency');\n  const rate = attr(r, 'rate');\n\n  if (!currency || rate === undefined) continue;\n\n  out.push({\n    json: {\n      RateDate: rateDate,\n      BaseCurrencyISOCode: 'EUR',\n      QuoteCurrencyISOCode: currency,\n      Rate: Number(rate),\n      Source: 'ECB',\n      SourceUrl: sourceUrl\n    }\n  });\n}\n\nreturn out;"
+        },
+        "position": [
+          96,
+          -96
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "b349d24d-490c-4271-bd75-b0ae850cefb4",
+        "name": "Execute a SQL query",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "INSERT INTO infofee01_corporate.if_fx_rates\n(\n  FXRateDate,\n  FXRateBaseCurrencyISOCode,\n  FXRateQuoteCurrencyISOCode,\n  FXRateRate,\n  FXRateSource,\n  FXRateSourceUrl,\n  ImportedAt,\n  UpdatedAt\n)\nVALUES\n(\n  '{{ $json.RateDate }}',\n  '{{ $json.BaseCurrencyISOCode }}',\n  '{{ $json.QuoteCurrencyISOCode }}',\n  {{ Number($json.Rate) }},\n  '{{ $json.Source }}',\n  '{{ $json.SourceUrl }}',\n  NOW(),\n  NOW()\n)\nON DUPLICATE KEY UPDATE\n  FXRateRate = VALUES(FXRateRate),\n  FXRateSourceUrl = VALUES(FXRateSourceUrl),\n  UpdatedAt = NOW();"
+        },
+        "position": [
+          304,
+          -96
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "id": "f945fbea-761b-4460-a0ff-6cce3b304271",
+        "name": "Schedule Trigger1",
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "expression": "0 0 17 1 * *",
+                "field": "cronExpression"
+              }
+            ]
+          }
+        },
+        "position": [
+          -528,
+          176
+        ],
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2
+      },
+      {
+        "id": "c756ff00-f196-4a6e-9ae1-0c89a2d97b6d",
+        "name": "HTTP Request2",
+        "parameters": {
+          "options": {},
+          "url": "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml"
+        },
+        "position": [
+          -320,
+          176
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "4792d49e-698b-4599-a285-31644964b394",
+        "name": "XML1",
+        "parameters": {
+          "options": {}
+        },
+        "position": [
+          -112,
+          176
+        ],
+        "type": "n8n-nodes-base.xml",
+        "typeVersion": 1
+      },
+      {
+        "id": "00c96449-8558-438e-82b2-c88f847988d3",
+        "name": "Code in JavaScript1",
+        "parameters": {
+          "jsCode": "const sourceUrl =\n'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml';\n\nfunction first(v){\n return Array.isArray(v) ? v[0] : v;\n}\n\nfunction attr(obj,name){\n if(!obj) return undefined;\n\n return obj[name]\n   ?? obj?.$?.[name]\n   ?? obj?.$?.[`@_${name}`]\n   ?? obj[`@_${name}`];\n}\n\nconst root=\n $json['gesmes:Envelope']\n ?? $json.Envelope\n ?? $json;\n\nconst cubeRoot=first(root.Cube);\n\nconst dayNodes=\nArray.isArray(cubeRoot.Cube)\n ? cubeRoot.Cube\n : [cubeRoot.Cube];\n\nlet out=[];\n\nfor (const day of dayNodes){\n\n const rateDate=attr(day,'time');\n\n if(!rateDate) continue;\n\n // EUR Basis selbst\n out.push({\n   json:{\n      RateDate:rateDate,\n      BaseCurrencyISOCode:'EUR',\n      QuoteCurrencyISOCode:'EUR',\n      Rate:1,\n      Source:'ECB',\n      SourceUrl:sourceUrl\n   }\n });\n\n const rates=\n   Array.isArray(day.Cube)\n    ? day.Cube\n    : day.Cube\n      ? [day.Cube]\n      : [];\n\n for(const r of rates){\n\n   const c=attr(r,'currency');\n   const rate=attr(r,'rate');\n\n   if(!c || !rate) continue;\n\n   out.push({\n      json:{\n        RateDate:rateDate,\n        BaseCurrencyISOCode:'EUR',\n        QuoteCurrencyISOCode:c,\n        Rate:Number(rate),\n        Source:'ECB',\n        SourceUrl:sourceUrl\n      }\n   });\n\n }\n\n}\n\nreturn out;"
+        },
+        "position": [
+          96,
+          176
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "9923ec52-bf0b-4911-ab75-d8bab987e745",
+        "name": "Execute a SQL query1",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "INSERT INTO infofee01_corporate.if_fx_rates\n(\n  FXRateDate,\n  FXRateBaseCurrencyISOCode,\n  FXRateQuoteCurrencyISOCode,\n  FXRateRate,\n  FXRateSource,\n  FXRateSourceUrl,\n  ImportedAt,\n  UpdatedAt\n)\nVALUES\n(\n  '{{ $json.RateDate }}',\n  '{{ $json.BaseCurrencyISOCode }}',\n  '{{ $json.QuoteCurrencyISOCode }}',\n  {{ Number($json.Rate) }},\n  '{{ $json.Source }}',\n  '{{ $json.SourceUrl }}',\n  NOW(),\n  NOW()\n)\nON DUPLICATE KEY UPDATE\n  FXRateRate = VALUES(FXRateRate),\n  FXRateSourceUrl = VALUES(FXRateSourceUrl),\n  UpdatedAt = NOW();"
+        },
+        "position": [
+          512,
+          336
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "id": "f444b0cd-6b81-48b8-b49a-77e37f5b1424",
+        "name": "Loop Over Items1",
+        "parameters": {
+          "batchSize": 250,
+          "options": {}
+        },
+        "position": [
+          304,
+          176
+        ],
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3
+      },
+      {
+        "id": "c6edd3b7-1991-4702-8fee-11f1e8c90089",
+        "name": "Sticky Note",
+        "parameters": {
+          "content": "## Collect daily\n**Double click** to edit me. [Guide](https://docs.n8n.io/workflows/components/sticky-notes/)",
+          "height": 256,
+          "width": 1152
+        },
+        "position": [
+          -624,
+          -176
+        ],
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1
+      },
+      {
+        "id": "fc499f1e-b87b-492b-9e4a-12476b9124e7",
+        "name": "Sticky Note1",
+        "parameters": {
+          "content": "## Collect last 90 days once a month\n**Double click** to edit me. [Guide](https://docs.n8n.io/workflows/components/sticky-notes/)",
+          "height": 432,
+          "width": 1312
+        },
+        "position": [
+          -624,
+          96
+        ],
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1
+      },
+      {
+        "id": "6d5ee699-4069-4fcc-8b13-d5c6c0f41f33",
+        "name": "Loop Over Items",
+        "parameters": {
+          "options": {}
+        },
+        "position": [
+          -256,
+          640
+        ],
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "22d76ce4-a1f1-42b5-bf0b-e5b6a5615175",
+        "name": "Collect Rows w/o USD",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "SELECT A.Bestellungen_AnnahmenNr, A.BestellungBezahlungBetrag, DATE(A.BestellungBezahlungRechnungsDatum), A.BestellungBezahlungWaehrung\nFROM if_bestellungen_annahmen as A\nWHERE A.BestellungBezahlungBetrag IS NOT NULL\n  AND A.BestellungBezahlungBetrag <> 0\n  AND (A.BestellungBezahlungBetragUSD IS NULL\n  OR A.BestellungBezahlungBetragUSD = 0)\n  AND A.BestellungBezahlungRechnungsDatum IS NOT NULL\n  AND DATE(A.BestellungBezahlungRechnungsDatum) <> '0000-00-00'\n  AND A.BestellungBezahlungWaehrung IS NOT NULL\n  AND A.BestellungBezahlungWaehrung <> ''"
+        },
+        "position": [
+          -464,
+          640
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "39af45e4-771e-4678-8357-6d0f115e8dc2",
+        "name": "Collect Rates",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{\n[\n  $json.BestellungBezahlungWaehrung,\n  $json['DATE(A.BestellungBezahlungRechnungsDatum)']\n]\n}}"
+          },
+          "query": "SELECT A.FxRateDate, A.FXRateRate, A. FXRateBaseCurrencyISOCode, A.FXRateQuoteCurrencyISOCode\nFROM infofee01_corporate.if_fx_rates as A\nWHERE (A.FXRateQuoteCurrencyISOCode = $1 \n  OR A.FXRateQuoteCurrencyISOCode = 'USD')\n  AND A.FxRateDate >= $2\nORDER BY A.FxRateDate ASC\nLIMIT 2"
+        },
+        "position": [
+          -96,
+          720
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "id": "d4db77af-d377-4b2e-8561-b6efb116d2a1",
+        "name": "Code in JavaScript2",
+        "parameters": {
+          "jsCode": "const rates = $input.all().map(item => item.json);\nconst fromWaehrung = $('Loop Over Items').item.json.BestellungBezahlungWaehrung ?? '';\nconst betrag = $('Loop Over Items').item.json.BestellungBezahlungBetrag ?? 0;\n\nconst eurUsd = rates.find(r => r.FXRateQuoteCurrencyISOCode === 'USD');\nconst eurAny = rates.find(r => r.FXRateQuoteCurrencyISOCode !== 'USD');\n\nif (!eurUsd || !eurAny) {\n  throw new Error('EUR/USD oder EUR/' + fromWaehrung + ' Kurs fehlt');\n}\n\nconst usdPerAny =\n  Number(eurUsd.FXRateRate) / Number(eurAny.FXRateRate);\n\nconst betragUsd = Number(betrag) * Number(usdPerAny);\n\nreturn [{\n  json: {\n    FxRateDate: eurUsd.FxRateDate,\n    FXRateBaseCurrencyISOCode: fromWaehrung,\n    FXRateQuoteCurrencyISOCode: 'USD',\n    FXRateRate: usdPerAny.toFixed(10),\n    betragUsd: betragUsd\n  }\n}];"
+        },
+        "position": [
+          80,
+          720
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "16c149d5-8e93-426e-b294-0788a45bc7d8",
+        "name": "If",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "0955ecd3-8e1b-4497-b7bb-ca3c80642644",
+                "leftValue": "={{ $json.FxRateDate }}",
+                "operator": {
+                  "operation": "notEmpty",
+                  "singleValue": true,
+                  "type": "dateTime"
+                },
+                "rightValue": ""
+              },
+              {
+                "id": "0e1b1872-af6c-445d-afb3-e72aae9cd97d",
+                "leftValue": "={{ $json.betragUsd }}",
+                "operator": {
+                  "operation": "notEmpty",
+                  "singleValue": true,
+                  "type": "number"
+                },
+                "rightValue": ""
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          288,
+          720
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3
+      },
+      {
+        "id": "ad70ccbe-0d96-4c27-ba34-5ed33c15e72a",
+        "name": "Schedule Trigger2",
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "expression": "15 1 1 * * *",
+                "field": "cronExpression"
+              }
+            ]
+          }
+        },
+        "position": [
+          -640,
+          640
+        ],
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2
+      },
+      {
+        "id": "8f80d8d7-ac9c-44c9-9620-5eebad72ef9d",
+        "name": "Sticky Note2",
+        "parameters": {
+          "content": "## Update FX Rates in WA\n**Double click** to edit me. [Guide](https://docs.n8n.io/workflows/components/sticky-notes/)",
+          "height": 448,
+          "width": 1472
+        },
+        "position": [
+          -736,
+          560
+        ],
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "ee26d02b-99b4-48f7-9db0-ce37a908e7f5",
+        "name": "Update USD",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ \n[\n  $json.betragUsd,\n  $json.FxRateDate,\n  $('Loop Over Items').item.json.Bestellungen_AnnahmenNr\n]\n}}"
+          },
+          "query": "UPDATE if_bestellungen_annahmen SET\nBestellungBezahlungBetragUSD = $1,\nBestellungBezahlungBetragFXRateDatum = $2\nWHERE Bestellungen_AnnahmenNr = $3"
+        },
+        "position": [
+          528,
+          784
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      }
+    ],
+    "updatedAt": "2026-04-30T10:49:25.000Z",
+    "versionId": "e558cd59-432f-4f4a-bae2-a1da6bde4535",
+    "workflowId": "OQbIWATp08KAUBga"
+  },
+  "activeVersionId": "e558cd59-432f-4f4a-bae2-a1da6bde4535",
+  "connections": {
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Execute a SQL query",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items1",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript2": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Collect Rates": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code in JavaScript2",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Collect Rows w/o USD": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Execute a SQL query": {
+      "main": [
+        []
+      ]
+    },
+    "Execute a SQL query1": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items1",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "XML",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP Request2": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "XML1",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Update USD",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "index": 0,
+            "node": "Collect Rates",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [],
+        [
+          {
+            "index": 0,
+            "node": "Execute a SQL query1",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "HTTP Request",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "HTTP Request2",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger2": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Collect Rows w/o USD",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Update USD": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "XML": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code in JavaScript",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "XML1": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code in JavaScript1",
+            "type": "main"
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-04-27T07:44:53.847Z",
+  "id": "OQbIWATp08KAUBga",
+  "isArchived": false,
+  "name": "Collect FX Rates",
+  "nodes": [
+    {
+      "id": "a860efa1-3814-48e7-8109-ebb0b30c5893",
+      "name": "Schedule Trigger",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "expression": "0 0 17 * * 1-5",
+              "field": "cronExpression"
+            }
+          ]
+        }
+      },
+      "position": [
+        -528,
+        -96
+      ],
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2
+    },
+    {
+      "id": "eb4f054d-c06c-4aa6-9f0e-780adb962e3e",
+      "name": "HTTP Request",
+      "parameters": {
+        "options": {},
+        "url": "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml"
+      },
+      "position": [
+        -320,
+        -96
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "99cab833-b760-49f1-9570-9c370f1854b5",
+      "name": "XML",
+      "parameters": {
+        "options": {}
+      },
+      "position": [
+        -112,
+        -96
+      ],
+      "type": "n8n-nodes-base.xml",
+      "typeVersion": 1
+    },
+    {
+      "id": "0fa6df79-3d54-41b6-8940-8c15eab68975",
+      "name": "Code in JavaScript",
+      "parameters": {
+        "jsCode": "const sourceUrl = 'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml';\n\nfunction first(x) {\n  return Array.isArray(x) ? x[0] : x;\n}\n\nfunction attr(obj, name) {\n  if (!obj) return undefined;\n  return obj[name] ?? obj.$?.[name] ?? obj.$?.[`@_${name}`] ?? obj[`@_${name}`];\n}\n\nconst root =\n  $json['gesmes:Envelope'] ??\n  $json.Envelope ??\n  $json;\n\nconst cubeRoot = first(root.Cube);\nconst timeCube = first(cubeRoot?.Cube);\n\nif (!timeCube) {\n  throw new Error(\n    'ECB timeCube nicht gefunden. XML-Struktur: ' +\n    JSON.stringify($json).slice(0, 2000)\n  );\n}\n\nconst rateDate = attr(timeCube, 'time');\n\nif (!rateDate) {\n  throw new Error(\n    'RateDate/time nicht gefunden. timeCube: ' +\n    JSON.stringify(timeCube).slice(0, 2000)\n  );\n}\n\nconst rates = Array.isArray(timeCube.Cube)\n  ? timeCube.Cube\n  : timeCube.Cube\n    ? [timeCube.Cube]\n    : [];\n\nconst out = [];\n\nout.push({\n  json: {\n    RateDate: rateDate,\n    BaseCurrencyISOCode: 'EUR',\n    QuoteCurrencyISOCode: 'EUR',\n    Rate: 1.0,\n    Source: 'ECB',\n    SourceUrl: sourceUrl\n  }\n});\n\nfor (const r of rates) {\n  const currency = attr(r, 'currency');\n  const rate = attr(r, 'rate');\n\n  if (!currency || rate === undefined) continue;\n\n  out.push({\n    json: {\n      RateDate: rateDate,\n      BaseCurrencyISOCode: 'EUR',\n      QuoteCurrencyISOCode: currency,\n      Rate: Number(rate),\n      Source: 'ECB',\n      SourceUrl: sourceUrl\n    }\n  });\n}\n\nreturn out;"
+      },
+      "position": [
+        96,
+        -96
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "b349d24d-490c-4271-bd75-b0ae850cefb4",
+      "name": "Execute a SQL query",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "INSERT INTO infofee01_corporate.if_fx_rates\n(\n  FXRateDate,\n  FXRateBaseCurrencyISOCode,\n  FXRateQuoteCurrencyISOCode,\n  FXRateRate,\n  FXRateSource,\n  FXRateSourceUrl,\n  ImportedAt,\n  UpdatedAt\n)\nVALUES\n(\n  '{{ $json.RateDate }}',\n  '{{ $json.BaseCurrencyISOCode }}',\n  '{{ $json.QuoteCurrencyISOCode }}',\n  {{ Number($json.Rate) }},\n  '{{ $json.Source }}',\n  '{{ $json.SourceUrl }}',\n  NOW(),\n  NOW()\n)\nON DUPLICATE KEY UPDATE\n  FXRateRate = VALUES(FXRateRate),\n  FXRateSourceUrl = VALUES(FXRateSourceUrl),\n  UpdatedAt = NOW();"
+      },
+      "position": [
+        304,
+        -96
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "id": "f945fbea-761b-4460-a0ff-6cce3b304271",
+      "name": "Schedule Trigger1",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "expression": "0 0 17 1 * *",
+              "field": "cronExpression"
+            }
+          ]
+        }
+      },
+      "position": [
+        -528,
+        176
+      ],
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2
+    },
+    {
+      "id": "c756ff00-f196-4a6e-9ae1-0c89a2d97b6d",
+      "name": "HTTP Request2",
+      "parameters": {
+        "options": {},
+        "url": "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml"
+      },
+      "position": [
+        -320,
+        176
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "4792d49e-698b-4599-a285-31644964b394",
+      "name": "XML1",
+      "parameters": {
+        "options": {}
+      },
+      "position": [
+        -112,
+        176
+      ],
+      "type": "n8n-nodes-base.xml",
+      "typeVersion": 1
+    },
+    {
+      "id": "00c96449-8558-438e-82b2-c88f847988d3",
+      "name": "Code in JavaScript1",
+      "parameters": {
+        "jsCode": "const sourceUrl =\n'https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml';\n\nfunction first(v){\n return Array.isArray(v) ? v[0] : v;\n}\n\nfunction attr(obj,name){\n if(!obj) return undefined;\n\n return obj[name]\n   ?? obj?.$?.[name]\n   ?? obj?.$?.[`@_${name}`]\n   ?? obj[`@_${name}`];\n}\n\nconst root=\n $json['gesmes:Envelope']\n ?? $json.Envelope\n ?? $json;\n\nconst cubeRoot=first(root.Cube);\n\nconst dayNodes=\nArray.isArray(cubeRoot.Cube)\n ? cubeRoot.Cube\n : [cubeRoot.Cube];\n\nlet out=[];\n\nfor (const day of dayNodes){\n\n const rateDate=attr(day,'time');\n\n if(!rateDate) continue;\n\n // EUR Basis selbst\n out.push({\n   json:{\n      RateDate:rateDate,\n      BaseCurrencyISOCode:'EUR',\n      QuoteCurrencyISOCode:'EUR',\n      Rate:1,\n      Source:'ECB',\n      SourceUrl:sourceUrl\n   }\n });\n\n const rates=\n   Array.isArray(day.Cube)\n    ? day.Cube\n    : day.Cube\n      ? [day.Cube]\n      : [];\n\n for(const r of rates){\n\n   const c=attr(r,'currency');\n   const rate=attr(r,'rate');\n\n   if(!c || !rate) continue;\n\n   out.push({\n      json:{\n        RateDate:rateDate,\n        BaseCurrencyISOCode:'EUR',\n        QuoteCurrencyISOCode:c,\n        Rate:Number(rate),\n        Source:'ECB',\n        SourceUrl:sourceUrl\n      }\n   });\n\n }\n\n}\n\nreturn out;"
+      },
+      "position": [
+        96,
+        176
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "9923ec52-bf0b-4911-ab75-d8bab987e745",
+      "name": "Execute a SQL query1",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "INSERT INTO infofee01_corporate.if_fx_rates\n(\n  FXRateDate,\n  FXRateBaseCurrencyISOCode,\n  FXRateQuoteCurrencyISOCode,\n  FXRateRate,\n  FXRateSource,\n  FXRateSourceUrl,\n  ImportedAt,\n  UpdatedAt\n)\nVALUES\n(\n  '{{ $json.RateDate }}',\n  '{{ $json.BaseCurrencyISOCode }}',\n  '{{ $json.QuoteCurrencyISOCode }}',\n  {{ Number($json.Rate) }},\n  '{{ $json.Source }}',\n  '{{ $json.SourceUrl }}',\n  NOW(),\n  NOW()\n)\nON DUPLICATE KEY UPDATE\n  FXRateRate = VALUES(FXRateRate),\n  FXRateSourceUrl = VALUES(FXRateSourceUrl),\n  UpdatedAt = NOW();"
+      },
+      "position": [
+        512,
+        336
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "id": "f444b0cd-6b81-48b8-b49a-77e37f5b1424",
+      "name": "Loop Over Items1",
+      "parameters": {
+        "batchSize": 250,
+        "options": {}
+      },
+      "position": [
+        304,
+        176
+      ],
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3
+    },
+    {
+      "id": "c6edd3b7-1991-4702-8fee-11f1e8c90089",
+      "name": "Sticky Note",
+      "parameters": {
+        "content": "## Collect daily\n**Double click** to edit me. [Guide](https://docs.n8n.io/workflows/components/sticky-notes/)",
+        "height": 256,
+        "width": 1152
+      },
+      "position": [
+        -624,
+        -176
+      ],
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1
+    },
+    {
+      "id": "fc499f1e-b87b-492b-9e4a-12476b9124e7",
+      "name": "Sticky Note1",
+      "parameters": {
+        "content": "## Collect last 90 days once a month\n**Double click** to edit me. [Guide](https://docs.n8n.io/workflows/components/sticky-notes/)",
+        "height": 432,
+        "width": 1312
+      },
+      "position": [
+        -624,
+        96
+      ],
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1
+    },
+    {
+      "id": "6d5ee699-4069-4fcc-8b13-d5c6c0f41f33",
+      "name": "Loop Over Items",
+      "parameters": {
+        "options": {}
+      },
+      "position": [
+        -256,
+        640
+      ],
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "22d76ce4-a1f1-42b5-bf0b-e5b6a5615175",
+      "name": "Collect Rows w/o USD",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "SELECT A.Bestellungen_AnnahmenNr, A.BestellungBezahlungBetrag, DATE(A.BestellungBezahlungRechnungsDatum), A.BestellungBezahlungWaehrung\nFROM if_bestellungen_annahmen as A\nWHERE A.BestellungBezahlungBetrag IS NOT NULL\n  AND A.BestellungBezahlungBetrag <> 0\n  AND (A.BestellungBezahlungBetragUSD IS NULL\n  OR A.BestellungBezahlungBetragUSD = 0)\n  AND A.BestellungBezahlungRechnungsDatum IS NOT NULL\n  AND DATE(A.BestellungBezahlungRechnungsDatum) <> '0000-00-00'\n  AND A.BestellungBezahlungWaehrung IS NOT NULL\n  AND A.BestellungBezahlungWaehrung <> ''"
+      },
+      "position": [
+        -464,
+        640
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "39af45e4-771e-4678-8357-6d0f115e8dc2",
+      "name": "Collect Rates",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{\n[\n  $json.BestellungBezahlungWaehrung,\n  $json['DATE(A.BestellungBezahlungRechnungsDatum)']\n]\n}}"
+        },
+        "query": "SELECT A.FxRateDate, A.FXRateRate, A. FXRateBaseCurrencyISOCode, A.FXRateQuoteCurrencyISOCode\nFROM infofee01_corporate.if_fx_rates as A\nWHERE (A.FXRateQuoteCurrencyISOCode = $1 \n  OR A.FXRateQuoteCurrencyISOCode = 'USD')\n  AND A.FxRateDate >= $2\nORDER BY A.FxRateDate ASC\nLIMIT 2"
+      },
+      "position": [
+        -96,
+        720
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "id": "d4db77af-d377-4b2e-8561-b6efb116d2a1",
+      "name": "Code in JavaScript2",
+      "parameters": {
+        "jsCode": "const rates = $input.all().map(item => item.json);\nconst fromWaehrung = $('Loop Over Items').item.json.BestellungBezahlungWaehrung ?? '';\nconst betrag = $('Loop Over Items').item.json.BestellungBezahlungBetrag ?? 0;\n\nconst eurUsd = rates.find(r => r.FXRateQuoteCurrencyISOCode === 'USD');\nconst eurAny = rates.find(r => r.FXRateQuoteCurrencyISOCode !== 'USD');\n\nif (!eurUsd || !eurAny) {\n  throw new Error('EUR/USD oder EUR/' + fromWaehrung + ' Kurs fehlt');\n}\n\nconst usdPerAny =\n  Number(eurUsd.FXRateRate) / Number(eurAny.FXRateRate);\n\nconst betragUsd = Number(betrag) * Number(usdPerAny);\n\nreturn [{\n  json: {\n    FxRateDate: eurUsd.FxRateDate,\n    FXRateBaseCurrencyISOCode: fromWaehrung,\n    FXRateQuoteCurrencyISOCode: 'USD',\n    FXRateRate: usdPerAny.toFixed(10),\n    betragUsd: betragUsd\n  }\n}];"
+      },
+      "position": [
+        80,
+        720
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "16c149d5-8e93-426e-b294-0788a45bc7d8",
+      "name": "If",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "0955ecd3-8e1b-4497-b7bb-ca3c80642644",
+              "leftValue": "={{ $json.FxRateDate }}",
+              "operator": {
+                "operation": "notEmpty",
+                "singleValue": true,
+                "type": "dateTime"
+              },
+              "rightValue": ""
+            },
+            {
+              "id": "0e1b1872-af6c-445d-afb3-e72aae9cd97d",
+              "leftValue": "={{ $json.betragUsd }}",
+              "operator": {
+                "operation": "notEmpty",
+                "singleValue": true,
+                "type": "number"
+              },
+              "rightValue": ""
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        288,
+        720
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3
+    },
+    {
+      "id": "ad70ccbe-0d96-4c27-ba34-5ed33c15e72a",
+      "name": "Schedule Trigger2",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "expression": "15 1 1 * * *",
+              "field": "cronExpression"
+            }
+          ]
+        }
+      },
+      "position": [
+        -640,
+        640
+      ],
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2
+    },
+    {
+      "id": "8f80d8d7-ac9c-44c9-9620-5eebad72ef9d",
+      "name": "Sticky Note2",
+      "parameters": {
+        "content": "## Update FX Rates in WA\n**Double click** to edit me. [Guide](https://docs.n8n.io/workflows/components/sticky-notes/)",
+        "height": 448,
+        "width": 1472
+      },
+      "position": [
+        -736,
+        560
+      ],
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "ee26d02b-99b4-48f7-9db0-ce37a908e7f5",
+      "name": "Update USD",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ \n[\n  $json.betragUsd,\n  $json.FxRateDate,\n  $('Loop Over Items').item.json.Bestellungen_AnnahmenNr\n]\n}}"
+        },
+        "query": "UPDATE if_bestellungen_annahmen SET\nBestellungBezahlungBetragUSD = $1,\nBestellungBezahlungBetragFXRateDatum = $2\nWHERE Bestellungen_AnnahmenNr = $3"
+      },
+      "position": [
+        528,
+        784
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    }
+  ],
+  "settings": {
+    "binaryMode": "separate",
+    "executionOrder": "v1"
+  },
+  "tags": [
+    {
+      "createdAt": "2026-04-13T10:45:59.101Z",
+      "id": "dhutUOk6gjuZBrgq",
+      "name": "mariadb",
+      "updatedAt": "2026-04-13T10:45:59.101Z"
+    },
+    {
+      "createdAt": "2026-04-27T11:39:57.715Z",
+      "id": "xipRNIPkNrOMhlRM",
+      "name": "corporate",
+      "updatedAt": "2026-04-27T11:39:57.715Z"
+    }
+  ],
+  "triggerCount": 3,
+  "updatedAt": "2026-04-30T10:49:16.768Z",
+  "versionId": "e558cd59-432f-4f4a-bae2-a1da6bde4535"
+}

@@ -1,0 +1,453 @@
+{
+  "active": true,
+  "activeVersion": {
+    "authors": "Lars Komorowski",
+    "autosaved": true,
+    "connections": {
+      "Build Mail Payload": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "HTTP Request",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP Request": {
+        "main": [
+          []
+        ]
+      },
+      "Letzte FX Raten": {
+        "main": [
+          [
+            {
+              "index": 2,
+              "node": "Merge",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Merge": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Build Mail Payload",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Offene Übersetzungen Annahmen": {
+        "main": [
+          [
+            {
+              "index": 1,
+              "node": "Merge",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Offene Übersetzungen Bestellungen Bemerkungen": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Merge",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Offene Übersetzungen Bestellungen Bemerkungen",
+              "type": "main"
+            },
+            {
+              "index": 0,
+              "node": "Offene Übersetzungen Annahmen",
+              "type": "main"
+            },
+            {
+              "index": 0,
+              "node": "Letzte FX Raten",
+              "type": "main"
+            }
+          ]
+        ]
+      }
+    },
+    "createdAt": "2026-04-30T12:13:07.012Z",
+    "description": "",
+    "name": "Version de9477aa",
+    "nodes": [
+      {
+        "credentials": "__REDACTED__",
+        "id": "3f2ded9d-1488-4b56-b807-8c105668caa2",
+        "name": "Offene Übersetzungen Bestellungen Bemerkungen",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "SELECT COUNT(*) as TranslateBestellungen, NOW()\nFROM if_bestellungen_bemerkungen\nWHERE Bestellungen_BemerkungenText IS NOT NULL\n  AND Bestellungen_BemerkungenText <> ''\n  AND (\n    Bestellungen_BemerkungenText_E IS NULL\n    OR Bestellungen_BemerkungenText_E = ''\n  )"
+        },
+        "position": [
+          -432,
+          48
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "8cb53f43-5b6d-4274-904e-af431d82f1fe",
+        "name": "Offene Übersetzungen Annahmen",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "SELECT COUNT(*) as TranslateAnnahmen, NOW()\nFROM if_bestellungen_annahmen_bemerkungen\nWHERE Bestellungen_Annahmen_BemerkungenText IS NOT NULL\n  AND Bestellungen_Annahmen_BemerkungenText <> ''\n  AND (\n    Bestellungen_Annahmen_BemerkungenText_E IS NULL\n    OR Bestellungen_Annahmen_BemerkungenText_E = ''\n  )"
+        },
+        "position": [
+          -432,
+          240
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "id": "cf8f4520-23b5-45ce-a323-6285a88f9d13",
+        "name": "Schedule Trigger",
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "expression": "0 0 6 * * *",
+                "field": "cronExpression"
+              }
+            ]
+          }
+        },
+        "position": [
+          -656,
+          240
+        ],
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.3
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "62ea18ed-91c5-4add-a1fd-9c1b294d428c",
+        "name": "Letzte FX Raten",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "SELECT MAX(FxRateDate) as LastUpdate, NOW(), TO_DAYS(NOW()) - TO_DAYS(MAX(FxRateDate)) as AnzTage\nFROM infofee01_corporate.if_fx_rates"
+        },
+        "position": [
+          -432,
+          432
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "id": "bcf5eb91-399d-4107-aac5-f01ce0bb8620",
+        "name": "Build Mail Payload",
+        "parameters": {
+          "jsCode": "const items = $input.all();\n\nconst anzBestellungen = items[0]?.json?.TranslateBestellungen ?? 0;\nconst anzAnnahmen = items[1]?.json?.TranslateAnnahmen ?? 0;\nconst lastFx = items[2]?.json?.AnzTage ?? 0;\n\nconst uservorname = \"Lars\";\nconst to = \"l.komorowski@euroimmun.de\";\n\nlet subject = `Daily Morning Report ${$now.toFormat('yyyy-LL-dd')}`;\nlet text = \"Offene Übersetzungen von Bemerkungen für Bestellungen: \" + anzBestellungen + \"\\n\";\ntext = text + \"Offene Übersetzungen von Bemerkungen für Annahmen: \" + anzAnnahmen + \"\\n\";\ntext = text + \"Tage seit letztem Update FX Rates: \" + lastFx;\nlet html = `<p>Hallo ${uservorname},</p>\n<p>Offene Übersetzungen von Bemerkungen für Bestellungen: ${anzBestellungen}</p>\n<p>Offene Übersetzungen von Bemerkungen für Annahmen: ${anzAnnahmen}</p>\n<p>Tage seit letztem Update FX Rates: ${lastFx}</p>\n<p>Erzeugt am: ${$now.toFormat('dd.LL.yyyy HH:mm:ss')}</p>`;\n\nreturn [\n  {\n    json: {\n      to: [to],\n      cc: [],\n      bcc: [],\n      from: \"infofee@euroimmun.de\",\n      from_name: \"InfoFee Reporting\",\n      subject,\n      text,\n      html,\n      attachments: [\n      ],\n      meta: {\n        generated_at: $now.toISO()\n      }\n    }\n  }\n];"
+        },
+        "position": [
+          -16,
+          256
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "33f55d5b-6377-4c25-bbb2-44434784d2d3",
+        "name": "HTTP Request",
+        "parameters": {
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "x-webhook-token",
+                "value": "W0sp9w27iCtEcXOiWFiE8KfhfmJQ0YZd3tDC4EbPxsQ"
+              }
+            ]
+          },
+          "jsonBody": "={{ $json }}",
+          "method": "POST",
+          "options": {},
+          "sendBody": true,
+          "sendHeaders": true,
+          "specifyBody": "json",
+          "url": "http://10.4.190.16:5678/webhook/internal-mail/send"
+        },
+        "position": [
+          176,
+          256
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "274641ea-2019-43ed-870a-59fc4875fecc",
+        "name": "Merge",
+        "parameters": {
+          "numberInputs": 3
+        },
+        "position": [
+          -192,
+          240
+        ],
+        "type": "n8n-nodes-base.merge",
+        "typeVersion": 3.2
+      }
+    ],
+    "updatedAt": "2026-04-30T12:13:13.000Z",
+    "versionId": "de9477aa-a585-4f35-8fc7-0a0d34835b68",
+    "workflowId": "Z24mJlV419GzcdmA"
+  },
+  "activeVersionId": "de9477aa-a585-4f35-8fc7-0a0d34835b68",
+  "connections": {
+    "Build Mail Payload": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "HTTP Request",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        []
+      ]
+    },
+    "Letzte FX Raten": {
+      "main": [
+        [
+          {
+            "index": 2,
+            "node": "Merge",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Build Mail Payload",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Offene Übersetzungen Annahmen": {
+      "main": [
+        [
+          {
+            "index": 1,
+            "node": "Merge",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Offene Übersetzungen Bestellungen Bemerkungen": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Merge",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Offene Übersetzungen Bestellungen Bemerkungen",
+            "type": "main"
+          },
+          {
+            "index": 0,
+            "node": "Offene Übersetzungen Annahmen",
+            "type": "main"
+          },
+          {
+            "index": 0,
+            "node": "Letzte FX Raten",
+            "type": "main"
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-04-30T10:39:35.952Z",
+  "id": "Z24mJlV419GzcdmA",
+  "isArchived": false,
+  "name": "Daily Morning Report",
+  "nodes": [
+    {
+      "credentials": "__REDACTED__",
+      "id": "3f2ded9d-1488-4b56-b807-8c105668caa2",
+      "name": "Offene Übersetzungen Bestellungen Bemerkungen",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "SELECT COUNT(*) as TranslateBestellungen, NOW()\nFROM if_bestellungen_bemerkungen\nWHERE Bestellungen_BemerkungenText IS NOT NULL\n  AND Bestellungen_BemerkungenText <> ''\n  AND (\n    Bestellungen_BemerkungenText_E IS NULL\n    OR Bestellungen_BemerkungenText_E = ''\n  )"
+      },
+      "position": [
+        -432,
+        48
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "8cb53f43-5b6d-4274-904e-af431d82f1fe",
+      "name": "Offene Übersetzungen Annahmen",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "SELECT COUNT(*) as TranslateAnnahmen, NOW()\nFROM if_bestellungen_annahmen_bemerkungen\nWHERE Bestellungen_Annahmen_BemerkungenText IS NOT NULL\n  AND Bestellungen_Annahmen_BemerkungenText <> ''\n  AND (\n    Bestellungen_Annahmen_BemerkungenText_E IS NULL\n    OR Bestellungen_Annahmen_BemerkungenText_E = ''\n  )"
+      },
+      "position": [
+        -432,
+        240
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "id": "cf8f4520-23b5-45ce-a323-6285a88f9d13",
+      "name": "Schedule Trigger",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "expression": "0 0 6 * * *",
+              "field": "cronExpression"
+            }
+          ]
+        }
+      },
+      "position": [
+        -656,
+        240
+      ],
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "62ea18ed-91c5-4add-a1fd-9c1b294d428c",
+      "name": "Letzte FX Raten",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "SELECT MAX(FxRateDate) as LastUpdate, NOW(), TO_DAYS(NOW()) - TO_DAYS(MAX(FxRateDate)) as AnzTage\nFROM infofee01_corporate.if_fx_rates"
+      },
+      "position": [
+        -432,
+        432
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "id": "bcf5eb91-399d-4107-aac5-f01ce0bb8620",
+      "name": "Build Mail Payload",
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nconst anzBestellungen = items[0]?.json?.TranslateBestellungen ?? 0;\nconst anzAnnahmen = items[1]?.json?.TranslateAnnahmen ?? 0;\nconst lastFx = items[2]?.json?.AnzTage ?? 0;\n\nconst uservorname = \"Lars\";\nconst to = \"l.komorowski@euroimmun.de\";\n\nlet subject = `Daily Morning Report ${$now.toFormat('yyyy-LL-dd')}`;\nlet text = \"Offene Übersetzungen von Bemerkungen für Bestellungen: \" + anzBestellungen + \"\\n\";\ntext = text + \"Offene Übersetzungen von Bemerkungen für Annahmen: \" + anzAnnahmen + \"\\n\";\ntext = text + \"Tage seit letztem Update FX Rates: \" + lastFx;\nlet html = `<p>Hallo ${uservorname},</p>\n<p>Offene Übersetzungen von Bemerkungen für Bestellungen: ${anzBestellungen}</p>\n<p>Offene Übersetzungen von Bemerkungen für Annahmen: ${anzAnnahmen}</p>\n<p>Tage seit letztem Update FX Rates: ${lastFx}</p>\n<p>Erzeugt am: ${$now.toFormat('dd.LL.yyyy HH:mm:ss')}</p>`;\n\nreturn [\n  {\n    json: {\n      to: [to],\n      cc: [],\n      bcc: [],\n      from: \"infofee@euroimmun.de\",\n      from_name: \"InfoFee Reporting\",\n      subject,\n      text,\n      html,\n      attachments: [\n      ],\n      meta: {\n        generated_at: $now.toISO()\n      }\n    }\n  }\n];"
+      },
+      "position": [
+        -16,
+        256
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "33f55d5b-6377-4c25-bbb2-44434784d2d3",
+      "name": "HTTP Request",
+      "parameters": {
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "x-webhook-token",
+              "value": "W0sp9w27iCtEcXOiWFiE8KfhfmJQ0YZd3tDC4EbPxsQ"
+            }
+          ]
+        },
+        "jsonBody": "={{ $json }}",
+        "method": "POST",
+        "options": {},
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "url": "http://10.4.190.16:5678/webhook/internal-mail/send"
+      },
+      "position": [
+        176,
+        256
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "274641ea-2019-43ed-870a-59fc4875fecc",
+      "name": "Merge",
+      "parameters": {
+        "numberInputs": 3
+      },
+      "position": [
+        -192,
+        240
+      ],
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2
+    }
+  ],
+  "settings": {
+    "binaryMode": "separate",
+    "executionOrder": "v1"
+  },
+  "tags": [
+    {
+      "createdAt": "2026-04-13T10:45:59.101Z",
+      "id": "dhutUOk6gjuZBrgq",
+      "name": "mariadb",
+      "updatedAt": "2026-04-13T10:45:59.101Z"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2026-04-30T12:13:07.011Z",
+  "versionId": "de9477aa-a585-4f35-8fc7-0a0d34835b68"
+}

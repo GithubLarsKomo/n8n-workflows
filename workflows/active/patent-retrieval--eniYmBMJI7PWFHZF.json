@@ -1,0 +1,3231 @@
+{
+  "active": true,
+  "activeVersion": {
+    "authors": "system migration",
+    "autosaved": false,
+    "connections": {
+      "Code in JavaScript1": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If2",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Code in JavaScript3": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL SET NAMES",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Edit Fields": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Select rows from a table",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Function: Build Date Window": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If1",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP Request": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If4",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "HTTP Request1": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code in JavaScript1",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "HTTP Request",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If1": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "OPS Authentication",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If2": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Insert rows in a table1",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If3": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MYSQL Set PatentResult to Finished",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Code in JavaScript3",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If4": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Split Out",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Execute a SQL query2",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If5": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Wait",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If6": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "HTTP Request1",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If7": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL Find Linked Antigens",
+              "type": "main"
+            },
+            {
+              "index": 0,
+              "node": "MYSQL Set PatentResult to Finished",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items1",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If8": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items4",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If9": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items1",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Insert rows in a table": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items4",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Insert rows in a table1": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Loop Over Items": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Execute a SQL query2",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "If5",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Loop Over Items1": {
+        "main": [
+          [],
+          [
+            {
+              "index": 0,
+              "node": "MySQL Check for Existing Patent",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Loop Over Items4": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL Delete Linked Antigens",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Insert rows in a table",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MYSQL Set PatentResult to Finished": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items1",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MYSQL: Queries": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Function: Build Date Window",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL Check for Existing Patent": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If3",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL Find Approved Patents": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If9",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL Find Linked Antigens": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If8",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL Insert New PMID2": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If7",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL Insert New Patent": {
+        "main": [
+          []
+        ]
+      },
+      "MySQL SET NAMES": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL Insert New PMID2",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "OPS Authentication": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MYSQL: Queries",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger1": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL Find Approved Patents",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Select rows from a table": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If6",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Split Out": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Loop Over Items",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Wait": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Edit Fields",
+              "type": "main"
+            }
+          ]
+        ]
+      }
+    },
+    "createdAt": "2026-04-27T20:26:31.809Z",
+    "description": null,
+    "name": null,
+    "nodes": [
+      {
+        "id": "1eec142c-1454-4e3b-8e5c-0dc289d44ca5",
+        "name": "If",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "6f2c148b-f8fb-4034-8240-936bcef223cf",
+                "leftValue": "={{ $json.access_token }}",
+                "operator": {
+                  "operation": "exists",
+                  "singleValue": true,
+                  "type": "string"
+                },
+                "rightValue": 0
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          1072,
+          320
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2
+      },
+      {
+        "id": "843a1b1e-ebc5-4026-b2f2-51bdd3a15716",
+        "name": "Function: Build Date Window",
+        "parameters": {
+          "jsCode": "// Build Date Window — Run once for all items: AN\nconst items = $input.all(); // alle eingehenden Items\n\nfunction toEutilsDate(d) {\n  return String(d || '20251001').replaceAll('-', ''); // YYYYMMDD\n}\n\nconst today = new Date();\nconst yyyy = today.getFullYear();\nconst mm = String(today.getMonth() + 1).padStart(2, '0');\nconst dd = String(today.getDate()).padStart(2, '0');\n\nconst maxdate = `${yyyy}${mm}${dd}`;\nconst today_sql = `${yyyy}-${mm}-${dd}`;\n\nreturn items.map(({ json }) => {\n  const { query_id, query, last_run } = json;\n  return {\n    json: {\n      query_id,\n      query,\n      mindate: toEutilsDate(last_run),\n      maxdate,\n      datetype: 'edat',\n      today_sql\n    }\n  };\n});\n"
+        },
+        "position": [
+          448,
+          320
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "alwaysOutputData": true,
+        "credentials": "__REDACTED__",
+        "id": "50d75edb-c73f-42f7-9fb1-366612e0a6f3",
+        "name": "MYSQL: Queries",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "SELECT PatentQueryNr as query_id, PatentQueryQuery as query, PatentQueryLastRun as last_run, PatentQueryTitel as title FROM if_patent_query WHERE PatentQueryAktiv = 'j' AND (TO_DAYS(PatentQueryLastRun) < TO_DAYS(NOW()) OR PatentQueryLastRun IS NULL) LIMIT 1"
+        },
+        "position": [
+          256,
+          320
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "id": "0894be30-ddef-4118-92fa-0634f421079e",
+        "name": "Schedule Trigger",
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "expression": "15 * * * *",
+                "field": "cronExpression"
+              }
+            ]
+          }
+        },
+        "position": [
+          64,
+          320
+        ],
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2
+      },
+      {
+        "id": "1eed37a9-a504-4b1e-8630-0476f0061354",
+        "name": "Sticky Note1",
+        "parameters": {
+          "color": 5,
+          "content": "## Find new patents",
+          "height": 720,
+          "width": 4160
+        },
+        "position": [
+          0,
+          0
+        ],
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1
+      },
+      {
+        "id": "06edfca3-e28b-4dde-8c60-ffd9fd563443",
+        "name": "If1",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "fec224c6-41f9-4616-a90a-9a5ca2b3cdce",
+                "leftValue": "={{ $json.query_id }}",
+                "operator": {
+                  "operation": "exists",
+                  "singleValue": true,
+                  "type": "number"
+                },
+                "rightValue": ""
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          656,
+          448
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2
+      },
+      {
+        "id": "d6897f75-9afe-4fc6-963f-4ac09c20fcf3",
+        "name": "OPS Authentication",
+        "parameters": {
+          "bodyParameters": {
+            "parameters": [
+              {
+                "name": "grant_type",
+                "value": "client_credentials"
+              },
+              {
+                "name": "scope",
+                "value": "ops"
+              }
+            ]
+          },
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              },
+              {
+                "name": "Authorization",
+                "value": "__REDACTED__"
+              }
+            ]
+          },
+          "method": "POST",
+          "options": {},
+          "queryParameters": {
+            "parameters": [
+              {}
+            ]
+          },
+          "sendBody": true,
+          "sendHeaders": true,
+          "sendQuery": true,
+          "url": "https://ops.epo.org/3.2/auth/accesstoken"
+        },
+        "position": [
+          864,
+          320
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "alwaysOutputData": true,
+        "id": "2d6e54ff-2b78-4cb8-bdfe-ad93fabf6a45",
+        "name": "HTTP Request",
+        "onError": "continueRegularOutput",
+        "parameters": {
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "__REDACTED__"
+              },
+              {
+                "name": "Accept",
+                "value": "application/json"
+              },
+              {
+                "name": "X-OPS-Range",
+                "value": "1-5"
+              }
+            ]
+          },
+          "options": {},
+          "queryParameters": {
+            "parameters": [
+              {
+                "name": "q",
+                "value": "={{ $('If1').item.json.query }} and pd>\"{{ $('If1').item.json.mindate }}\""
+              }
+            ]
+          },
+          "sendHeaders": true,
+          "sendQuery": true,
+          "url": "https://ops.epo.org/3.2/rest-services/published-data/search"
+        },
+        "position": [
+          1280,
+          224
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "c2cf1e0f-b63b-43a5-b445-d6bf3f160b80",
+        "name": "If4",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "6b98b79e-78e6-4448-9c48-b86cf89afcf0",
+                "leftValue": "={{ $json['ops:world-patent-data']['ops:biblio-search']['ops:range'] }}",
+                "operator": {
+                  "operation": "exists",
+                  "singleValue": true,
+                  "type": "object"
+                },
+                "rightValue": ""
+              },
+              {
+                "id": "ade8d33e-6418-4c8a-8b36-bac7681cb89e",
+                "leftValue": "={{ $json.error }}",
+                "operator": {
+                  "operation": "notExists",
+                  "singleValue": true,
+                  "type": "object"
+                },
+                "rightValue": ""
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          1488,
+          224
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2
+      },
+      {
+        "id": "96d04f48-1aba-4835-ab3a-3c93b5c682d5",
+        "name": "Loop Over Items",
+        "parameters": {
+          "options": {}
+        },
+        "position": [
+          1904,
+          128
+        ],
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3
+      },
+      {
+        "id": "1c9d6dbb-6e17-497a-a28c-f851513a8d7d",
+        "name": "Split Out",
+        "parameters": {
+          "fieldToSplitOut": "['ops:world-patent-data']['ops:biblio-search']['ops:search-result']['ops:publication-reference']",
+          "options": {}
+        },
+        "position": [
+          1696,
+          128
+        ],
+        "type": "n8n-nodes-base.splitOut",
+        "typeVersion": 1
+      },
+      {
+        "id": "19c90dc5-c167-4b07-842f-165415fae0fc",
+        "name": "Wait",
+        "parameters": {
+          "amount": 1
+        },
+        "position": [
+          2336,
+          128
+        ],
+        "type": "n8n-nodes-base.wait",
+        "typeVersion": 1.1,
+        "webhookId": "f03f0c84-f767-4313-ad90-2633be5b159f"
+      },
+      {
+        "id": "5d07c051-5f6c-4da1-ba08-060a6339e4df",
+        "name": "HTTP Request1",
+        "parameters": {
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Authorization",
+                "value": "__REDACTED__"
+              },
+              {
+                "name": "Accept",
+                "value": "application/json"
+              }
+            ]
+          },
+          "options": {},
+          "sendHeaders": true,
+          "url": "=https://ops.epo.org/3.2/rest-services/published-data/publication/epodoc/{{ $('Edit Fields').item.json.epodoc }}/biblio"
+        },
+        "position": [
+          3200,
+          240
+        ],
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2
+      },
+      {
+        "id": "dd8de6c0-5f2b-4d30-94bb-da1535f97d5e",
+        "name": "If5",
+        "parameters": {
+          "conditions": {
+            "combinator": "or",
+            "conditions": [
+              {
+                "id": "4c5053f0-5443-4487-9200-cc68671478ea",
+                "leftValue": "={{ $json['document-id'].country.$ }}",
+                "operator": {
+                  "name": "filter.operator.equals",
+                  "operation": "equals",
+                  "type": "string"
+                },
+                "rightValue": "WO"
+              },
+              {
+                "id": "48ce93bc-3261-499d-a246-6788dd1fa654",
+                "leftValue": "={{ $json['document-id'].country.$ }}",
+                "operator": {
+                  "operation": "equals",
+                  "type": "string"
+                },
+                "rightValue": "EP"
+              },
+              {
+                "id": "6ff81865-e839-436c-a1fb-f84e50220eeb",
+                "leftValue": "={{ $json['document-id'].country.$ }}",
+                "operator": {
+                  "name": "filter.operator.equals",
+                  "operation": "equals",
+                  "type": "string"
+                },
+                "rightValue": "US"
+              },
+              {
+                "id": "54ec9f0c-c822-4a52-ba5c-99421c959aab",
+                "leftValue": "={{ $json['document-id'].country.$ }}",
+                "operator": {
+                  "name": "filter.operator.equals",
+                  "operation": "equals",
+                  "type": "string"
+                },
+                "rightValue": "CN"
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          2112,
+          240
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2
+      },
+      {
+        "id": "d2bf96bc-2469-4c44-9043-249805a999e3",
+        "name": "Edit Fields",
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "6a3b632a-9980-43a2-9a5a-822a19d5a690",
+                "name": "epodoc",
+                "type": "string",
+                "value": "={{ $json['document-id'].country.$ }}{{ $json['document-id']['doc-number'].$ }}"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "position": [
+          2512,
+          128
+        ],
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4
+      },
+      {
+        "alwaysOutputData": true,
+        "credentials": "__REDACTED__",
+        "id": "f2054fb8-636d-4fb7-b26e-d721afa44a44",
+        "name": "Select rows from a table",
+        "parameters": {
+          "limit": 1,
+          "operation": "select",
+          "options": {},
+          "table": {
+            "__rl": true,
+            "cachedResultName": "if_patent_results",
+            "mode": "list",
+            "value": "if_patent_results"
+          },
+          "where": {
+            "values": [
+              {
+                "column": "PatentResultPublicationNumber",
+                "value": "={{ $json.epodoc }}"
+              }
+            ]
+          }
+        },
+        "position": [
+          2704,
+          128
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "id": "0eb3eb71-9ef7-441c-b206-9d1e40814ec1",
+        "name": "If6",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "d9108342-06c7-4759-b6d4-4db7089bb6cd",
+                "leftValue": "={{ $json.PatentResultNr }}",
+                "operator": {
+                  "operation": "exists",
+                  "singleValue": true,
+                  "type": "number"
+                },
+                "rightValue": ""
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          2960,
+          272
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2
+      },
+      {
+        "id": "25b6b67f-82f4-4844-b5e2-1ecb7041cc3e",
+        "name": "Code in JavaScript1",
+        "parameters": {
+          "jsCode": "// Robustes Parsen von EPO OPS \"biblio\" JSON (EP/WIPO=Arrays; US/DE/CN=Objekte)\n\nconst root = $input.first().json?.[\"ops:world-patent-data\"]?.[\"exchange-documents\"]?.[\"exchange-document\"] ?? {};\n\n//\n// Hilfsfunktionen\n//\nconst asArray = (v) => v == null ? [] : (Array.isArray(v) ? v : [v]);\n\n// Holt entweder obj.$ oder den String selbst\nconst val = (v, fallback = \"\") => {\n  if (v == null) return fallback;\n  if (typeof v === \"object\" && \"$\" in v && typeof v.$ === \"string\") return v.$;\n  if (typeof v === \"string\") return v;\n  return fallback;\n};\n\n// Holt das erste Element, das predicate erfüllt – über Arrays/Objekte hinweg\nconst firstMatch = (arrOrObj, predicate) => {\n  for (const x of asArray(arrOrObj)) {\n    if (predicate(x)) return x;\n  }\n  return undefined;\n};\n\n// YYYYMMDD -> YYYY-MM-DD (nur wenn 8-stellig)\nconst normDate = (s) => {\n  const d = (s || \"\").toString();\n  if (/^\\d{8}$/.test(d)) return `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}`;\n  return d || \"\";\n};\n\n//\n// Pfadkürzel\n//\nconst biblio = root?.[\"bibliographic-data\"] ?? {};\n\n// 1) Publikationsnummer (epodoc)\nlet epodoc = \"\";\n\n// Manche Datensätze haben mehrere document-id; häufig ist [1] epodoc, aber nicht garantiert.\n// Wir suchen gezielt nach @document-id-type === \"epodoc\", andernfalls nehmen wir die erste doc-number.\nconst pubRef = biblio?.[\"publication-reference\"]?.[\"document-id\"];\nconst docIds = asArray(pubRef);\n\nconst epodocDoc = firstMatch(docIds, d => d?.[\"@document-id-type\"] === \"epodoc\") ?? docIds[0];\nepodoc = val(epodocDoc?.[\"doc-number\"]);\n\n// 2) Priorität (YYYY-MM-DD aus YYYYMMDD), bevorzugt epodoc\nlet priority = \"\";\n\nconst prioClaims = biblio?.[\"priority-claims\"]?.[\"priority-claim\"];\nconst prioDocs = asArray(prioClaims).map(pc => pc?.[\"document-id\"]).flatMap(asArray);\n\n// zuerst epodoc, sonst erstes Datum\nlet prio = firstMatch(prioDocs, d => d?.[\"@document-id-type\"] === \"epodoc\") ?? prioDocs[0];\n\nif (prio) {\n  const ds = val(prio?.date);\n  priority = normDate(ds);\n}\n\n// 3) Anmelder (epodoc)\nlet applicant = \"\";\nconst applicants = biblio?.parties?.applicants?.applicant;\nconst applList = asArray(applicants).filter(a => a?.[\"@data-format\"] === \"epodoc\" || !a?.[\"@data-format\"]);\n\nconst applicantNames = applList\n  .map(a => val(a?.[\"applicant-name\"]?.name))\n  .filter(Boolean);\n\nif (applicantNames.length === 0) {\n  // Fallback: nimm alles, was da ist\n  const allApps = asArray(applicants).map(a => val(a?.[\"applicant-name\"]?.name)).filter(Boolean);\n  applicant = allApps.join(\"; \");\n} else {\n  applicant = applicantNames.join(\"; \");\n}\n\n// 4) Erfinder (epodoc, kommasepariert)\nlet inventors = \"\";\nconst inventorsRaw = biblio?.parties?.inventors?.inventor;\nconst invList = asArray(inventorsRaw).filter(i => i?.[\"@data-format\"] === \"epodoc\" || !i?.[\"@data-format\"]);\n\nconst inventorNames = invList\n  .map(i => val(i?.[\"inventor-name\"]?.name))\n  .filter(Boolean);\n\nif (inventorNames.length === 0) {\n  const allInv = asArray(inventorsRaw).map(i => val(i?.[\"inventor-name\"]?.name)).filter(Boolean);\n  inventors = allInv.join(\", \");\n} else {\n  inventors = inventorNames.join(\", \");\n}\n\n// 5) Titel (bevorzugt EN, sonst erster)\nlet title = \"\";\nconst titles = asArray(biblio?.[\"invention-title\"]);\nconst titleEn = firstMatch(titles, t => (t?.[\"@lang\"] || t?.[\"@lang\"] === \"en\" || t?.[\"@lang\"]?.toLowerCase?.() === \"en\")) ?? titles[0];\ntitle = val(titleEn);\n\n// 6) Abstract (bevorzugt EN, sonst erster). Struktur: abstract[].p.$ oder abstract.p.$\nlet abstractText = \"\";\nconst abstracts = asArray(root?.abstract);\nconst absEn = firstMatch(abstracts, a => (a?.[\"@lang\"] || a?.[\"@lang\"] === \"en\" || a?.[\"@lang\"]?.toLowerCase?.() === \"en\")) ?? abstracts[0];\n\nif (absEn) {\n  // p kann Array, Objekt oder String sein\n  const p = absEn?.p;\n  if (Array.isArray(p)) {\n    abstractText = p.map(x => val(x)).filter(Boolean).join(\"\\n\");\n  } else {\n    abstractText = val(p) || val(absEn); // Fallback auf gesamten Knoten\n  }\n}\n\nreturn {\n  epodoc,\n  priority,\n  applicant,\n  inventors,\n  title,\n  abstract: abstractText\n};\n"
+        },
+        "position": [
+          3392,
+          240
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "415e6da2-1fce-4c73-ba10-123b2433443c",
+        "name": "Insert rows in a table1",
+        "onError": "continueRegularOutput",
+        "parameters": {
+          "dataMode": "defineBelow",
+          "options": {
+            "skipOnConflict": true
+          },
+          "table": {
+            "__rl": true,
+            "cachedResultName": "if_patent_results",
+            "mode": "list",
+            "value": "if_patent_results"
+          },
+          "valuesToSend": {
+            "values": [
+              {
+                "column": "PatentQueryNr",
+                "value": "={{ $('MYSQL: Queries').item.json.query_id }}"
+              },
+              {
+                "column": "PatentResultPublicationNumber",
+                "value": "={{ $json.epodoc }}"
+              },
+              {
+                "column": "PatentResultTitel",
+                "value": "={{ $json.title }}"
+              },
+              {
+                "column": "PatentResultErfinder",
+                "value": "={{ $json.inventors }}"
+              },
+              {
+                "column": "PatentResultAnmelder",
+                "value": "={{ $json.applicant }}"
+              },
+              {
+                "column": "PatentResultAbstract",
+                "value": "={{ $json.abstract }}"
+              },
+              {
+                "column": "PatentResultKeywords",
+                "value": "={{ $('MYSQL: Queries').item.json.title }}"
+              },
+              {
+                "column": "PatentResultPublishedDate",
+                "value": "={{ $json.priority }}"
+              },
+              {
+                "column": "PatentResultInseriert",
+                "value": "={{ $today }}"
+              }
+            ]
+          }
+        },
+        "position": [
+          3888,
+          256
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "bcdd4b0f-fb20-4380-9dbc-53f5d7c480d9",
+        "name": "Execute a SQL query2",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "UPDATE if_patent_query SET PatentQueryLastRun = NOW() WHERE PatentQueryNr = {{ $('MYSQL: Queries').item.json.query_id }}"
+        },
+        "position": [
+          2816,
+          480
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "id": "c4a04189-f14e-41e9-b4cd-07dc013eb998",
+        "name": "If2",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "370d94cf-ef9d-41c5-a4ac-9ad4e6695f42",
+                "leftValue": "={{ $json.epodoc }}",
+                "operator": {
+                  "operation": "notEmpty",
+                  "singleValue": true,
+                  "type": "string"
+                },
+                "rightValue": ""
+              },
+              {
+                "id": "a7ee21bb-7603-4926-9650-98a6ea5ea793",
+                "leftValue": "={{ $json.applicant }}",
+                "operator": {
+                  "operation": "notEmpty",
+                  "singleValue": true,
+                  "type": "string"
+                },
+                "rightValue": ""
+              },
+              {
+                "id": "5d7a951c-6490-4f30-9c4c-62205ac334cb",
+                "leftValue": "={{ $json.title }}",
+                "operator": {
+                  "operation": "notEmpty",
+                  "singleValue": true,
+                  "type": "string"
+                },
+                "rightValue": ""
+              },
+              {
+                "id": "067e8874-69b6-41e2-87f9-1e7a7da0a2da",
+                "leftValue": "={{ $json.abstract }}",
+                "operator": {
+                  "operation": "notEmpty",
+                  "singleValue": true,
+                  "type": "string"
+                },
+                "rightValue": ""
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          3600,
+          240
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2
+      },
+      {
+        "id": "ecb92cc8-ce81-4e90-892d-2e463016d08e",
+        "name": "Sticky Note",
+        "parameters": {
+          "content": "## Transfer approved Patents",
+          "height": 528,
+          "width": 2864
+        },
+        "position": [
+          0,
+          768
+        ],
+        "type": "n8n-nodes-base.stickyNote",
+        "typeVersion": 1
+      },
+      {
+        "id": "a257fa3a-1af0-4a1b-a8cb-554dae5fd328",
+        "name": "Schedule Trigger1",
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "field": "hours"
+              }
+            ]
+          }
+        },
+        "position": [
+          64,
+          864
+        ],
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2
+      },
+      {
+        "id": "f73e77f3-f1d8-460a-b0c5-7559c6b60541",
+        "name": "Code in JavaScript3",
+        "parameters": {
+          "jsCode": "function strip4Byte(s) {\n  if (!s) return s;\n  // 4-Byte entfernen (Emojis etc.)\n  s = s.replace(/[\\uD800-\\uDBFF][\\uDC00-\\uDFFF]/g, '');\n  // optional: Unicode-Normalisierung (NFC), falls Node-Version es kann\n  if (typeof s.normalize === 'function') s = s.normalize('NFC');\n  return s;\n}\n\nconst json = $('Loop Over Items1').first().json;\n\nconst titel = strip4Byte(json.PatentResultTitel);\nconst erfinder = strip4Byte(json.PatentResultErfinder)\nconst jahr = (json.PatentResultPublishedDate).substring(0,4);\nconst anmelder = json.PatentResultAnmelder ? json.PatentResultAnmelder : '';\nconst journal = \"Patent\";\nconst patentnr = json.PatentResultPublicationNumber;\nconst inseriert = json.PatentResultInseriert;\nconst abstract = strip4Byte(json.PatentResultAbstract);\nconst keywords = strip4Byte(json.PatentResultKeywords);\n\nreturn {\n  titel: titel,\n  erfinder: erfinder,\n  jahr: jahr,\n  anmelder: anmelder,\n  journal: journal,\n  patentnr: patentnr,\n  inseriert: inseriert,\n  abstract: abstract,\n  keywords: keywords\n};"
+        },
+        "position": [
+          1168,
+          1040
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "449c78b7-366f-401b-be86-9afca19bd75c",
+        "name": "MySQL Delete Linked Antigens",
+        "parameters": {
+          "deleteCommand": "delete",
+          "operation": "deleteTable",
+          "options": {},
+          "table": {
+            "__rl": true,
+            "cachedResultName": "if_l_patentresult_antigene",
+            "mode": "list",
+            "value": "if_l_patentresult_antigene"
+          },
+          "where": {
+            "values": [
+              {
+                "column": "PatentResultNr",
+                "value": "={{ $('Loop Over Items1').item.json.PatentResultNr }}"
+              }
+            ]
+          }
+        },
+        "position": [
+          2608,
+          1072
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "alwaysOutputData": true,
+        "credentials": "__REDACTED__",
+        "id": "27a101a3-e172-4da5-9f29-3f063eec9c8e",
+        "name": "MySQL Find Linked Antigens",
+        "parameters": {
+          "operation": "select",
+          "options": {},
+          "returnAll": true,
+          "table": {
+            "__rl": true,
+            "mode": "list",
+            "value": "if_l_patentresult_antigene"
+          },
+          "where": {
+            "values": [
+              {
+                "column": "PatentResultNr",
+                "value": "={{ $('Loop Over Items1').item.json.PatentResultNr }}"
+              }
+            ]
+          }
+        },
+        "position": [
+          1808,
+          864
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "id": "d741df09-dc8f-4fc2-a6fc-b83815a5c262",
+        "name": "Loop Over Items4",
+        "parameters": {
+          "options": {}
+        },
+        "position": [
+          2240,
+          784
+        ],
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3
+      },
+      {
+        "id": "02f2ad7c-badb-4ff9-b6e8-bc1c163b2d6e",
+        "name": "Loop Over Items1",
+        "parameters": {
+          "options": {}
+        },
+        "position": [
+          704,
+          848
+        ],
+        "type": "n8n-nodes-base.splitInBatches",
+        "typeVersion": 3
+      },
+      {
+        "id": "d482a198-f20d-4bd3-a5aa-8376129c1c4b",
+        "name": "If3",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "2ba4147f-feb8-4ada-acd7-b44dfac2328d",
+                "leftValue": "={{ $json }}",
+                "operator": {
+                  "operation": "notEmpty",
+                  "singleValue": true,
+                  "type": "object"
+                },
+                "rightValue": "true"
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          1040,
+          944
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2
+      },
+      {
+        "id": "127bbcf0-9b11-4cfc-bea6-5042f80b6c62",
+        "name": "If7",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "2ba4147f-feb8-4ada-acd7-b44dfac2328d",
+                "leftValue": "={{ $json }}",
+                "operator": {
+                  "operation": "notEmpty",
+                  "singleValue": true,
+                  "type": "object"
+                },
+                "rightValue": "true"
+              },
+              {
+                "id": "b57b434e-98d9-4518-9cd3-29ebc7623999",
+                "leftValue": "={{ $json.data.insertId }}",
+                "operator": {
+                  "operation": "gt",
+                  "type": "number"
+                },
+                "rightValue": 0
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          1664,
+          1040
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2
+      },
+      {
+        "id": "1253d517-7637-4701-b3fc-f9dd842760d9",
+        "name": "If8",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "83a46e0a-fa04-4a6d-bfcf-f12b8bda9947",
+                "leftValue": "={{ $json }}",
+                "operator": {
+                  "operation": "notEmpty",
+                  "singleValue": true,
+                  "type": "object"
+                },
+                "rightValue": ""
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          2016,
+          864
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "333e659e-9411-4212-9d9a-87ae63baafc3",
+        "name": "Insert rows in a table",
+        "parameters": {
+          "dataMode": "defineBelow",
+          "options": {},
+          "table": {
+            "__rl": true,
+            "cachedResultName": "if_l_literatur_antigene",
+            "mode": "list",
+            "value": "if_l_literatur_antigene"
+          },
+          "valuesToSend": {
+            "values": [
+              {
+                "column": "AntigenNr",
+                "value": "={{ $json.AntigenNr }}"
+              },
+              {
+                "column": "LiteraturNr",
+                "value": "={{ $('MySQL Insert New Patent').item.json.data.insertId }}"
+              },
+              {
+                "column": "L_Literatur_AntigeneStatus",
+                "value": "j"
+              }
+            ]
+          }
+        },
+        "position": [
+          2496,
+          800
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "id": "2ff90ff2-5a06-49c3-a0ae-4322d6a8ecd7",
+        "name": "If9",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "11bb6fdb-5f81-4eea-8254-58930406b345",
+                "leftValue": "={{ $json }}",
+                "operator": {
+                  "operation": "notEmpty",
+                  "singleValue": true,
+                  "type": "object"
+                },
+                "rightValue": ""
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          480,
+          864
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2
+      },
+      {
+        "id": "288ec7bb-9fc8-46df-837f-6ac00a6be76f",
+        "name": "When clicking ‘Execute workflow’",
+        "parameters": {},
+        "position": [
+          64,
+          1056
+        ],
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "34eed07e-bb94-437c-ba36-15df4deb156d",
+        "name": "MySQL Insert New Patent",
+        "parameters": {
+          "dataMode": "defineBelow",
+          "options": {
+            "detailedOutput": true
+          },
+          "table": {
+            "__rl": true,
+            "cachedResultName": "if_literatur2",
+            "mode": "list",
+            "value": "if_literatur2"
+          },
+          "valuesToSend": {
+            "values": [
+              {
+                "column": "LiteraturZweck",
+                "value": "l"
+              },
+              {
+                "column": "LiteraturTitel",
+                "value": "={{ $json.titel }}"
+              },
+              {
+                "column": "LiteraturAutoren",
+                "value": "={{ $json.erfinder }}"
+              },
+              {
+                "column": "LiteraturJahr",
+                "value": "={{ $json.jahr }}"
+              },
+              {
+                "column": "LiteraturAusgabe",
+                "value": "={{ $json.anmelder }}"
+              },
+              {
+                "column": "LiteraturJournal",
+                "value": "={{ $json.journal }}"
+              },
+              {
+                "column": "LiteraturPatentNr",
+                "value": "={{ $json.patentnr }}"
+              },
+              {
+                "column": "LiteraturDatum",
+                "value": "={{ $json.inseriert }}"
+              },
+              {
+                "column": "LiteraturErstellerNr",
+                "value": "2"
+              },
+              {
+                "column": "LiteraturAbstract",
+                "value": "={{ $json.abstract }}"
+              },
+              {
+                "column": "LiteraturKeywords",
+                "value": "={{ $json.keywords }}"
+              },
+              {
+                "column": "LiteraturStatus",
+                "value": "f"
+              }
+            ]
+          }
+        },
+        "position": [
+          1392,
+          784
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "alwaysOutputData": true,
+        "credentials": "__REDACTED__",
+        "id": "528328af-0921-48a6-868c-c342c08f0119",
+        "name": "MySQL Check for Existing Patent",
+        "parameters": {
+          "limit": 1,
+          "operation": "select",
+          "options": {},
+          "table": {
+            "__rl": true,
+            "cachedResultName": "if_literatur2",
+            "mode": "list",
+            "value": "if_literatur2"
+          },
+          "where": {
+            "values": [
+              {
+                "column": "LiteraturPatentNr",
+                "value": "={{ $json.PatentResultPublicationNumber }}"
+              }
+            ]
+          }
+        },
+        "position": [
+          864,
+          944
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "alwaysOutputData": true,
+        "credentials": "__REDACTED__",
+        "id": "1772697d-fbce-4581-8f6e-6c701419a011",
+        "name": "MySQL Find Approved Patents",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "SELECT *, YEAR(A.PatentResultPublishedDate) AS PatentResultJahr\nFROM   if_patent_results AS A\nLEFT JOIN if_patent_query as B ON A.PatentQueryNr=B.PatentQueryNr\nWHERE  PatentResultUebernommen = 'j'\nORDER BY PatentResultNr ASC\nLIMIT 50"
+        },
+        "position": [
+          272,
+          864
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "26a3eb96-04ed-4584-8623-36438d8c9922",
+        "name": "MYSQL Set PatentResult to Finished",
+        "parameters": {
+          "columnToMatchOn": "PatentResultNr",
+          "dataMode": "defineBelow",
+          "operation": "update",
+          "options": {},
+          "table": {
+            "__rl": true,
+            "cachedResultName": "if_patent_results",
+            "mode": "list",
+            "value": "if_patent_results"
+          },
+          "valueToMatchOn": "={{ $('Loop Over Items1').item.json.PatentResultNr }}",
+          "valuesToSend": {
+            "values": [
+              {
+                "column": "PatentResultUebernommen",
+                "value": "f"
+              }
+            ]
+          }
+        },
+        "position": [
+          2320,
+          1040
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "233016e6-501a-4b21-a969-448f761a5471",
+        "name": "MySQL Insert New PMID2",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n$('Code in JavaScript3').item.json.titel ?? '',\n$('Code in JavaScript3').item.json.erfinder ?? '',\n$('Code in JavaScript3').item.json.jahr ?? '',\n$('Code in JavaScript3').item.json.anmelder ?? '',\n$('Code in JavaScript3').item.json.journal ?? '',\n$('Code in JavaScript3').item.json.patentnr ?? '',\n$('Code in JavaScript3').item.json.inseriert ?? '',\n$('Code in JavaScript3').item.json.abstract ?? '',\n$('Code in JavaScript3').item.json.keywords ?? '',\n] }}"
+          },
+          "query": "INSERT INTO if_literatur2 SET\nLiteraturZweck = 'l',\nLiteraturArt = 'PDF',\nLiteraturTitel = $1,\nLiteraturAutoren = $2,\nLiteraturJahr = $3,\nLiteraturAusgabe = $4,\nLiteraturJournal = $5,\nLiteraturPatentNr = $6,\nLiteraturDatum = $7,\nLiteraturErstellerNr = 2,\nLiteraturAbstract = $8,\nLiteraturKeywords = $9,\nLiteraturStatus = 'f'"
+        },
+        "position": [
+          1504,
+          1040
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "e7e625e3-2492-45b9-acd4-0d91d4694cbd",
+        "name": "MySQL SET NAMES",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "SET NAMES utf8;"
+        },
+        "position": [
+          1344,
+          1040
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.5
+      }
+    ],
+    "updatedAt": "2026-04-27T20:26:31.809Z",
+    "versionId": "ea88b75d-1764-48fa-b271-555e170799cd",
+    "workflowId": "eniYmBMJI7PWFHZF"
+  },
+  "activeVersionId": "ea88b75d-1764-48fa-b271-555e170799cd",
+  "connections": {
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If2",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript3": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL SET NAMES",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Select rows from a table",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Function: Build Date Window": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If1",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If4",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code in JavaScript1",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "HTTP Request",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "OPS Authentication",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Insert rows in a table1",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MYSQL Set PatentResult to Finished",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Code in JavaScript3",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If4": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Split Out",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Execute a SQL query2",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If5": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Wait",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If6": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "HTTP Request1",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If7": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL Find Linked Antigens",
+            "type": "main"
+          },
+          {
+            "index": 0,
+            "node": "MYSQL Set PatentResult to Finished",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items1",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If8": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items4",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If9": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items1",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Insert rows in a table": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items4",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Insert rows in a table1": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Execute a SQL query2",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "If5",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [],
+        [
+          {
+            "index": 0,
+            "node": "MySQL Check for Existing Patent",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Loop Over Items4": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL Delete Linked Antigens",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Insert rows in a table",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MYSQL Set PatentResult to Finished": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items1",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MYSQL: Queries": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Function: Build Date Window",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL Check for Existing Patent": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If3",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL Find Approved Patents": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If9",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL Find Linked Antigens": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If8",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL Insert New PMID2": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If7",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL Insert New Patent": {
+      "main": [
+        []
+      ]
+    },
+    "MySQL SET NAMES": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL Insert New PMID2",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "OPS Authentication": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MYSQL: Queries",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger1": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL Find Approved Patents",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Select rows from a table": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If6",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Loop Over Items",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Edit Fields",
+            "type": "main"
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-11-24T09:06:06.786Z",
+  "id": "eniYmBMJI7PWFHZF",
+  "isArchived": false,
+  "name": "Patent retrieval",
+  "nodes": [
+    {
+      "id": "1eec142c-1454-4e3b-8e5c-0dc289d44ca5",
+      "name": "If",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "6f2c148b-f8fb-4034-8240-936bcef223cf",
+              "leftValue": "={{ $json.access_token }}",
+              "operator": {
+                "operation": "exists",
+                "singleValue": true,
+                "type": "string"
+              },
+              "rightValue": 0
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        1072,
+        320
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2
+    },
+    {
+      "id": "843a1b1e-ebc5-4026-b2f2-51bdd3a15716",
+      "name": "Function: Build Date Window",
+      "parameters": {
+        "jsCode": "// Build Date Window — Run once for all items: AN\nconst items = $input.all(); // alle eingehenden Items\n\nfunction toEutilsDate(d) {\n  return String(d || '20251001').replaceAll('-', ''); // YYYYMMDD\n}\n\nconst today = new Date();\nconst yyyy = today.getFullYear();\nconst mm = String(today.getMonth() + 1).padStart(2, '0');\nconst dd = String(today.getDate()).padStart(2, '0');\n\nconst maxdate = `${yyyy}${mm}${dd}`;\nconst today_sql = `${yyyy}-${mm}-${dd}`;\n\nreturn items.map(({ json }) => {\n  const { query_id, query, last_run } = json;\n  return {\n    json: {\n      query_id,\n      query,\n      mindate: toEutilsDate(last_run),\n      maxdate,\n      datetype: 'edat',\n      today_sql\n    }\n  };\n});\n"
+      },
+      "position": [
+        448,
+        320
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "alwaysOutputData": true,
+      "credentials": "__REDACTED__",
+      "id": "50d75edb-c73f-42f7-9fb1-366612e0a6f3",
+      "name": "MYSQL: Queries",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "SELECT PatentQueryNr as query_id, PatentQueryQuery as query, PatentQueryLastRun as last_run, PatentQueryTitel as title FROM if_patent_query WHERE PatentQueryAktiv = 'j' AND (TO_DAYS(PatentQueryLastRun) < TO_DAYS(NOW()) OR PatentQueryLastRun IS NULL) LIMIT 1"
+      },
+      "position": [
+        256,
+        320
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "id": "0894be30-ddef-4118-92fa-0634f421079e",
+      "name": "Schedule Trigger",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "expression": "15 * * * *",
+              "field": "cronExpression"
+            }
+          ]
+        }
+      },
+      "position": [
+        64,
+        320
+      ],
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2
+    },
+    {
+      "id": "1eed37a9-a504-4b1e-8630-0476f0061354",
+      "name": "Sticky Note1",
+      "parameters": {
+        "color": 5,
+        "content": "## Find new patents",
+        "height": 720,
+        "width": 4160
+      },
+      "position": [
+        0,
+        0
+      ],
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1
+    },
+    {
+      "id": "06edfca3-e28b-4dde-8c60-ffd9fd563443",
+      "name": "If1",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "fec224c6-41f9-4616-a90a-9a5ca2b3cdce",
+              "leftValue": "={{ $json.query_id }}",
+              "operator": {
+                "operation": "exists",
+                "singleValue": true,
+                "type": "number"
+              },
+              "rightValue": ""
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        656,
+        448
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2
+    },
+    {
+      "id": "d6897f75-9afe-4fc6-963f-4ac09c20fcf3",
+      "name": "OPS Authentication",
+      "parameters": {
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "grant_type",
+              "value": "client_credentials"
+            },
+            {
+              "name": "scope",
+              "value": "ops"
+            }
+          ]
+        },
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/x-www-form-urlencoded"
+            },
+            {
+              "name": "Authorization",
+              "value": "__REDACTED__"
+            }
+          ]
+        },
+        "method": "POST",
+        "options": {},
+        "queryParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "sendQuery": true,
+        "url": "https://ops.epo.org/3.2/auth/accesstoken"
+      },
+      "position": [
+        864,
+        320
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "alwaysOutputData": true,
+      "id": "2d6e54ff-2b78-4cb8-bdfe-ad93fabf6a45",
+      "name": "HTTP Request",
+      "onError": "continueRegularOutput",
+      "parameters": {
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "__REDACTED__"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            },
+            {
+              "name": "X-OPS-Range",
+              "value": "1-5"
+            }
+          ]
+        },
+        "options": {},
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ $('If1').item.json.query }} and pd>\"{{ $('If1').item.json.mindate }}\""
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "sendQuery": true,
+        "url": "https://ops.epo.org/3.2/rest-services/published-data/search"
+      },
+      "position": [
+        1280,
+        224
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "c2cf1e0f-b63b-43a5-b445-d6bf3f160b80",
+      "name": "If4",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "6b98b79e-78e6-4448-9c48-b86cf89afcf0",
+              "leftValue": "={{ $json['ops:world-patent-data']['ops:biblio-search']['ops:range'] }}",
+              "operator": {
+                "operation": "exists",
+                "singleValue": true,
+                "type": "object"
+              },
+              "rightValue": ""
+            },
+            {
+              "id": "ade8d33e-6418-4c8a-8b36-bac7681cb89e",
+              "leftValue": "={{ $json.error }}",
+              "operator": {
+                "operation": "notExists",
+                "singleValue": true,
+                "type": "object"
+              },
+              "rightValue": ""
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        1488,
+        224
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2
+    },
+    {
+      "id": "96d04f48-1aba-4835-ab3a-3c93b5c682d5",
+      "name": "Loop Over Items",
+      "parameters": {
+        "options": {}
+      },
+      "position": [
+        1904,
+        128
+      ],
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3
+    },
+    {
+      "id": "1c9d6dbb-6e17-497a-a28c-f851513a8d7d",
+      "name": "Split Out",
+      "parameters": {
+        "fieldToSplitOut": "['ops:world-patent-data']['ops:biblio-search']['ops:search-result']['ops:publication-reference']",
+        "options": {}
+      },
+      "position": [
+        1696,
+        128
+      ],
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1
+    },
+    {
+      "id": "19c90dc5-c167-4b07-842f-165415fae0fc",
+      "name": "Wait",
+      "parameters": {
+        "amount": 1
+      },
+      "position": [
+        2336,
+        128
+      ],
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "webhookId": "f03f0c84-f767-4313-ad90-2633be5b159f"
+    },
+    {
+      "id": "5d07c051-5f6c-4da1-ba08-060a6339e4df",
+      "name": "HTTP Request1",
+      "parameters": {
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "__REDACTED__"
+            },
+            {
+              "name": "Accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "options": {},
+        "sendHeaders": true,
+        "url": "=https://ops.epo.org/3.2/rest-services/published-data/publication/epodoc/{{ $('Edit Fields').item.json.epodoc }}/biblio"
+      },
+      "position": [
+        3200,
+        240
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2
+    },
+    {
+      "id": "dd8de6c0-5f2b-4d30-94bb-da1535f97d5e",
+      "name": "If5",
+      "parameters": {
+        "conditions": {
+          "combinator": "or",
+          "conditions": [
+            {
+              "id": "4c5053f0-5443-4487-9200-cc68671478ea",
+              "leftValue": "={{ $json['document-id'].country.$ }}",
+              "operator": {
+                "name": "filter.operator.equals",
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "WO"
+            },
+            {
+              "id": "48ce93bc-3261-499d-a246-6788dd1fa654",
+              "leftValue": "={{ $json['document-id'].country.$ }}",
+              "operator": {
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "EP"
+            },
+            {
+              "id": "6ff81865-e839-436c-a1fb-f84e50220eeb",
+              "leftValue": "={{ $json['document-id'].country.$ }}",
+              "operator": {
+                "name": "filter.operator.equals",
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "US"
+            },
+            {
+              "id": "54ec9f0c-c822-4a52-ba5c-99421c959aab",
+              "leftValue": "={{ $json['document-id'].country.$ }}",
+              "operator": {
+                "name": "filter.operator.equals",
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "CN"
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        2112,
+        240
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2
+    },
+    {
+      "id": "d2bf96bc-2469-4c44-9043-249805a999e3",
+      "name": "Edit Fields",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6a3b632a-9980-43a2-9a5a-822a19d5a690",
+              "name": "epodoc",
+              "type": "string",
+              "value": "={{ $json['document-id'].country.$ }}{{ $json['document-id']['doc-number'].$ }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "position": [
+        2512,
+        128
+      ],
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4
+    },
+    {
+      "alwaysOutputData": true,
+      "credentials": "__REDACTED__",
+      "id": "f2054fb8-636d-4fb7-b26e-d721afa44a44",
+      "name": "Select rows from a table",
+      "parameters": {
+        "limit": 1,
+        "operation": "select",
+        "options": {},
+        "table": {
+          "__rl": true,
+          "cachedResultName": "if_patent_results",
+          "mode": "list",
+          "value": "if_patent_results"
+        },
+        "where": {
+          "values": [
+            {
+              "column": "PatentResultPublicationNumber",
+              "value": "={{ $json.epodoc }}"
+            }
+          ]
+        }
+      },
+      "position": [
+        2704,
+        128
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "id": "0eb3eb71-9ef7-441c-b206-9d1e40814ec1",
+      "name": "If6",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "d9108342-06c7-4759-b6d4-4db7089bb6cd",
+              "leftValue": "={{ $json.PatentResultNr }}",
+              "operator": {
+                "operation": "exists",
+                "singleValue": true,
+                "type": "number"
+              },
+              "rightValue": ""
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        2960,
+        272
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2
+    },
+    {
+      "id": "25b6b67f-82f4-4844-b5e2-1ecb7041cc3e",
+      "name": "Code in JavaScript1",
+      "parameters": {
+        "jsCode": "// Robustes Parsen von EPO OPS \"biblio\" JSON (EP/WIPO=Arrays; US/DE/CN=Objekte)\n\nconst root = $input.first().json?.[\"ops:world-patent-data\"]?.[\"exchange-documents\"]?.[\"exchange-document\"] ?? {};\n\n//\n// Hilfsfunktionen\n//\nconst asArray = (v) => v == null ? [] : (Array.isArray(v) ? v : [v]);\n\n// Holt entweder obj.$ oder den String selbst\nconst val = (v, fallback = \"\") => {\n  if (v == null) return fallback;\n  if (typeof v === \"object\" && \"$\" in v && typeof v.$ === \"string\") return v.$;\n  if (typeof v === \"string\") return v;\n  return fallback;\n};\n\n// Holt das erste Element, das predicate erfüllt – über Arrays/Objekte hinweg\nconst firstMatch = (arrOrObj, predicate) => {\n  for (const x of asArray(arrOrObj)) {\n    if (predicate(x)) return x;\n  }\n  return undefined;\n};\n\n// YYYYMMDD -> YYYY-MM-DD (nur wenn 8-stellig)\nconst normDate = (s) => {\n  const d = (s || \"\").toString();\n  if (/^\\d{8}$/.test(d)) return `${d.slice(0,4)}-${d.slice(4,6)}-${d.slice(6,8)}`;\n  return d || \"\";\n};\n\n//\n// Pfadkürzel\n//\nconst biblio = root?.[\"bibliographic-data\"] ?? {};\n\n// 1) Publikationsnummer (epodoc)\nlet epodoc = \"\";\n\n// Manche Datensätze haben mehrere document-id; häufig ist [1] epodoc, aber nicht garantiert.\n// Wir suchen gezielt nach @document-id-type === \"epodoc\", andernfalls nehmen wir die erste doc-number.\nconst pubRef = biblio?.[\"publication-reference\"]?.[\"document-id\"];\nconst docIds = asArray(pubRef);\n\nconst epodocDoc = firstMatch(docIds, d => d?.[\"@document-id-type\"] === \"epodoc\") ?? docIds[0];\nepodoc = val(epodocDoc?.[\"doc-number\"]);\n\n// 2) Priorität (YYYY-MM-DD aus YYYYMMDD), bevorzugt epodoc\nlet priority = \"\";\n\nconst prioClaims = biblio?.[\"priority-claims\"]?.[\"priority-claim\"];\nconst prioDocs = asArray(prioClaims).map(pc => pc?.[\"document-id\"]).flatMap(asArray);\n\n// zuerst epodoc, sonst erstes Datum\nlet prio = firstMatch(prioDocs, d => d?.[\"@document-id-type\"] === \"epodoc\") ?? prioDocs[0];\n\nif (prio) {\n  const ds = val(prio?.date);\n  priority = normDate(ds);\n}\n\n// 3) Anmelder (epodoc)\nlet applicant = \"\";\nconst applicants = biblio?.parties?.applicants?.applicant;\nconst applList = asArray(applicants).filter(a => a?.[\"@data-format\"] === \"epodoc\" || !a?.[\"@data-format\"]);\n\nconst applicantNames = applList\n  .map(a => val(a?.[\"applicant-name\"]?.name))\n  .filter(Boolean);\n\nif (applicantNames.length === 0) {\n  // Fallback: nimm alles, was da ist\n  const allApps = asArray(applicants).map(a => val(a?.[\"applicant-name\"]?.name)).filter(Boolean);\n  applicant = allApps.join(\"; \");\n} else {\n  applicant = applicantNames.join(\"; \");\n}\n\n// 4) Erfinder (epodoc, kommasepariert)\nlet inventors = \"\";\nconst inventorsRaw = biblio?.parties?.inventors?.inventor;\nconst invList = asArray(inventorsRaw).filter(i => i?.[\"@data-format\"] === \"epodoc\" || !i?.[\"@data-format\"]);\n\nconst inventorNames = invList\n  .map(i => val(i?.[\"inventor-name\"]?.name))\n  .filter(Boolean);\n\nif (inventorNames.length === 0) {\n  const allInv = asArray(inventorsRaw).map(i => val(i?.[\"inventor-name\"]?.name)).filter(Boolean);\n  inventors = allInv.join(\", \");\n} else {\n  inventors = inventorNames.join(\", \");\n}\n\n// 5) Titel (bevorzugt EN, sonst erster)\nlet title = \"\";\nconst titles = asArray(biblio?.[\"invention-title\"]);\nconst titleEn = firstMatch(titles, t => (t?.[\"@lang\"] || t?.[\"@lang\"] === \"en\" || t?.[\"@lang\"]?.toLowerCase?.() === \"en\")) ?? titles[0];\ntitle = val(titleEn);\n\n// 6) Abstract (bevorzugt EN, sonst erster). Struktur: abstract[].p.$ oder abstract.p.$\nlet abstractText = \"\";\nconst abstracts = asArray(root?.abstract);\nconst absEn = firstMatch(abstracts, a => (a?.[\"@lang\"] || a?.[\"@lang\"] === \"en\" || a?.[\"@lang\"]?.toLowerCase?.() === \"en\")) ?? abstracts[0];\n\nif (absEn) {\n  // p kann Array, Objekt oder String sein\n  const p = absEn?.p;\n  if (Array.isArray(p)) {\n    abstractText = p.map(x => val(x)).filter(Boolean).join(\"\\n\");\n  } else {\n    abstractText = val(p) || val(absEn); // Fallback auf gesamten Knoten\n  }\n}\n\nreturn {\n  epodoc,\n  priority,\n  applicant,\n  inventors,\n  title,\n  abstract: abstractText\n};\n"
+      },
+      "position": [
+        3392,
+        240
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "415e6da2-1fce-4c73-ba10-123b2433443c",
+      "name": "Insert rows in a table1",
+      "onError": "continueRegularOutput",
+      "parameters": {
+        "dataMode": "defineBelow",
+        "options": {
+          "skipOnConflict": true
+        },
+        "table": {
+          "__rl": true,
+          "cachedResultName": "if_patent_results",
+          "mode": "list",
+          "value": "if_patent_results"
+        },
+        "valuesToSend": {
+          "values": [
+            {
+              "column": "PatentQueryNr",
+              "value": "={{ $('MYSQL: Queries').item.json.query_id }}"
+            },
+            {
+              "column": "PatentResultPublicationNumber",
+              "value": "={{ $json.epodoc }}"
+            },
+            {
+              "column": "PatentResultTitel",
+              "value": "={{ $json.title }}"
+            },
+            {
+              "column": "PatentResultErfinder",
+              "value": "={{ $json.inventors }}"
+            },
+            {
+              "column": "PatentResultAnmelder",
+              "value": "={{ $json.applicant }}"
+            },
+            {
+              "column": "PatentResultAbstract",
+              "value": "={{ $json.abstract }}"
+            },
+            {
+              "column": "PatentResultKeywords",
+              "value": "={{ $('MYSQL: Queries').item.json.title }}"
+            },
+            {
+              "column": "PatentResultPublishedDate",
+              "value": "={{ $json.priority }}"
+            },
+            {
+              "column": "PatentResultInseriert",
+              "value": "={{ $today }}"
+            }
+          ]
+        }
+      },
+      "position": [
+        3888,
+        256
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "bcdd4b0f-fb20-4380-9dbc-53f5d7c480d9",
+      "name": "Execute a SQL query2",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "UPDATE if_patent_query SET PatentQueryLastRun = NOW() WHERE PatentQueryNr = {{ $('MYSQL: Queries').item.json.query_id }}"
+      },
+      "position": [
+        2816,
+        480
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "id": "c4a04189-f14e-41e9-b4cd-07dc013eb998",
+      "name": "If2",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "370d94cf-ef9d-41c5-a4ac-9ad4e6695f42",
+              "leftValue": "={{ $json.epodoc }}",
+              "operator": {
+                "operation": "notEmpty",
+                "singleValue": true,
+                "type": "string"
+              },
+              "rightValue": ""
+            },
+            {
+              "id": "a7ee21bb-7603-4926-9650-98a6ea5ea793",
+              "leftValue": "={{ $json.applicant }}",
+              "operator": {
+                "operation": "notEmpty",
+                "singleValue": true,
+                "type": "string"
+              },
+              "rightValue": ""
+            },
+            {
+              "id": "5d7a951c-6490-4f30-9c4c-62205ac334cb",
+              "leftValue": "={{ $json.title }}",
+              "operator": {
+                "operation": "notEmpty",
+                "singleValue": true,
+                "type": "string"
+              },
+              "rightValue": ""
+            },
+            {
+              "id": "067e8874-69b6-41e2-87f9-1e7a7da0a2da",
+              "leftValue": "={{ $json.abstract }}",
+              "operator": {
+                "operation": "notEmpty",
+                "singleValue": true,
+                "type": "string"
+              },
+              "rightValue": ""
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        3600,
+        240
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2
+    },
+    {
+      "id": "ecb92cc8-ce81-4e90-892d-2e463016d08e",
+      "name": "Sticky Note",
+      "parameters": {
+        "content": "## Transfer approved Patents",
+        "height": 528,
+        "width": 2864
+      },
+      "position": [
+        0,
+        768
+      ],
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1
+    },
+    {
+      "id": "a257fa3a-1af0-4a1b-a8cb-554dae5fd328",
+      "name": "Schedule Trigger1",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "position": [
+        64,
+        864
+      ],
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2
+    },
+    {
+      "id": "f73e77f3-f1d8-460a-b0c5-7559c6b60541",
+      "name": "Code in JavaScript3",
+      "parameters": {
+        "jsCode": "function strip4Byte(s) {\n  if (!s) return s;\n  // 4-Byte entfernen (Emojis etc.)\n  s = s.replace(/[\\uD800-\\uDBFF][\\uDC00-\\uDFFF]/g, '');\n  // optional: Unicode-Normalisierung (NFC), falls Node-Version es kann\n  if (typeof s.normalize === 'function') s = s.normalize('NFC');\n  return s;\n}\n\nconst json = $('Loop Over Items1').first().json;\n\nconst titel = strip4Byte(json.PatentResultTitel);\nconst erfinder = strip4Byte(json.PatentResultErfinder)\nconst jahr = (json.PatentResultPublishedDate).substring(0,4);\nconst anmelder = json.PatentResultAnmelder ? json.PatentResultAnmelder : '';\nconst journal = \"Patent\";\nconst patentnr = json.PatentResultPublicationNumber;\nconst inseriert = json.PatentResultInseriert;\nconst abstract = strip4Byte(json.PatentResultAbstract);\nconst keywords = strip4Byte(json.PatentResultKeywords);\n\nreturn {\n  titel: titel,\n  erfinder: erfinder,\n  jahr: jahr,\n  anmelder: anmelder,\n  journal: journal,\n  patentnr: patentnr,\n  inseriert: inseriert,\n  abstract: abstract,\n  keywords: keywords\n};"
+      },
+      "position": [
+        1168,
+        1040
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "449c78b7-366f-401b-be86-9afca19bd75c",
+      "name": "MySQL Delete Linked Antigens",
+      "parameters": {
+        "deleteCommand": "delete",
+        "operation": "deleteTable",
+        "options": {},
+        "table": {
+          "__rl": true,
+          "cachedResultName": "if_l_patentresult_antigene",
+          "mode": "list",
+          "value": "if_l_patentresult_antigene"
+        },
+        "where": {
+          "values": [
+            {
+              "column": "PatentResultNr",
+              "value": "={{ $('Loop Over Items1').item.json.PatentResultNr }}"
+            }
+          ]
+        }
+      },
+      "position": [
+        2608,
+        1072
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "alwaysOutputData": true,
+      "credentials": "__REDACTED__",
+      "id": "27a101a3-e172-4da5-9f29-3f063eec9c8e",
+      "name": "MySQL Find Linked Antigens",
+      "parameters": {
+        "operation": "select",
+        "options": {},
+        "returnAll": true,
+        "table": {
+          "__rl": true,
+          "mode": "list",
+          "value": "if_l_patentresult_antigene"
+        },
+        "where": {
+          "values": [
+            {
+              "column": "PatentResultNr",
+              "value": "={{ $('Loop Over Items1').item.json.PatentResultNr }}"
+            }
+          ]
+        }
+      },
+      "position": [
+        1808,
+        864
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "id": "d741df09-dc8f-4fc2-a6fc-b83815a5c262",
+      "name": "Loop Over Items4",
+      "parameters": {
+        "options": {}
+      },
+      "position": [
+        2240,
+        784
+      ],
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3
+    },
+    {
+      "id": "02f2ad7c-badb-4ff9-b6e8-bc1c163b2d6e",
+      "name": "Loop Over Items1",
+      "parameters": {
+        "options": {}
+      },
+      "position": [
+        704,
+        848
+      ],
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3
+    },
+    {
+      "id": "d482a198-f20d-4bd3-a5aa-8376129c1c4b",
+      "name": "If3",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "2ba4147f-feb8-4ada-acd7-b44dfac2328d",
+              "leftValue": "={{ $json }}",
+              "operator": {
+                "operation": "notEmpty",
+                "singleValue": true,
+                "type": "object"
+              },
+              "rightValue": "true"
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        1040,
+        944
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2
+    },
+    {
+      "id": "127bbcf0-9b11-4cfc-bea6-5042f80b6c62",
+      "name": "If7",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "2ba4147f-feb8-4ada-acd7-b44dfac2328d",
+              "leftValue": "={{ $json }}",
+              "operator": {
+                "operation": "notEmpty",
+                "singleValue": true,
+                "type": "object"
+              },
+              "rightValue": "true"
+            },
+            {
+              "id": "b57b434e-98d9-4518-9cd3-29ebc7623999",
+              "leftValue": "={{ $json.data.insertId }}",
+              "operator": {
+                "operation": "gt",
+                "type": "number"
+              },
+              "rightValue": 0
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        1664,
+        1040
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2
+    },
+    {
+      "id": "1253d517-7637-4701-b3fc-f9dd842760d9",
+      "name": "If8",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "83a46e0a-fa04-4a6d-bfcf-f12b8bda9947",
+              "leftValue": "={{ $json }}",
+              "operator": {
+                "operation": "notEmpty",
+                "singleValue": true,
+                "type": "object"
+              },
+              "rightValue": ""
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        2016,
+        864
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "333e659e-9411-4212-9d9a-87ae63baafc3",
+      "name": "Insert rows in a table",
+      "parameters": {
+        "dataMode": "defineBelow",
+        "options": {},
+        "table": {
+          "__rl": true,
+          "cachedResultName": "if_l_literatur_antigene",
+          "mode": "list",
+          "value": "if_l_literatur_antigene"
+        },
+        "valuesToSend": {
+          "values": [
+            {
+              "column": "AntigenNr",
+              "value": "={{ $json.AntigenNr }}"
+            },
+            {
+              "column": "LiteraturNr",
+              "value": "={{ $('MySQL Insert New Patent').item.json.data.insertId }}"
+            },
+            {
+              "column": "L_Literatur_AntigeneStatus",
+              "value": "j"
+            }
+          ]
+        }
+      },
+      "position": [
+        2496,
+        800
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "id": "2ff90ff2-5a06-49c3-a0ae-4322d6a8ecd7",
+      "name": "If9",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "11bb6fdb-5f81-4eea-8254-58930406b345",
+              "leftValue": "={{ $json }}",
+              "operator": {
+                "operation": "notEmpty",
+                "singleValue": true,
+                "type": "object"
+              },
+              "rightValue": ""
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        480,
+        864
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2
+    },
+    {
+      "id": "288ec7bb-9fc8-46df-837f-6ac00a6be76f",
+      "name": "When clicking ‘Execute workflow’",
+      "parameters": {},
+      "position": [
+        64,
+        1056
+      ],
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "34eed07e-bb94-437c-ba36-15df4deb156d",
+      "name": "MySQL Insert New Patent",
+      "parameters": {
+        "dataMode": "defineBelow",
+        "options": {
+          "detailedOutput": true
+        },
+        "table": {
+          "__rl": true,
+          "cachedResultName": "if_literatur2",
+          "mode": "list",
+          "value": "if_literatur2"
+        },
+        "valuesToSend": {
+          "values": [
+            {
+              "column": "LiteraturZweck",
+              "value": "l"
+            },
+            {
+              "column": "LiteraturTitel",
+              "value": "={{ $json.titel }}"
+            },
+            {
+              "column": "LiteraturAutoren",
+              "value": "={{ $json.erfinder }}"
+            },
+            {
+              "column": "LiteraturJahr",
+              "value": "={{ $json.jahr }}"
+            },
+            {
+              "column": "LiteraturAusgabe",
+              "value": "={{ $json.anmelder }}"
+            },
+            {
+              "column": "LiteraturJournal",
+              "value": "={{ $json.journal }}"
+            },
+            {
+              "column": "LiteraturPatentNr",
+              "value": "={{ $json.patentnr }}"
+            },
+            {
+              "column": "LiteraturDatum",
+              "value": "={{ $json.inseriert }}"
+            },
+            {
+              "column": "LiteraturErstellerNr",
+              "value": "2"
+            },
+            {
+              "column": "LiteraturAbstract",
+              "value": "={{ $json.abstract }}"
+            },
+            {
+              "column": "LiteraturKeywords",
+              "value": "={{ $json.keywords }}"
+            },
+            {
+              "column": "LiteraturStatus",
+              "value": "f"
+            }
+          ]
+        }
+      },
+      "position": [
+        1392,
+        784
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "alwaysOutputData": true,
+      "credentials": "__REDACTED__",
+      "id": "528328af-0921-48a6-868c-c342c08f0119",
+      "name": "MySQL Check for Existing Patent",
+      "parameters": {
+        "limit": 1,
+        "operation": "select",
+        "options": {},
+        "table": {
+          "__rl": true,
+          "cachedResultName": "if_literatur2",
+          "mode": "list",
+          "value": "if_literatur2"
+        },
+        "where": {
+          "values": [
+            {
+              "column": "LiteraturPatentNr",
+              "value": "={{ $json.PatentResultPublicationNumber }}"
+            }
+          ]
+        }
+      },
+      "position": [
+        864,
+        944
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "alwaysOutputData": true,
+      "credentials": "__REDACTED__",
+      "id": "1772697d-fbce-4581-8f6e-6c701419a011",
+      "name": "MySQL Find Approved Patents",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "SELECT *, YEAR(A.PatentResultPublishedDate) AS PatentResultJahr\nFROM   if_patent_results AS A\nLEFT JOIN if_patent_query as B ON A.PatentQueryNr=B.PatentQueryNr\nWHERE  PatentResultUebernommen = 'j'\nORDER BY PatentResultNr ASC\nLIMIT 50"
+      },
+      "position": [
+        272,
+        864
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "26a3eb96-04ed-4584-8623-36438d8c9922",
+      "name": "MYSQL Set PatentResult to Finished",
+      "parameters": {
+        "columnToMatchOn": "PatentResultNr",
+        "dataMode": "defineBelow",
+        "operation": "update",
+        "options": {},
+        "table": {
+          "__rl": true,
+          "cachedResultName": "if_patent_results",
+          "mode": "list",
+          "value": "if_patent_results"
+        },
+        "valueToMatchOn": "={{ $('Loop Over Items1').item.json.PatentResultNr }}",
+        "valuesToSend": {
+          "values": [
+            {
+              "column": "PatentResultUebernommen",
+              "value": "f"
+            }
+          ]
+        }
+      },
+      "position": [
+        2320,
+        1040
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "233016e6-501a-4b21-a969-448f761a5471",
+      "name": "MySQL Insert New PMID2",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n$('Code in JavaScript3').item.json.titel ?? '',\n$('Code in JavaScript3').item.json.erfinder ?? '',\n$('Code in JavaScript3').item.json.jahr ?? '',\n$('Code in JavaScript3').item.json.anmelder ?? '',\n$('Code in JavaScript3').item.json.journal ?? '',\n$('Code in JavaScript3').item.json.patentnr ?? '',\n$('Code in JavaScript3').item.json.inseriert ?? '',\n$('Code in JavaScript3').item.json.abstract ?? '',\n$('Code in JavaScript3').item.json.keywords ?? '',\n] }}"
+        },
+        "query": "INSERT INTO if_literatur2 SET\nLiteraturZweck = 'l',\nLiteraturArt = 'PDF',\nLiteraturTitel = $1,\nLiteraturAutoren = $2,\nLiteraturJahr = $3,\nLiteraturAusgabe = $4,\nLiteraturJournal = $5,\nLiteraturPatentNr = $6,\nLiteraturDatum = $7,\nLiteraturErstellerNr = 2,\nLiteraturAbstract = $8,\nLiteraturKeywords = $9,\nLiteraturStatus = 'f'"
+      },
+      "position": [
+        1504,
+        1040
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "e7e625e3-2492-45b9-acd4-0d91d4694cbd",
+      "name": "MySQL SET NAMES",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "SET NAMES utf8;"
+      },
+      "position": [
+        1344,
+        1040
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5
+    }
+  ],
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": [],
+  "triggerCount": 2,
+  "updatedAt": "2026-04-23T10:47:43.000Z",
+  "versionId": "ea88b75d-1764-48fa-b271-555e170799cd"
+}

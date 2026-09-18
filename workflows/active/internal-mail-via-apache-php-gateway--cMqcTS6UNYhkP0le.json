@@ -1,0 +1,949 @@
+{
+  "active": true,
+  "activeVersion": {
+    "authors": "system migration",
+    "autosaved": false,
+    "connections": {
+      "Code in JavaScript": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Send to PHP Gateway",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Gateway Success?": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Respond Success",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Respond Gateway Error",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Normalize Payload": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Send to PHP Gateway",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Payload Valid?": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Normalize Payload",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Respond Validation Error",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Prepare Mail": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code in JavaScript",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Send to PHP Gateway": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Gateway Success?",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Validate Payload": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Payload Valid?",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Webhook": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Webhook Token Valid?",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Webhook Token Valid?": "__REDACTED__",
+      "When clicking ‘Execute workflow’": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Prepare Mail",
+              "type": "main"
+            }
+          ]
+        ]
+      }
+    },
+    "createdAt": "2026-04-27T20:26:31.809Z",
+    "description": null,
+    "name": null,
+    "nodes": [
+      {
+        "id": "57023740-a1b2-41fe-9711-155c68186f6d",
+        "name": "Webhook",
+        "parameters": {
+          "httpMethod": "POST",
+          "options": {},
+          "path": "internal-mail/send",
+          "responseMode": "responseNode"
+        },
+        "position": [
+          -992,
+          672
+        ],
+        "type": "n8n-nodes-base.webhook",
+        "typeVersion": 2,
+        "webhookId": "internal-mail-send"
+      },
+      {
+        "id": "569e6f0c-1a88-4f06-a2b6-d49ebe5c1573",
+        "name": "Webhook Token Valid?",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "2fb778e2-a93a-41fe-aa57-0a6b898584e1",
+                "leftValue": "={{ $json.headers[\"x-webhook-token\"] }}",
+                "operator": {
+                  "operation": "equals",
+                  "type": "string"
+                },
+                "rightValue": "W0sp9w27iCtEcXOiWFiE8KfhfmJQ0YZd3tDC4EbPxsQ"
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 1
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          -768,
+          672
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2
+      },
+      {
+        "id": "73567285-759d-445d-b0e9-3debb450c9a1",
+        "name": "Validate Payload",
+        "parameters": {
+          "jsCode": "const body = $json.body || {};\nconst errors = [];\n\nif (!Array.isArray(body.to) || body.to.length === 0) {\n  errors.push('Field \"to\" must be a non-empty array');\n}\n\nif (!body.subject || String(body.subject).trim() === '') {\n  errors.push('Field \"subject\" is required');\n}\n\nif ((!body.text || String(body.text).trim() === '') && (!body.html || String(body.html).trim() === '')) {\n  errors.push('Either \"text\" or \"html\" must be provided');\n}\n\nif (body.attachments !== undefined) {\n  if (!Array.isArray(body.attachments)) {\n    errors.push('Field \"attachments\" must be an array');\n  } else {\n    body.attachments.forEach((att, i) => {\n      if (!att || typeof att !== 'object') {\n        errors.push(`Attachment ${i} must be an object`);\n        return;\n      }\n      if (!att.filename || String(att.filename).trim() === '') {\n        errors.push(`Attachment ${i}: filename is required`);\n      }\n      if (!att.contentBase64 || String(att.contentBase64).trim() === '') {\n        errors.push(`Attachment ${i}: contentBase64 is required`);\n      }\n    });\n  }\n}\n\nreturn [{\n  json: {\n    valid: errors.length === 0,\n    errors,\n    body\n  }\n}];"
+        },
+        "position": [
+          -544,
+          576
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "74653215-4f93-422d-be9b-cbcd35ac873b",
+        "name": "Payload Valid?",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "09864d46-240d-4151-807c-88f0f858657b",
+                "leftValue": "={{$json.valid}}",
+                "operator": {
+                  "operation": "true",
+                  "singleValue": true,
+                  "type": "boolean"
+                },
+                "rightValue": true
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 1
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          -304,
+          576
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2
+      },
+      {
+        "id": "e406603e-6fa0-43a6-be8d-cba3e08b1737",
+        "name": "Normalize Payload",
+        "parameters": {
+          "jsCode": "const body = $json.body || {};\n\nconst norm = {\n  to: Array.isArray(body.to) ? body.to.filter(v => !!String(v).trim()) : [],\n  cc: Array.isArray(body.cc) ? body.cc.filter(v => !!String(v).trim()) : [],\n  bcc: Array.isArray(body.bcc) ? body.bcc.filter(v => !!String(v).trim()) : [],\n  from: body.from || 'infofee@euroimmun.de',\n  from_name: body.from_name || 'n8n Mail Relay',\n  subject: String(body.subject || '').trim(),\n  text: body.text || '',\n  html: body.html || '',\n  attachments: Array.isArray(body.attachments)\n    ? body.attachments.map(att => ({\n        filename: String(att.filename || '').trim(),\n        mimeType: att.mimeType || 'application/octet-stream',\n        contentBase64: att.contentBase64\n      }))\n    : [],\n  meta: {\n    ...(body.meta || {}),\n    relay_workflow: 'Webhook Mail Relay via PHP Gateway',\n    n8n_execution_id: $execution.id\n  }\n};\n\nreturn [{ json: norm }];"
+        },
+        "position": [
+          -80,
+          464
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "a3e243c2-bb0a-485d-9fa6-777694b132a4",
+        "name": "Send to PHP Gateway",
+        "onError": "continueRegularOutput",
+        "parameters": {
+          "headerParameters": {
+            "parameters": [
+              {
+                "name": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "name": "X-Internal-Token",
+                "value": "a0Rn-6H8cmOR4sGcDfCySjZrnsWLKF9-pRamLictJuc"
+              }
+            ]
+          },
+          "jsonBody": "={{$json}}",
+          "method": "POST",
+          "options": {
+            "redirect": {},
+            "timeout": 30000
+          },
+          "sendBody": true,
+          "sendHeaders": true,
+          "specifyBody": "json",
+          "url": "http://172.16.30.136/mail/send.php"
+        },
+        "position": [
+          368,
+          464
+        ],
+        "retryOnFail": true,
+        "type": "n8n-nodes-base.httpRequest",
+        "typeVersion": 4.2,
+        "waitBetweenTries": 2000
+      },
+      {
+        "id": "9f7e86dc-26ca-4ab7-aa92-28acb973a209",
+        "name": "Gateway Success?",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "0c73da8d-cab1-4b1b-b047-a3440051da17",
+                "leftValue": "={{ $json.success }}",
+                "operator": {
+                  "operation": "true",
+                  "singleValue": true,
+                  "type": "boolean"
+                },
+                "rightValue": ""
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 1
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          592,
+          464
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2
+      },
+      {
+        "id": "32b3a318-211a-488e-9597-15033795c787",
+        "name": "Respond Success",
+        "parameters": {
+          "options": {
+            "responseCode": 200
+          },
+          "respondWith": "json",
+          "responseBody": "={{ { success: true, message: 'Mail queued/sent successfully', gateway: $json } }}"
+        },
+        "position": [
+          832,
+          384
+        ],
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1
+      },
+      {
+        "id": "4db8259b-9857-462e-ba27-8064686fa7f7",
+        "name": "Respond Gateway Error",
+        "parameters": {
+          "options": {
+            "responseCode": 502
+          },
+          "respondWith": "json",
+          "responseBody": "={{ { success: false, error: $json.error || 'Gateway call failed', gateway: $json } }}"
+        },
+        "position": [
+          832,
+          544
+        ],
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1
+      },
+      {
+        "id": "b237b03c-47e8-4853-a0db-ae3feaf675ff",
+        "name": "Respond Validation Error",
+        "parameters": {
+          "options": {
+            "responseCode": 400
+          },
+          "respondWith": "json",
+          "responseBody": "={{ { success: false, error: 'Invalid payload', details: $json.errors } }}"
+        },
+        "position": [
+          -80,
+          672
+        ],
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1
+      },
+      {
+        "id": "25907a0d-377c-419b-ae35-86d4e739732e",
+        "name": "Respond Unauthorized",
+        "parameters": {
+          "options": {
+            "responseCode": 401
+          },
+          "respondWith": "json",
+          "responseBody": "={{ { success: false, error: 'Unauthorized' } }}"
+        },
+        "position": [
+          -544,
+          816
+        ],
+        "type": "n8n-nodes-base.respondToWebhook",
+        "typeVersion": 1
+      },
+      {
+        "id": "8a070d8e-eec7-40b5-b784-f6150f37122b",
+        "name": "When clicking ‘Execute workflow’",
+        "parameters": {},
+        "position": [
+          -304,
+          208
+        ],
+        "type": "n8n-nodes-base.manualTrigger",
+        "typeVersion": 1
+      },
+      {
+        "id": "cfda06be-1826-49c3-8104-4b4c0f4ecefd",
+        "name": "Prepare Mail",
+        "parameters": {
+          "assignments": {
+            "assignments": [
+              {
+                "id": "c6af6d5d-27f3-472e-b97e-2b5d0c8900c2",
+                "name": "to",
+                "type": "string",
+                "value": "l.komorowski@euroimmun.de"
+              },
+              {
+                "id": "b5e833b2-3e10-418e-bd7a-e5f30b4ab76c",
+                "name": "cc",
+                "type": "string",
+                "value": ""
+              },
+              {
+                "id": "f13069a0-2483-43db-961a-3b2a7c9a3a20",
+                "name": "bcc",
+                "type": "string",
+                "value": ""
+              },
+              {
+                "id": "76f3c1cd-aacb-4da7-a494-5b3c54b875af",
+                "name": "from",
+                "type": "string",
+                "value": "infofee@euroimmun.de"
+              },
+              {
+                "id": "18a99dd2-52a8-4b1c-b638-a90542cef461",
+                "name": "from_name",
+                "type": "string",
+                "value": "Lars"
+              },
+              {
+                "id": "df5e4e25-4692-4f62-bbfb-8945c4d1df85",
+                "name": "subject",
+                "type": "string",
+                "value": "Testmail aus n8n über Apache/PHP"
+              },
+              {
+                "id": "c9b8c1f9-b790-48c0-a5b0-b0e24ab34fd7",
+                "name": "text",
+                "type": "string",
+                "value": "Dies ist eine Testmail aus n8n über das interne PHP-Mail-Gateway."
+              },
+              {
+                "id": "eea33d7d-c727-45f9-9281-a1a044688e8c",
+                "name": "html",
+                "type": "string",
+                "value": "<p>Dies ist eine <strong>Testmail</strong> aus n8n über das interne PHP-Mail-Gateway.</p>"
+              },
+              {
+                "id": "ea796ad8-0a44-4018-ace7-fc54278fbc71",
+                "name": "workflow_name",
+                "type": "string",
+                "value": "Internal Mail via Apache PHP Gateway"
+              }
+            ]
+          },
+          "options": {}
+        },
+        "position": [
+          -128,
+          208
+        ],
+        "type": "n8n-nodes-base.set",
+        "typeVersion": 3.4
+      },
+      {
+        "id": "d5caba15-6036-4cad-89af-e3fd930edb29",
+        "name": "Code in JavaScript",
+        "parameters": {
+          "jsCode": "return [\n  {\n    json: {\n      to: [\"l.komorowski@euroimmun.de\"],\n      cc: [],\n      bcc: [],\n      from: \"infofee@euroimmun.de\",\n      from_name: \"Lars\",\n      subject: \"Testmail aus n8n über Apache/PHP\",\n      text: \"Dies ist eine Testmail aus n8n über das interne PHP-Mail-Gateway.\",\n      html: \"<p>Dies ist eine <strong>Testmail</strong> aus n8n über das interne PHP-Mail-Gateway.</p>\",\n      meta: {\n        workflow_name: \"Internal Mail via Apache PHP Gateway\",\n        relay_workflow: \"Webhook Mail Relay via PHP Gateway\",\n        n8n_execution_id: $execution.id\n      }\n    }\n  }\n];"
+        },
+        "position": [
+          80,
+          208
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      }
+    ],
+    "updatedAt": "2026-04-27T20:26:31.809Z",
+    "versionId": "634bf29f-815e-40f3-bccd-67b3a38bf8de",
+    "workflowId": "cMqcTS6UNYhkP0le"
+  },
+  "activeVersionId": "634bf29f-815e-40f3-bccd-67b3a38bf8de",
+  "connections": {
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Send to PHP Gateway",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Gateway Success?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Respond Success",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Respond Gateway Error",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Normalize Payload": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Send to PHP Gateway",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Payload Valid?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Normalize Payload",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Respond Validation Error",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Prepare Mail": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code in JavaScript",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Send to PHP Gateway": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Gateway Success?",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Validate Payload": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Payload Valid?",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Webhook Token Valid?",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Webhook Token Valid?": "__REDACTED__",
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Prepare Mail",
+            "type": "main"
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-04-20T15:03:36.105Z",
+  "id": "cMqcTS6UNYhkP0le",
+  "isArchived": false,
+  "name": "Internal Mail via Apache PHP Gateway",
+  "nodes": [
+    {
+      "id": "57023740-a1b2-41fe-9711-155c68186f6d",
+      "name": "Webhook",
+      "parameters": {
+        "httpMethod": "POST",
+        "options": {},
+        "path": "internal-mail/send",
+        "responseMode": "responseNode"
+      },
+      "position": [
+        -992,
+        672
+      ],
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "webhookId": "internal-mail-send"
+    },
+    {
+      "id": "569e6f0c-1a88-4f06-a2b6-d49ebe5c1573",
+      "name": "Webhook Token Valid?",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "2fb778e2-a93a-41fe-aa57-0a6b898584e1",
+              "leftValue": "={{ $json.headers[\"x-webhook-token\"] }}",
+              "operator": {
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "W0sp9w27iCtEcXOiWFiE8KfhfmJQ0YZd3tDC4EbPxsQ"
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        -768,
+        672
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2
+    },
+    {
+      "id": "73567285-759d-445d-b0e9-3debb450c9a1",
+      "name": "Validate Payload",
+      "parameters": {
+        "jsCode": "const body = $json.body || {};\nconst errors = [];\n\nif (!Array.isArray(body.to) || body.to.length === 0) {\n  errors.push('Field \"to\" must be a non-empty array');\n}\n\nif (!body.subject || String(body.subject).trim() === '') {\n  errors.push('Field \"subject\" is required');\n}\n\nif ((!body.text || String(body.text).trim() === '') && (!body.html || String(body.html).trim() === '')) {\n  errors.push('Either \"text\" or \"html\" must be provided');\n}\n\nif (body.attachments !== undefined) {\n  if (!Array.isArray(body.attachments)) {\n    errors.push('Field \"attachments\" must be an array');\n  } else {\n    body.attachments.forEach((att, i) => {\n      if (!att || typeof att !== 'object') {\n        errors.push(`Attachment ${i} must be an object`);\n        return;\n      }\n      if (!att.filename || String(att.filename).trim() === '') {\n        errors.push(`Attachment ${i}: filename is required`);\n      }\n      if (!att.contentBase64 || String(att.contentBase64).trim() === '') {\n        errors.push(`Attachment ${i}: contentBase64 is required`);\n      }\n    });\n  }\n}\n\nreturn [{\n  json: {\n    valid: errors.length === 0,\n    errors,\n    body\n  }\n}];"
+      },
+      "position": [
+        -544,
+        576
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "74653215-4f93-422d-be9b-cbcd35ac873b",
+      "name": "Payload Valid?",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "09864d46-240d-4151-807c-88f0f858657b",
+              "leftValue": "={{$json.valid}}",
+              "operator": {
+                "operation": "true",
+                "singleValue": true,
+                "type": "boolean"
+              },
+              "rightValue": true
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        -304,
+        576
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2
+    },
+    {
+      "id": "e406603e-6fa0-43a6-be8d-cba3e08b1737",
+      "name": "Normalize Payload",
+      "parameters": {
+        "jsCode": "const body = $json.body || {};\n\nconst norm = {\n  to: Array.isArray(body.to) ? body.to.filter(v => !!String(v).trim()) : [],\n  cc: Array.isArray(body.cc) ? body.cc.filter(v => !!String(v).trim()) : [],\n  bcc: Array.isArray(body.bcc) ? body.bcc.filter(v => !!String(v).trim()) : [],\n  from: body.from || 'infofee@euroimmun.de',\n  from_name: body.from_name || 'n8n Mail Relay',\n  subject: String(body.subject || '').trim(),\n  text: body.text || '',\n  html: body.html || '',\n  attachments: Array.isArray(body.attachments)\n    ? body.attachments.map(att => ({\n        filename: String(att.filename || '').trim(),\n        mimeType: att.mimeType || 'application/octet-stream',\n        contentBase64: att.contentBase64\n      }))\n    : [],\n  meta: {\n    ...(body.meta || {}),\n    relay_workflow: 'Webhook Mail Relay via PHP Gateway',\n    n8n_execution_id: $execution.id\n  }\n};\n\nreturn [{ json: norm }];"
+      },
+      "position": [
+        -80,
+        464
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "a3e243c2-bb0a-485d-9fa6-777694b132a4",
+      "name": "Send to PHP Gateway",
+      "onError": "continueRegularOutput",
+      "parameters": {
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "X-Internal-Token",
+              "value": "a0Rn-6H8cmOR4sGcDfCySjZrnsWLKF9-pRamLictJuc"
+            }
+          ]
+        },
+        "jsonBody": "={{$json}}",
+        "method": "POST",
+        "options": {
+          "redirect": {},
+          "timeout": 30000
+        },
+        "sendBody": true,
+        "sendHeaders": true,
+        "specifyBody": "json",
+        "url": "http://172.16.30.136/mail/send.php"
+      },
+      "position": [
+        368,
+        464
+      ],
+      "retryOnFail": true,
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "waitBetweenTries": 2000
+    },
+    {
+      "id": "9f7e86dc-26ca-4ab7-aa92-28acb973a209",
+      "name": "Gateway Success?",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "0c73da8d-cab1-4b1b-b047-a3440051da17",
+              "leftValue": "={{ $json.success }}",
+              "operator": {
+                "operation": "true",
+                "singleValue": true,
+                "type": "boolean"
+              },
+              "rightValue": ""
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        592,
+        464
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2
+    },
+    {
+      "id": "32b3a318-211a-488e-9597-15033795c787",
+      "name": "Respond Success",
+      "parameters": {
+        "options": {
+          "responseCode": 200
+        },
+        "respondWith": "json",
+        "responseBody": "={{ { success: true, message: 'Mail queued/sent successfully', gateway: $json } }}"
+      },
+      "position": [
+        832,
+        384
+      ],
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1
+    },
+    {
+      "id": "4db8259b-9857-462e-ba27-8064686fa7f7",
+      "name": "Respond Gateway Error",
+      "parameters": {
+        "options": {
+          "responseCode": 502
+        },
+        "respondWith": "json",
+        "responseBody": "={{ { success: false, error: $json.error || 'Gateway call failed', gateway: $json } }}"
+      },
+      "position": [
+        832,
+        544
+      ],
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1
+    },
+    {
+      "id": "b237b03c-47e8-4853-a0db-ae3feaf675ff",
+      "name": "Respond Validation Error",
+      "parameters": {
+        "options": {
+          "responseCode": 400
+        },
+        "respondWith": "json",
+        "responseBody": "={{ { success: false, error: 'Invalid payload', details: $json.errors } }}"
+      },
+      "position": [
+        -80,
+        672
+      ],
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1
+    },
+    {
+      "id": "25907a0d-377c-419b-ae35-86d4e739732e",
+      "name": "Respond Unauthorized",
+      "parameters": {
+        "options": {
+          "responseCode": 401
+        },
+        "respondWith": "json",
+        "responseBody": "={{ { success: false, error: 'Unauthorized' } }}"
+      },
+      "position": [
+        -544,
+        816
+      ],
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1
+    },
+    {
+      "id": "8a070d8e-eec7-40b5-b784-f6150f37122b",
+      "name": "When clicking ‘Execute workflow’",
+      "parameters": {},
+      "position": [
+        -304,
+        208
+      ],
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1
+    },
+    {
+      "id": "cfda06be-1826-49c3-8104-4b4c0f4ecefd",
+      "name": "Prepare Mail",
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c6af6d5d-27f3-472e-b97e-2b5d0c8900c2",
+              "name": "to",
+              "type": "string",
+              "value": "l.komorowski@euroimmun.de"
+            },
+            {
+              "id": "b5e833b2-3e10-418e-bd7a-e5f30b4ab76c",
+              "name": "cc",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "f13069a0-2483-43db-961a-3b2a7c9a3a20",
+              "name": "bcc",
+              "type": "string",
+              "value": ""
+            },
+            {
+              "id": "76f3c1cd-aacb-4da7-a494-5b3c54b875af",
+              "name": "from",
+              "type": "string",
+              "value": "infofee@euroimmun.de"
+            },
+            {
+              "id": "18a99dd2-52a8-4b1c-b638-a90542cef461",
+              "name": "from_name",
+              "type": "string",
+              "value": "Lars"
+            },
+            {
+              "id": "df5e4e25-4692-4f62-bbfb-8945c4d1df85",
+              "name": "subject",
+              "type": "string",
+              "value": "Testmail aus n8n über Apache/PHP"
+            },
+            {
+              "id": "c9b8c1f9-b790-48c0-a5b0-b0e24ab34fd7",
+              "name": "text",
+              "type": "string",
+              "value": "Dies ist eine Testmail aus n8n über das interne PHP-Mail-Gateway."
+            },
+            {
+              "id": "eea33d7d-c727-45f9-9281-a1a044688e8c",
+              "name": "html",
+              "type": "string",
+              "value": "<p>Dies ist eine <strong>Testmail</strong> aus n8n über das interne PHP-Mail-Gateway.</p>"
+            },
+            {
+              "id": "ea796ad8-0a44-4018-ace7-fc54278fbc71",
+              "name": "workflow_name",
+              "type": "string",
+              "value": "Internal Mail via Apache PHP Gateway"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "position": [
+        -128,
+        208
+      ],
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4
+    },
+    {
+      "id": "d5caba15-6036-4cad-89af-e3fd930edb29",
+      "name": "Code in JavaScript",
+      "parameters": {
+        "jsCode": "return [\n  {\n    json: {\n      to: [\"l.komorowski@euroimmun.de\"],\n      cc: [],\n      bcc: [],\n      from: \"infofee@euroimmun.de\",\n      from_name: \"Lars\",\n      subject: \"Testmail aus n8n über Apache/PHP\",\n      text: \"Dies ist eine Testmail aus n8n über das interne PHP-Mail-Gateway.\",\n      html: \"<p>Dies ist eine <strong>Testmail</strong> aus n8n über das interne PHP-Mail-Gateway.</p>\",\n      meta: {\n        workflow_name: \"Internal Mail via Apache PHP Gateway\",\n        relay_workflow: \"Webhook Mail Relay via PHP Gateway\",\n        n8n_execution_id: $execution.id\n      }\n    }\n  }\n];"
+      },
+      "position": [
+        80,
+        208
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    }
+  ],
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2026-04-23T06:18:56.000Z",
+  "versionId": "634bf29f-815e-40f3-bccd-67b3a38bf8de"
+}

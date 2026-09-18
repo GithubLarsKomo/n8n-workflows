@@ -1,0 +1,2055 @@
+{
+  "active": true,
+  "activeVersion": {
+    "authors": "Lars Komorowski",
+    "autosaved": true,
+    "connections": {
+      "Code - build multi-row INSERT": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - insert chunks",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark chunk job failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Code - choose extraction source per part": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If DoclingJSON?",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark chunk job failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Code - chunk complete document": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - delete old chunks (idempotency)",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark chunk job failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Code - collapse insert results": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - count inserted chunks",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Code - combine parsed part": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code - chunk complete document",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark chunk job failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Code - parse DoclingJSON part": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code - combine parsed part",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark chunk job failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Code - parse DoclingMD part": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code - combine parsed part",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark chunk job failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Code - parse PaddleJSON part": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code - combine parsed part",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark chunk job failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Code - throw incomplete chunk insert": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark chunk job done",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark chunk job failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Code Throw Chunking Error": {
+        "main": [
+          [],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark chunk job failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If Attempts >= 3": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - dead letter",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - requeue",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If DoclingJSON?": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code - parse DoclingJSON part",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "If PaddleJSON?",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If DoclingMD?": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code - parse DoclingMD part",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Code Throw Chunking Error",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If PaddleJSON?": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code - parse PaddleJSON part",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "If DoclingMD?",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "If all chunks inserted?": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark chunk job done",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "Code - throw incomplete chunk insert",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - claim one pending chunk job": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Row found?",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - count inserted chunks": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If all chunks inserted?",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark chunk job failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - delete old chunks (idempotency)": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code - build multi-row INSERT",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark chunk job failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - insert chunks": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code - collapse insert results",
+              "type": "main"
+            }
+          ],
+          []
+        ]
+      },
+      "MySQL - load extraction parts": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "Code - choose extraction source per part",
+              "type": "main"
+            }
+          ],
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark chunk job failed",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - mark chunk job done": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - log done",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - mark chunk job failed": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - read chunk attempts",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - mark chunk job processing": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - load extraction parts",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - read chunk attempts": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "If Attempts >= 3",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "MySQL - recover stale chunk jobs": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - claim one pending chunk job",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Row found?": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - mark chunk job processing",
+              "type": "main"
+            }
+          ]
+        ]
+      },
+      "Schedule Trigger Chunker": {
+        "main": [
+          [
+            {
+              "index": 0,
+              "node": "MySQL - recover stale chunk jobs",
+              "type": "main"
+            }
+          ]
+        ]
+      }
+    },
+    "createdAt": "2026-08-14T10:49:34.895Z",
+    "description": "",
+    "name": "Version af533c99",
+    "nodes": [
+      {
+        "credentials": "__REDACTED__",
+        "id": "d3dda9f5-3391-441f-ae35-7a95bc25c838",
+        "name": "MySQL - delete old chunks (idempotency)",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [  $('Code - chunk complete document').first().json.TextUUID] }}"
+          },
+          "query": "DELETE FROM infofee01_rag.if_chunks\nWHERE TextUUIDBin = UUID_TO_BIN_MDB($1);"
+        },
+        "position": [
+          -80,
+          384
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "id": "76a6ed6e-4160-4224-93e0-e009cdf055cf",
+        "name": "Code - build multi-row INSERT",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "jsCode": "const source =\n  $('Code - chunk complete document').first().json;\n\nconst chunks =\n  Array.isArray(source.chunks)\n    ? source.chunks\n    : [];\n\nif (!chunks.length) {\n  throw new Error(\n    `TextUUID ${source.TextUUID}: keine Chunks vorhanden`\n  );\n}\n\nreturn chunks.map(chunk => ({\n  json: {\n    TextUUID:\n      source.TextUUID,\n\n    ChunkSprache:\n      '?',\n\n    ChunkChunkNumber:\n      Number(chunk.counter),\n\n    ChunkText:\n      chunk.text ?? '',\n\n    ChunkPageFrom:\n      chunk.page_from ?? null,\n\n    ChunkPageTo:\n      chunk.page_to ?? null\n  }\n}));"
+        },
+        "position": [
+          112,
+          368
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "730b8e66-80c0-46ab-9484-59afc5079960",
+        "name": "MySQL - insert chunks",
+        "onError": "continueRegularOutput",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $json.TextUUID,\n  $json.ChunkSprache,\n  $json.ChunkChunkNumber,\n  $json.ChunkText ?? '',\n  $json.ChunkPageFrom ?? null,\n  $json.ChunkPageTo ?? null\n] }}"
+          },
+          "query": "INSERT INTO infofee01_rag.if_chunks\n(\n    ChunkUUIDBin,\n    ChunkDatum,\n    ChunkLetzterBearbeiterNr,\n    TextUUIDBin,\n    ChunkSprache,\n    ChunkChunkNumber,\n    ChunkText,\n    ChunkPageFrom,\n    ChunkPageTo\n)\nVALUES\n(\n    UUID_TO_BIN_MDB(UUID()),\n    NOW(),\n    0,\n    UUID_TO_BIN_MDB($1),\n    $2,\n    $3,\n    $4,\n    $5,\n    $6\n);"
+        },
+        "position": [
+          304,
+          352
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "id": "ecf4cb27-795c-484b-b5e8-769cb26e2856",
+        "name": "Schedule Trigger Chunker",
+        "parameters": {
+          "rule": {
+            "interval": [
+              {
+                "expression": "*/30 * * * * *",
+                "field": "cronExpression"
+              }
+            ]
+          }
+        },
+        "position": [
+          -2848,
+          736
+        ],
+        "type": "n8n-nodes-base.scheduleTrigger",
+        "typeVersion": 1.2
+      },
+      {
+        "id": "e57d84ad-dbb3-4317-857b-0ba4188bc390",
+        "name": "Row found?",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "if-no-row",
+                "leftValue": "={{ $('MySQL - claim one pending chunk job').item?.json?.ChunkQueueID }}",
+                "operator": {
+                  "operation": "exists",
+                  "singleValue": true,
+                  "type": "number"
+                },
+                "rightValue": ""
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 2
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          -2256,
+          736
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "f9a04842-a3c6-42ba-b72b-6a16cc5fb286",
+        "name": "MySQL - load extraction parts",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $('MySQL - claim one pending chunk job').first().json.QueueID\n] }}"
+          },
+          "query": "SELECT\n    p.PartID,\n    p.QueueID,\n    BIN_TO_UUID_MDB(p.TextUUIDBin) AS TextUUID,\n    p.PartNumber,\n    p.PageFrom,\n    p.PageTo,\n    p.Extractor,\n    p.DoclingJSON,\n    p.DoclingMD,\n    p.PaddleJSON\nFROM infofee01_rag.if_extraction_parts p\nWHERE p.QueueID = $1\n  AND p.Status = 'done'\nORDER BY p.PartNumber ASC;"
+        },
+        "position": [
+          -1840,
+          624
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "id": "c7bcc4b7-aa51-4428-a33d-599a63e04525",
+        "name": "Code - choose extraction source per part",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "jsCode": "const items = $input.all();\n\nreturn items.map(item => {\n  const part = item.json;\n\n  const hasDoclingJSON =\n    typeof part.DoclingJSON === 'string'\n      ? part.DoclingJSON.trim() !== ''\n      : part.DoclingJSON != null;\n\n  const hasPaddleJSON =\n    typeof part.PaddleJSON === 'string'\n      ? part.PaddleJSON.trim() !== ''\n      : part.PaddleJSON != null;\n\n  const hasDoclingMD =\n    typeof part.DoclingMD === 'string'\n      ? part.DoclingMD.trim() !== ''\n      : part.DoclingMD != null;\n\n  let SourceType = null;\n\n  // Primär anhand dessen, was tatsächlich gespeichert wurde.\n  if (hasDoclingJSON) {\n    SourceType = 'docling_json';\n  } else if (hasPaddleJSON) {\n    SourceType = 'paddle_json';\n  } else if (hasDoclingMD) {\n    SourceType = 'docling_md';\n  }\n\n  if (!SourceType) {\n    throw new Error(\n      `Part ${part.PartNumber} / PartID ${part.PartID}: ` +\n      `keine verwertbaren Extraktionsdaten vorhanden`\n    );\n  }\n\n  return {\n    json: {\n      ...part,\n      SourceType,\n      PageOffset: Number(part.PageFrom) - 1\n    }\n  };\n});"
+        },
+        "position": [
+          -1648,
+          608
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "be769b14-01fc-4a44-984e-bf4ffc485b8e",
+        "name": "Code - parse DoclingJSON part",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "jsCode": "const item = $json;\n\nconst partNumber = Number(item.PartNumber);\nconst partId = Number(item.PartID);\nconst pageOffset = Number(item.PageOffset ?? 0);\n\nfunction asArray(x) {\n  return Array.isArray(x) ? x : [];\n}\n\nfunction refId(refObj) {\n  return refObj && typeof refObj.$ref === 'string'\n    ? refObj.$ref\n    : '';\n}\n\nfunction localPageNo(item) {\n  const value = item?.prov?.[0]?.page_no;\n\n  if (\n    value === undefined ||\n    value === null ||\n    value === ''\n  ) {\n    return null;\n  }\n\n  const n = Number(value);\n\n  return Number.isFinite(n)\n    ? n\n    : null;\n}\n\n/*\n * Vorerst Annahme: Docling page_no ist 1-basiert.\n * Falls wir später feststellen, dass page_no 0-basiert ist,\n * ändern wir genau diese Funktion.\n */\nfunction globalPageNo(item) {\n  const local = localPageNo(item);\n\n  if (local === null) {\n    return null;\n  }\n\n  return local + pageOffset;\n}\n\nfunction normalizeCellText(s) {\n  return String(s || '')\n    .trim()\n    .replace(/\\s+/g, ' ');\n}\n\nlet document = {};\n\ntry {\n  document =\n    typeof item.DoclingJSON === 'string'\n      ? JSON.parse(item.DoclingJSON)\n      : item.DoclingJSON;\n} catch (e) {\n  throw new Error(\n    `Part ${partNumber}: DoclingJSON ist kein gültiges JSON`\n  );\n}\n\nconst bodyChildren = asArray(document?.body?.children);\nconst texts = asArray(document?.texts);\nconst groups = asArray(document?.groups);\nconst tables = asArray(document?.tables);\n\nconst entries = [];\n\nlet lastLabel = '';\nlet textblock = '';\nlet heading = '';\nlet pageFrom = null;\nlet pageTo = null;\n\nfunction findTextByRef(ref) {\n  return texts.find(t => t?.self_ref === ref);\n}\n\nfunction pushTextEntry() {\n  if (!textblock && !heading) {\n    return;\n  }\n\n  entries.push({\n    type: 'text',\n    heading,\n    text: textblock,\n    page_from: pageFrom,\n    page_to: pageTo,\n\n    part_number: partNumber,\n    part_id: partId\n  });\n\n  textblock = '';\n  heading = '';\n  pageFrom = null;\n  pageTo = null;\n}\n\nfunction handleTextItem(t) {\n  const label = t?.label || '';\n  const original = t?.orig || '';\n  const text = t?.text || '';\n  const hyperlink = t?.hyperlink || '';\n\n  const currentPage = globalPageNo(t);\n\n  if (currentPage !== null) {\n    pageTo = currentPage;\n\n    if (pageFrom === null) {\n      pageFrom = currentPage;\n    }\n  }\n\n  if (label === 'section_header') {\n    if (textblock) {\n      pushTextEntry();\n    }\n\n    if (heading) {\n      heading += '\\n' + text;\n    } else {\n      heading = text;\n    }\n  }\n\n  else if (label === 'list_item') {\n    if (\n      textblock &&\n      !textblock.endsWith('\\n')\n    ) {\n      textblock += '\\n';\n    }\n\n    if (original) {\n      textblock += original.trim();\n    } else if (text) {\n      textblock += `- ${text.trim()}`;\n    }\n\n    if (hyperlink) {\n      textblock += ` (${hyperlink})`;\n    }\n\n    textblock += '\\n';\n  }\n\n  else if (label === 'text') {\n    if (\n      textblock &&\n      !/[ \\n]$/.test(textblock)\n    ) {\n      textblock += ' ';\n    }\n\n    if (text) {\n      textblock += text.trim();\n\n      if (hyperlink) {\n        textblock += ` (${hyperlink})`;\n      }\n    }\n  }\n\n  lastLabel = label;\n}\n\nfunction normalizeTable(tab) {\n  const data = tab?.data || {};\n  const cells = asArray(data.table_cells);\n\n  let hasColumnHeaders = false;\n  let maxRow = 0;\n  let maxCol = 0;\n\n  const defs = cells.map(tc => {\n    const def = {\n      text: normalizeCellText(tc?.text),\n      row_header: !!tc?.row_header,\n      column_header: !!tc?.column_header,\n      row_span: tc?.row_span || 1,\n      col_span: tc?.col_span || 1,\n      start_row: tc?.start_row_offset_idx || 0,\n      start_col: tc?.start_col_offset_idx || 0,\n    };\n\n    hasColumnHeaders ||= def.column_header;\n\n    maxRow = Math.max(\n      maxRow,\n      def.start_row + def.row_span\n    );\n\n    maxCol = Math.max(\n      maxCol,\n      def.start_col + def.col_span\n    );\n\n    return def;\n  });\n\n  if (!maxRow || !maxCol) {\n    return '';\n  }\n\n  const grid = Array.from(\n    { length: maxRow },\n    () =>\n      Array.from(\n        { length: maxCol },\n        () => ({\n          text: '',\n          row_header: false,\n          column_header: false,\n        })\n      )\n  );\n\n  for (const cell of defs) {\n    for (\n      let r = cell.start_row;\n      r < cell.start_row + cell.row_span;\n      r++\n    ) {\n      for (\n        let c = cell.start_col;\n        c < cell.start_col + cell.col_span;\n        c++\n      ) {\n        grid[r][c].text =\n          grid[r][c].text\n            ? `${grid[r][c].text} / ${cell.text}`\n            : cell.text;\n\n        grid[r][c].row_header ||= cell.row_header;\n        grid[r][c].column_header ||= cell.column_header;\n      }\n    }\n  }\n\n  const lines = [];\n\n  if (!hasColumnHeaders) {\n    for (let r = 0; r < maxRow; r++) {\n      const line = grid[r]\n        .map(c => c.text)\n        .join(' ')\n        .trim();\n\n      if (line) {\n        lines.push(line);\n      }\n    }\n  } else {\n    for (let r = 1; r < maxRow; r++) {\n      const parts = [];\n\n      for (let c = 0; c < maxCol; c++) {\n        const header =\n          grid[0][c].text ||\n          `Column ${c + 1}`;\n\n        const value =\n          grid[r][c].text || '';\n\n        parts.push(\n          `${header}: ${value};`\n        );\n      }\n\n      const line =\n        parts.join(' ').trim();\n\n      if (line) {\n        lines.push(line);\n      }\n    }\n  }\n\n  return lines.join('\\n').trim();\n}\n\nfunction handleTableRef(ref) {\n  if (textblock || heading) {\n    pushTextEntry();\n  }\n\n  const tab =\n    tables.find(t => t?.self_ref === ref);\n\n  if (!tab) {\n    return;\n  }\n\n  const currentPage =\n    globalPageNo(tab);\n\n  let caption = '';\n\n  for (const cap of asArray(tab.captions)) {\n    const t =\n      findTextByRef(refId(cap));\n\n    if (t?.text) {\n      caption += '\\n' + t.text;\n    }\n  }\n\n  const tableHeading =\n    caption\n      ? caption\n          .replace(/\\n/g, ' ')\n          .trim()\n      : '';\n\n  const tableText =\n    normalizeTable(tab);\n\n  if (tableText) {\n    entries.push({\n      type: tableHeading\n        ? 'table'\n        : 'text',\n\n      heading: tableHeading,\n      text: tableText,\n\n      page_from: currentPage,\n      page_to: currentPage,\n\n      part_number: partNumber,\n      part_id: partId\n    });\n  }\n\n  textblock = '';\n  heading = '';\n  pageFrom = null;\n  pageTo = null;\n  lastLabel = 'table';\n}\n\nfor (const bc of bodyChildren) {\n  const ref = refId(bc);\n\n  if (!ref) {\n    continue;\n  }\n\n  if (ref.includes('/texts/')) {\n    const t =\n      findTextByRef(ref);\n\n    if (t) {\n      handleTextItem(t);\n    }\n  }\n\n  else if (ref.includes('/groups/')) {\n    const group =\n      groups.find(\n        g => g?.self_ref === ref\n      );\n\n    for (\n      const gc of asArray(group?.children)\n    ) {\n      const childRef =\n        refId(gc);\n\n      const t =\n        findTextByRef(childRef);\n\n      if (t) {\n        handleTextItem(t);\n      }\n    }\n  }\n\n  else if (ref.includes('/tables/')) {\n    handleTableRef(ref);\n  }\n}\n\nif (textblock || heading) {\n  pushTextEntry();\n}\n\nreturn {\n  json: {\n    PartID: partId,\n    QueueID: Number(item.QueueID),\n    TextUUID: item.TextUUID,\n\n    PartNumber: partNumber,\n    PageFrom: Number(item.PageFrom),\n    PageTo: Number(item.PageTo),\n    PageOffset: pageOffset,\n    SourceType: item.SourceType,\n\n    entries\n  }\n};",
+          "mode": "runOnceForEachItem"
+        },
+        "position": [
+          -1248,
+          496
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "fde0ab7f-ec58-45cd-8ea0-5377f891a5d7",
+        "name": "If DoclingJSON?",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "d166a6be-4a37-487d-94cf-d0ff56d5681d",
+                "leftValue": "={{ $json.SourceType }}",
+                "operator": {
+                  "operation": "equals",
+                  "type": "string"
+                },
+                "rightValue": "docling_json"
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          -1456,
+          592
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3
+      },
+      {
+        "id": "47b408ce-e7fe-43cb-9aab-77e44ccf4d61",
+        "name": "Code - parse PaddleJSON part",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "jsCode": "const item = $json;\n\nconst partNumber = Number(item.PartNumber);\nconst partId = Number(item.PartID);\nconst queueId = Number(item.QueueID);\nconst pageOffset = Number(item.PageOffset ?? 0);\n\nfunction asArray(value) {\n  return Array.isArray(value) ? value : [];\n}\n\nfunction normalizeText(value) {\n  return String(value ?? '')\n    .replace(/\\r\\n?/g, '\\n')\n    .replace(/\\\\n/g, '\\n')\n    .replace(/[ \\t]+\\n/g, '\\n')\n    .replace(/\\n{3,}/g, '\\n\\n')\n    .trim();\n}\n\nfunction decodeHtml(value) {\n  const named = {\n    amp: '&',\n    quot: '\"',\n    apos: \"'\",\n    lt: '<',\n    gt: '>',\n    nbsp: ' ',\n  };\n\n  return String(value ?? '')\n    .replace(/&#x([0-9a-f]+);/gi, (_, hex) =>\n      String.fromCodePoint(parseInt(hex, 16))\n    )\n    .replace(/&#(\\d+);/g, (_, number) =>\n      String.fromCodePoint(parseInt(number, 10))\n    )\n    .replace(/&([a-z]+);/gi, (match, name) =>\n      Object.prototype.hasOwnProperty.call(named, name.toLowerCase())\n        ? named[name.toLowerCase()]\n        : match\n    );\n}\n\nfunction htmlToText(value) {\n  return normalizeText(\n    decodeHtml(\n      String(value ?? '')\n        .replace(/<br\\s*\\/?\\s*>/gi, '\\n')\n        .replace(/<\\/(p|div|li|h[1-6])\\s*>/gi, '\\n')\n        .replace(/<li\\b[^>]*>/gi, '- ')\n        .replace(/<[^>]+>/g, ' ')\n    ).replace(/[ \\t]{2,}/g, ' ')\n  );\n}\n\nfunction parsePositiveInt(attributes, name, fallback = 1) {\n  const match = String(attributes ?? '').match(\n    new RegExp(`${name}\\\\s*=\\\\s*[\"']?(\\\\d+)`, 'i')\n  );\n\n  const value = match ? Number(match[1]) : fallback;\n\n  return Number.isInteger(value) && value > 0\n    ? value\n    : fallback;\n}\n\nfunction parseHtmlTableRows(html) {\n  const rowMatches = [\n    ...String(html ?? '').matchAll(\n      /<tr\\b[^>]*>([\\s\\S]*?)<\\/tr>/gi\n    ),\n  ];\n\n  const rows = [];\n  const spans = [];\n\n  for (const rowMatch of rowMatches) {\n    const grid = [];\n\n    for (let column = 0; column < spans.length; column++) {\n      const span = spans[column];\n\n      if (!span || span.remaining <= 0) {\n        continue;\n      }\n\n      grid[column] = span.text;\n      span.remaining -= 1;\n\n      if (span.remaining <= 0) {\n        spans[column] = null;\n      }\n    }\n\n    const cells = [\n      ...rowMatch[1].matchAll(\n        /<(td|th)\\b([^>]*)>([\\s\\S]*?)<\\/\\1>/gi\n      ),\n    ];\n\n    let column = 0;\n\n    for (const cell of cells) {\n      while (grid[column] !== undefined) {\n        column += 1;\n      }\n\n      const attributes = cell[2] ?? '';\n      const text = htmlToText(cell[3]);\n\n      const rowSpan =\n        parsePositiveInt(attributes, 'rowspan');\n\n      const colSpan =\n        parsePositiveInt(attributes, 'colspan');\n\n      for (let offset = 0; offset < colSpan; offset++) {\n        const targetColumn = column + offset;\n\n        grid[targetColumn] = text;\n\n        if (rowSpan > 1) {\n          spans[targetColumn] = {\n            text,\n            remaining: rowSpan - 1,\n          };\n        }\n      }\n\n      column += colSpan;\n    }\n\n    const values = [];\n    let previous = null;\n\n    for (const cell of grid) {\n      const text = normalizeText(cell);\n\n      if (!text || text === previous) {\n        continue;\n      }\n\n      values.push(text.replace(/\\n+/g, ' / '));\n      previous = text;\n    }\n\n    if (values.length > 0) {\n      rows.push(values.join(' | '));\n    }\n  }\n\n  return rows;\n}\n\nfunction splitPipeTableRow(line) {\n  let value = String(line ?? '').trim();\n\n  if (value.startsWith('|')) {\n    value = value.slice(1);\n  }\n\n  if (value.endsWith('|')) {\n    value = value.slice(0, -1);\n  }\n\n  return value\n    .split('|')\n    .map(cell => normalizeText(cell))\n    .filter(Boolean);\n}\n\nfunction parsePipeTableRows(markdown) {\n  return normalizeText(markdown)\n    .split('\\n')\n    .filter(line => {\n      const value = line.trim();\n      return value.startsWith('|') && value.endsWith('|');\n    })\n    .filter(line => {\n      const cells = splitPipeTableRow(line);\n\n      return !(\n        cells.length > 0 &&\n        cells.every(cell => /^:?-{3,}:?$/.test(cell))\n      );\n    })\n    .map(line =>\n      splitPipeTableRow(line).join(' | ')\n    )\n    .filter(Boolean);\n}\n\nfunction tableRows(value) {\n  const content = String(value ?? '');\n\n  if (/<table\\b/i.test(content)) {\n    return parseHtmlTableRows(content);\n  }\n\n  return parsePipeTableRows(content);\n}\n\nfunction isTableLabel(label) {\n  return String(label ?? '')\n    .toLowerCase()\n    .includes('table');\n}\n\nfunction isIgnoredLabel(label) {\n  return new Set([\n    'header',\n    'footer',\n    'page_header',\n    'page_footer',\n    'header_image',\n    'footer_image',\n    'footnote',\n    'number',\n    'aside_text',\n    'image',\n    'picture',\n  ]).has(\n    String(label ?? '').toLowerCase()\n  );\n}\n\nfunction isTitleLabel(label) {\n  const value =\n    String(label ?? '').toLowerCase();\n\n  return [\n    'title',\n    'doc_title',\n    'document_title',\n    'paragraph_title',\n    'section_header',\n    'heading',\n  ].includes(value);\n}\n\nfunction isPageMarker(text) {\n  const value = normalizeText(text);\n\n  return (\n    /^seite\\s*\\d+\\s*(?:von|\\/)?\\s*\\d*$/i.test(value) ||\n    /^page\\s*\\d+\\s*(?:of|\\/)?\\s*\\d*$/i.test(value) ||\n    /^\\d+\\s*(?:von|of|\\/)\\s*\\d+$/i.test(value)\n  );\n}\n\nfunction isPlausibleHeading(text) {\n  const value =\n    normalizeText(text).replace(/\\s+/g, ' ');\n\n  if (!value || value.length > 120) {\n    return false;\n  }\n\n  if (value.split(/\\s+/).length > 14) {\n    return false;\n  }\n\n  if (/[.:;!?]$/.test(value)) {\n    return false;\n  }\n\n  if (isPageMarker(value)) {\n    return false;\n  }\n\n  if (\n    /^[\\s\\d.,+-]+(?:EUR|USD|CHF|GBP)?$/i.test(value)\n  ) {\n    return false;\n  }\n\n  return true;\n}\n\n/*\n * Liefert bewusst eine 1-basierte lokale Seitennummer.\n */\nfunction localPageNumber(page, index) {\n  const explicit =\n    page?.page_no ??\n    page?.pageNumber ??\n    page?.prunedResult?.page_no ??\n    page?.prunedResult?.pageNumber;\n\n  if (\n    Number.isFinite(Number(explicit)) &&\n    Number(explicit) > 0\n  ) {\n    return Number(explicit);\n  }\n\n  const pageIndex =\n    page?.page_index ??\n    page?.prunedResult?.page_index;\n\n  if (Number.isFinite(Number(pageIndex))) {\n    return Number(pageIndex) + 1;\n  }\n\n  return index + 1;\n}\n\nfunction globalPageNumber(page, index) {\n  return (\n    localPageNumber(page, index) +\n    pageOffset\n  );\n}\n\nfunction orderedBlocks(page) {\n  return asArray(\n    page?.prunedResult?.parsing_res_list ??\n    page?.prunedResult?.parsingResList ??\n    page?.parsing_res_list ??\n    page?.parsingResList\n  )\n    .map((block, index) => ({\n      block,\n      index,\n    }))\n    .sort((left, right) => {\n      const leftOrder =\n        Number.isFinite(\n          Number(left.block?.block_order)\n        )\n          ? Number(left.block.block_order)\n          : left.index;\n\n      const rightOrder =\n        Number.isFinite(\n          Number(right.block?.block_order)\n        )\n          ? Number(right.block.block_order)\n          : right.index;\n\n      return leftOrder - rightOrder;\n    })\n    .map(entry => entry.block);\n}\n\n/*\n * PaddleJSON einlesen\n */\nconst rawPaddleJSON = item.PaddleJSON;\n\nif (\n  rawPaddleJSON === undefined ||\n  rawPaddleJSON === null ||\n  String(rawPaddleJSON).trim() === ''\n) {\n  throw new Error(\n    `Part ${partNumber}: PaddleJSON ist leer`\n  );\n}\n\nlet paddleResponse;\n\ntry {\n  paddleResponse =\n    typeof rawPaddleJSON === 'string'\n      ? JSON.parse(rawPaddleJSON)\n      : rawPaddleJSON;\n} catch (error) {\n  throw new Error(\n    `Part ${partNumber}: PaddleJSON ist ungültiges JSON: ${error.message}`\n  );\n}\n\nconst response =\n  paddleResponse?.body?.result\n    ? paddleResponse.body\n    : paddleResponse;\n\nif (\n  response?.errorCode !== undefined &&\n  Number(response.errorCode) !== 0\n) {\n  throw new Error(\n    `Part ${partNumber}: PaddleOCR-VL Fehler ` +\n    `${response.errorCode}: ` +\n    `${response.errorMsg || 'Unknown error'}`\n  );\n}\n\nconst layoutParsingResults =\n  asArray(\n    response?.result?.layoutParsingResults ??\n    response?.layoutParsingResults\n  );\n\nif (layoutParsingResults.length === 0) {\n  throw new Error(\n    `Part ${partNumber}: PaddleJSON enthält keine layoutParsingResults`\n  );\n}\n\nconst pages =\n  layoutParsingResults.map(\n    (page, index) => ({\n      source: page,\n\n      /*\n       * Ab hier ausschließlich globale Seiten.\n       */\n      pageNumber:\n        globalPageNumber(page, index),\n\n      blocks:\n        orderedBlocks(page),\n\n      markdown:\n        normalizeText(\n          page?.markdown?.text ??\n          page?.markdown ??\n          page?.md_content ??\n          ''\n        ),\n    })\n  );\n\n/*\n * Wiederkehrende Kopf-/Fußtexte erkennen.\n * Da pages.pageNumber bereits global ist,\n * arbeitet auch diese Logik direkt mit Originalseiten.\n */\nconst textPages = new Map();\n\nfor (const page of pages) {\n  const seenOnPage = new Set();\n\n  for (const block of page.blocks) {\n    const label =\n      block?.block_label ??\n      block?.label ??\n      '';\n\n    if (isTableLabel(label)) {\n      continue;\n    }\n\n    const text =\n      htmlToText(\n        block?.block_content ??\n        block?.content ??\n        block?.text ??\n        ''\n      ).replace(/\\s+/g, ' ');\n\n    if (\n      !text ||\n      text.length > 300 ||\n      seenOnPage.has(text)\n    ) {\n      continue;\n    }\n\n    seenOnPage.add(text);\n\n    if (!textPages.has(text)) {\n      textPages.set(text, new Set());\n    }\n\n    textPages\n      .get(text)\n      .add(page.pageNumber);\n  }\n}\n\nfunction isRepeatedNoise(text) {\n  const value =\n    normalizeText(text)\n      .replace(/\\s+/g, ' ');\n\n  const occurrences =\n    textPages.get(value);\n\n  return Boolean(\n    occurrences &&\n    occurrences.size >= 3 &&\n    value.length <= 300\n  );\n}\n\nconst entries = [];\nlet currentEntryNumber = 0;\n\nfunction addEntry(\n  type,\n  heading,\n  text,\n  pageFrom,\n  pageTo = pageFrom\n) {\n  const normalizedHeading =\n    normalizeText(heading);\n\n  const normalizedBody =\n    normalizeText(text);\n\n  if (\n    !normalizedHeading &&\n    !normalizedBody\n  ) {\n    return;\n  }\n\n  entries.push({\n    source_counter:\n      currentEntryNumber++,\n\n    type:\n      type || 'text',\n\n    heading:\n      normalizedHeading,\n\n    text:\n      normalizedBody,\n\n    /*\n     * Bereits globale Original-PDF-Seiten.\n     */\n    page_from:\n      pageFrom,\n\n    page_to:\n      pageTo,\n\n    part_number:\n      partNumber,\n\n    part_id:\n      partId,\n  });\n}\n\nfunction isLikelyHeaderRow(line) {\n  return (\n    /(pos\\.?|artikelnr\\.?|bezeichnung|menge|einzelpreis|gesamtpreis)/i\n      .test(String(line ?? ''))\n  );\n}\n\nfunction addTableEntries(\n  rows,\n  heading,\n  page\n) {\n  const normalizedRows =\n    rows\n      .map(row =>\n        normalizeText(row)\n          .replace(/\\n+/g, ' / ')\n      )\n      .filter(Boolean);\n\n  if (normalizedRows.length === 0) {\n    return;\n  }\n\n  const repeatedHeader =\n    normalizedRows\n      .slice(0, 3)\n      .find(isLikelyHeaderRow) ?? '';\n\n  /*\n   * Hier noch NICHT auf 3000 Zeichen chunken.\n   * Wir erhalten nur semantische Tabellen-Entries.\n   */\n  for (const row of normalizedRows) {\n    addEntry(\n      'table',\n      heading,\n      row,\n      page,\n      page\n    );\n  }\n}\n\nfunction parseMarkdownFallback(\n  markdown,\n  page,\n  initialHeading = ''\n) {\n  const parts =\n    String(markdown ?? '')\n      .split(\n        /(<table\\b[\\s\\S]*?<\\/table>)/gi\n      )\n      .filter(part =>\n        normalizeText(part)\n      );\n\n  let heading =\n    initialHeading;\n\n  for (const part of parts) {\n    if (/<table\\b/i.test(part)) {\n      addTableEntries(\n        parseHtmlTableRows(part),\n        heading,\n        page\n      );\n\n      continue;\n    }\n\n    const bodyLines = [];\n\n    function flushBody() {\n      const text =\n        normalizeText(\n          bodyLines.join('\\n')\n        );\n\n      if (text) {\n        addEntry(\n          'text',\n          heading,\n          text,\n          page,\n          page\n        );\n      }\n\n      bodyLines.length = 0;\n    }\n\n    for (\n      const line of\n      normalizeText(part).split('\\n')\n    ) {\n      const match =\n        line\n          .trim()\n          .match(\n            /^(#{1,6})\\s+(.+?)\\s*#*$/\n          );\n\n      if (\n        match &&\n        isPlausibleHeading(match[2])\n      ) {\n        flushBody();\n\n        heading =\n          normalizeText(match[2]);\n      } else if (!isPageMarker(line)) {\n        bodyLines.push(\n          htmlToText(line)\n        );\n      }\n    }\n\n    flushBody();\n  }\n}\n\n/*\n * Pages in Dokumentreihenfolge verarbeiten.\n */\nfor (const page of pages) {\n  let currentHeading = '';\n  let textBuffer = [];\n\n  function flushTextBuffer() {\n    const text =\n      normalizeText(\n        textBuffer.join('\\n\\n')\n      );\n\n    if (text) {\n      addEntry(\n        'text',\n        currentHeading,\n        text,\n        page.pageNumber,\n        page.pageNumber\n      );\n    }\n\n    textBuffer = [];\n  }\n\n  if (page.blocks.length === 0) {\n    parseMarkdownFallback(\n      page.markdown,\n      page.pageNumber\n    );\n\n    continue;\n  }\n\n  for (const block of page.blocks) {\n    const label =\n      String(\n        block?.block_label ??\n        block?.label ??\n        'text'\n      ).toLowerCase();\n\n    const rawContent =\n      block?.block_content ??\n      block?.content ??\n      block?.text ??\n      '';\n\n    if (isIgnoredLabel(label)) {\n      continue;\n    }\n\n    if (\n      isTableLabel(label) ||\n      /<table\\b/i.test(\n        String(rawContent)\n      )\n    ) {\n      flushTextBuffer();\n\n      addTableEntries(\n        tableRows(rawContent),\n        currentHeading,\n        page.pageNumber\n      );\n\n      continue;\n    }\n\n    const text =\n      htmlToText(rawContent);\n\n    if (\n      !text ||\n      isPageMarker(text) ||\n      isRepeatedNoise(text)\n    ) {\n      continue;\n    }\n\n    if (\n      isTitleLabel(label) &&\n      isPlausibleHeading(text)\n    ) {\n      flushTextBuffer();\n\n      currentHeading =\n        text.replace(/\\s+/g, ' ');\n\n      continue;\n    }\n\n    textBuffer.push(text);\n  }\n\n  flushTextBuffer();\n}\n\nif (entries.length === 0) {\n  throw new Error(\n    `Part ${partNumber}: PaddleJSON enthält keinen verwertbaren Inhalt`\n  );\n}\n\nreturn {\n  json: {\n    PartID:\n      partId,\n\n    QueueID:\n      queueId,\n\n    TextUUID:\n      item.TextUUID,\n\n    PartNumber:\n      partNumber,\n\n    PageFrom:\n      Number(item.PageFrom),\n\n    PageTo:\n      Number(item.PageTo),\n\n    PageOffset:\n      pageOffset,\n\n    SourceType:\n      item.SourceType,\n\n    entries\n  }\n};",
+          "mode": "runOnceForEachItem"
+        },
+        "position": [
+          -1040,
+          592
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "6b268505-0bc7-4dba-80e4-9f38dc607c70",
+        "name": "If DoclingMD?",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "732472d5-99f2-4a6b-b4a2-36fbd41e1da4",
+                "leftValue": "={{ $json.SourceType }}",
+                "operator": {
+                  "name": "filter.operator.equals",
+                  "operation": "equals",
+                  "type": "string"
+                },
+                "rightValue": "docling_md"
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          -1040,
+          784
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3
+      },
+      {
+        "id": "ee5cfab2-d884-47f9-bebf-94703a77982c",
+        "name": "If PaddleJSON?",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "5604472c-384c-406c-851a-5c1c12d69385",
+                "leftValue": "={{ $json.SourceType }}",
+                "operator": {
+                  "operation": "equals",
+                  "type": "string"
+                },
+                "rightValue": "paddle_json"
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          -1248,
+          688
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3
+      },
+      {
+        "id": "43c94d5a-a8ac-474b-9655-0d13901e8816",
+        "name": "Code - parse DoclingMD part",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "jsCode": "const item = $json;\n\nconst partNumber = Number(item.PartNumber);\nconst partId = Number(item.PartID);\nconst queueId = Number(item.QueueID);\nconst pageOffset = Number(item.PageOffset ?? 0);\n\nfunction normalizeText(value) {\n  return String(value ?? '')\n    .replace(/\\\\r\\\\n|\\\\n|\\\\r/g, '\\n')\n    .replace(/\\r\\n?/g, '\\n')\n    .replace(/[ \\t]+\\n/g, '\\n')\n    .replace(/\\n{3,}/g, '\\n\\n')\n    .trim();\n}\n\nfunction markdownString(value) {\n  if (value === undefined || value === null) {\n    return '';\n  }\n\n  if (typeof value === 'string') {\n    const trimmed = value.trim();\n\n    if (\n      (trimmed.startsWith('\"') && trimmed.endsWith('\"')) ||\n      (trimmed.startsWith(\"'\") && trimmed.endsWith(\"'\"))\n    ) {\n      try {\n        const parsed = JSON.parse(trimmed);\n\n        if (typeof parsed === 'string') {\n          return parsed;\n        }\n      } catch (_) {\n        // normaler Markdown-String\n      }\n    }\n\n    return value;\n  }\n\n  if (typeof value === 'object') {\n    return markdownString(\n      value?.document?.md_content ??\n      value?.md_content ??\n      value?.DoclingMD ??\n      value?.markdown ??\n      value?.md ??\n      ''\n    );\n  }\n\n  return String(value);\n}\n\nfunction normalizeInline(value) {\n  return String(value ?? '')\n    .replace(/<br\\s*\\/?\\s*>/gi, ' / ')\n    .replace(/<!--.*?-->/g, ' ')\n    .replace(/\\\\\\|/g, '|')\n    .replace(/\\s+/g, ' ')\n    .trim();\n}\n\nfunction stripHeadingMarkup(line) {\n  return normalizeInline(\n    String(line ?? '')\n      .replace(/^\\s{0,3}#{1,6}\\s+/, '')\n  );\n}\n\nfunction headingLevel(line) {\n  const match =\n    String(line ?? '')\n      .match(/^\\s{0,3}(#{1,6})\\s+/);\n\n  return match\n    ? match[1].length\n    : 0;\n}\n\nfunction isPageMarker(line) {\n  return stripHeadingMarkup(line).match(\n    /^seite\\s+(\\d+)\\s+(?:von|\\/)\\s+(\\d+)\\s*$/i\n  );\n}\n\nfunction splitMarkdownRow(line) {\n  const cells = [];\n  let cell = '';\n  let escaped = false;\n\n  for (const character of String(line ?? '').trim()) {\n    if (escaped) {\n      cell += character;\n      escaped = false;\n      continue;\n    }\n\n    if (character === '\\\\') {\n      escaped = true;\n      continue;\n    }\n\n    if (character === '|') {\n      cells.push(cell);\n      cell = '';\n    } else {\n      cell += character;\n    }\n  }\n\n  cells.push(cell);\n\n  if (cells[0]?.trim() === '') {\n    cells.shift();\n  }\n\n  if (\n    cells[cells.length - 1]?.trim() === ''\n  ) {\n    cells.pop();\n  }\n\n  return cells\n    .map(normalizeInline);\n}\n\nfunction isTableSeparator(cells) {\n  return (\n    cells.length > 0 &&\n    cells.every(\n      cell => /^:?-{3,}:?$/.test(cell)\n    )\n  );\n}\n\nfunction normalizeTableRow(line) {\n  const cells =\n    splitMarkdownRow(line);\n\n  if (isTableSeparator(cells)) {\n    return '';\n  }\n\n  const meaningful = [];\n\n  for (const cell of cells) {\n    if (!cell) {\n      continue;\n    }\n\n    if (\n      meaningful[meaningful.length - 1] === cell\n    ) {\n      continue;\n    }\n\n    meaningful.push(cell);\n  }\n\n  return meaningful.join(' | ');\n}\n\nfunction isTableLine(line) {\n  return /^\\s*\\|.*\\|\\s*$/.test(\n    String(line ?? '')\n  );\n}\n\nfunction canonicalNoise(value) {\n  return stripHeadingMarkup(value)\n    .toLowerCase()\n    .replace(/\\s+/g, ' ')\n    .trim();\n}\n\nfunction isKnownBoilerplate(value) {\n  const text =\n    stripHeadingMarkup(value);\n\n  return (\n    !text ||\n    /^<!--.*-->$/.test(text) ||\n    /^biomers\\.net GmbH\\s*\\|/i.test(text) ||\n    /Handelsregister.*Ust\\.-Id\\.\\/VAT ID/i.test(text) ||\n    /^Geschäftsführer:.*Sparkasse/i.test(text) ||\n    /^Sitz des Unternehmens:.*Handelsregister/i.test(text)\n  );\n}\n\nfunction isPlausibleHeading(value) {\n  const text =\n    normalizeInline(value);\n\n  if (!text || text.length > 120) {\n    return false;\n  }\n\n  if (text.split(/\\s+/).length > 14) {\n    return false;\n  }\n\n  if (/[.:;!?]$/.test(text)) {\n    return false;\n  }\n\n  if (\n    /^[\\s\\d.,+-]+(?:EUR|USD|CHF|GBP)?$/i\n      .test(text)\n  ) {\n    return false;\n  }\n\n  return true;\n}\n\n/*\n * Docling-Markdown enthält in deinem bisherigen\n * Parser Marker wie:\n *\n * Seite 1 von 50\n *\n * Diese Nummer ist lokal zum Part.\n */\nfunction splitPages(markdown) {\n  const pages = [];\n  let lines = [];\n\n  let localPage = 1;\n\n  function flush(pageNumber) {\n    const content =\n      lines.join('\\n').trim();\n\n    if (\n      content ||\n      pages.length === 0\n    ) {\n      pages.push({\n        localPageNumber: pageNumber,\n        globalPageNumber:\n          pageNumber + pageOffset,\n        content\n      });\n    }\n\n    lines = [];\n  }\n\n  for (\n    const line of\n    normalizeText(markdown).split('\\n')\n  ) {\n    const marker =\n      isPageMarker(line);\n\n    if (marker) {\n      const markerPage =\n        Number(marker[1]);\n\n      flush(markerPage);\n\n      localPage =\n        markerPage + 1;\n\n      continue;\n    }\n\n    if (\n      /^\\s*<!--\\s*image\\s*-->\\s*$/i\n        .test(line)\n    ) {\n      continue;\n    }\n\n    lines.push(line);\n  }\n\n  if (\n    lines.some(line => line.trim())\n  ) {\n    flush(localPage);\n  }\n\n  return pages;\n}\n\nconst rawMarkdown =\n  markdownString(item.DoclingMD);\n\nif (!normalizeText(rawMarkdown)) {\n  throw new Error(\n    `Part ${partNumber}: DoclingMD ist leer`\n  );\n}\n\nconst pages =\n  splitPages(rawMarkdown);\n\n/*\n * Wiederkehrende Header/Footer innerhalb\n * dieses Parts erkennen.\n */\nconst occurrences =\n  new Map();\n\nfor (const page of pages) {\n  const seen =\n    new Set();\n\n  for (\n    const line of\n    page.content.split('\\n')\n  ) {\n    if (\n      isTableLine(line) ||\n      isKnownBoilerplate(line)\n    ) {\n      continue;\n    }\n\n    const key =\n      canonicalNoise(line);\n\n    if (\n      !key ||\n      key.length > 400 ||\n      seen.has(key)\n    ) {\n      continue;\n    }\n\n    seen.add(key);\n\n    if (!occurrences.has(key)) {\n      occurrences.set(\n        key,\n        new Set()\n      );\n    }\n\n    occurrences\n      .get(key)\n      .add(page.globalPageNumber);\n  }\n}\n\nconst repeatedNoise =\n  new Set(\n    [...occurrences.entries()]\n      .filter(\n        ([, pageNumbers]) =>\n          pageNumbers.size >= 3\n      )\n      .map(([text]) => text)\n  );\n\nconst entries = [];\nlet sourceCounter = 0;\n\nfunction addEntry(\n  type,\n  heading,\n  text,\n  pageFrom,\n  pageTo = pageFrom\n) {\n  const normalizedHeading =\n    normalizeInline(heading);\n\n  const normalizedBody =\n    normalizeText(text);\n\n  if (\n    !normalizedHeading &&\n    !normalizedBody\n  ) {\n    return;\n  }\n\n  entries.push({\n    source_counter:\n      sourceCounter++,\n\n    type:\n      type || 'text',\n\n    heading:\n      normalizedHeading,\n\n    text:\n      normalizedBody,\n\n    page_from:\n      pageFrom,\n\n    page_to:\n      pageTo,\n\n    part_number:\n      partNumber,\n\n    part_id:\n      partId\n  });\n}\n\nfunction addTableRows(\n  rows,\n  heading,\n  page\n) {\n  for (const row of rows) {\n    const normalized =\n      normalizeTableRow(row);\n\n    if (!normalized) {\n      continue;\n    }\n\n    addEntry(\n      'table',\n      heading,\n      normalized,\n      page,\n      page\n    );\n  }\n}\n\nfor (const page of pages) {\n  const lines =\n    page.content.split('\\n');\n\n  const globalPage =\n    page.globalPageNumber;\n\n  let currentHeading = '';\n  let paragraph = [];\n\n  function flushParagraph() {\n    const text =\n      normalizeText(\n        paragraph.join('\\n')\n      );\n\n    if (text) {\n      addEntry(\n        'text',\n        currentHeading,\n        text,\n        globalPage,\n        globalPage\n      );\n    }\n\n    paragraph = [];\n  }\n\n  for (\n    let index = 0;\n    index < lines.length;\n  ) {\n    const line =\n      lines[index];\n\n    if (isTableLine(line)) {\n      flushParagraph();\n\n      const tableLines = [];\n\n      while (\n        index < lines.length &&\n        isTableLine(lines[index])\n      ) {\n        tableLines.push(\n          lines[index]\n        );\n\n        index++;\n      }\n\n      addTableRows(\n        tableLines,\n        currentHeading,\n        globalPage\n      );\n\n      continue;\n    }\n\n    const normalizedLine =\n      normalizeInline(line);\n\n    const noiseKey =\n      canonicalNoise(line);\n\n    if (\n      isKnownBoilerplate(line) ||\n      repeatedNoise.has(noiseKey)\n    ) {\n      index++;\n      continue;\n    }\n\n    const level =\n      headingLevel(line);\n\n    if (level > 0) {\n      const heading =\n        stripHeadingMarkup(line);\n\n      if (\n        isPlausibleHeading(heading)\n      ) {\n        flushParagraph();\n\n        currentHeading =\n          heading;\n      } else if (heading) {\n        paragraph.push(heading);\n      }\n\n      index++;\n      continue;\n    }\n\n    if (!normalizedLine) {\n      if (\n        paragraph.length &&\n        paragraph[\n          paragraph.length - 1\n        ] !== ''\n      ) {\n        paragraph.push('');\n      }\n    } else {\n      paragraph.push(\n        normalizedLine\n      );\n    }\n\n    index++;\n  }\n\n  flushParagraph();\n}\n\n/*\n * Falls die Markdown-Struktur ungewöhnlich ist,\n * Part nicht einfach verlieren.\n */\nif (entries.length === 0) {\n  addEntry(\n    'text',\n    '',\n    normalizeText(rawMarkdown),\n    Number(item.PageFrom),\n    Number(item.PageTo)\n  );\n}\n\nreturn {\n  json: {\n    PartID:\n      partId,\n\n    QueueID:\n      queueId,\n\n    TextUUID:\n      item.TextUUID,\n\n    PartNumber:\n      partNumber,\n\n    PageFrom:\n      Number(item.PageFrom),\n\n    PageTo:\n      Number(item.PageTo),\n\n    PageOffset:\n      pageOffset,\n\n    SourceType:\n      item.SourceType,\n\n    entries\n  }\n};",
+          "mode": "runOnceForEachItem"
+        },
+        "position": [
+          -832,
+          688
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "15afbb58-346a-49c0-819d-445e2e8e877d",
+        "name": "Code - combine parsed part",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "jsCode": "const items = $input.all();\n\nif (!items.length) {\n  throw new Error('Keine geparsten Parts erhalten');\n}\n\nconst parts = items\n  .map(item => item.json)\n  .sort((a, b) =>\n    Number(a.PartNumber) - Number(b.PartNumber)\n  );\n\n/*\n * Konsistenz prüfen\n */\nconst queueIds = new Set(\n  parts.map(p => Number(p.QueueID))\n);\n\nconst textUUIDs = new Set(\n  parts.map(p => String(p.TextUUID ?? ''))\n);\n\nif (queueIds.size !== 1) {\n  throw new Error(\n    `Mehrere QueueIDs im Chunk-Dokumentstrom: ${\n      [...queueIds].join(', ')\n    }`\n  );\n}\n\nif (textUUIDs.size !== 1) {\n  throw new Error(\n    `Mehrere TextUUIDs im Chunk-Dokumentstrom: ${\n      [...textUUIDs].join(', ')\n    }`\n  );\n}\n\n/*\n * Part-Reihenfolge auf Lücken prüfen.\n */\nfor (let index = 0; index < parts.length; index++) {\n  const expectedPartNumber = index + 1;\n  const actualPartNumber =\n    Number(parts[index].PartNumber);\n\n  if (actualPartNumber !== expectedPartNumber) {\n    throw new Error(\n      `Part-Reihenfolge unvollständig: erwartet Part ` +\n      `${expectedPartNumber}, erhalten ${actualPartNumber}`\n    );\n  }\n}\n\n/*\n * Entries in Original-Dokumentreihenfolge zusammenführen.\n */\nconst entries = [];\n\nfor (const part of parts) {\n  const partEntries =\n    Array.isArray(part.entries)\n      ? part.entries\n      : [];\n\n  if (!partEntries.length) {\n    throw new Error(\n      `Part ${part.PartNumber} enthält keine Entries`\n    );\n  }\n\n  for (\n    let entryIndex = 0;\n    entryIndex < partEntries.length;\n    entryIndex++\n  ) {\n    const entry = partEntries[entryIndex];\n\n    entries.push({\n      ...entry,\n\n      part_number:\n        Number(part.PartNumber),\n\n      part_id:\n        Number(part.PartID),\n\n      source_entry_number:\n        entryIndex\n    });\n  }\n}\n\n/*\n * Sicherheitsprüfung der Seitennummern.\n */\nfor (const entry of entries) {\n  const from =\n    entry.page_from == null\n      ? null\n      : Number(entry.page_from);\n\n  const to =\n    entry.page_to == null\n      ? null\n      : Number(entry.page_to);\n\n  if (\n    from !== null &&\n    (!Number.isInteger(from) || from < 1)\n  ) {\n    throw new Error(\n      `Ungültige page_from=${entry.page_from} ` +\n      `in Part ${entry.part_number}`\n    );\n  }\n\n  if (\n    to !== null &&\n    (!Number.isInteger(to) || to < 1)\n  ) {\n    throw new Error(\n      `Ungültige page_to=${entry.page_to} ` +\n      `in Part ${entry.part_number}`\n    );\n  }\n\n  if (\n    from !== null &&\n    to !== null &&\n    to < from\n  ) {\n    throw new Error(\n      `Ungültiger Seitenbereich ${from}-${to} ` +\n      `in Part ${entry.part_number}`\n    );\n  }\n}\n\nreturn [{\n  json: {\n    QueueID:\n      Number(parts[0].QueueID),\n\n    TextUUID:\n      parts[0].TextUUID,\n\n    TotalParts:\n      parts.length,\n\n    TotalEntries:\n      entries.length,\n\n    Parts: parts.map(part => ({\n      PartID: Number(part.PartID),\n      PartNumber: Number(part.PartNumber),\n      PageFrom: Number(part.PageFrom),\n      PageTo: Number(part.PageTo),\n      SourceType: part.SourceType,\n      EntryCount:\n        Array.isArray(part.entries)\n          ? part.entries.length\n          : 0\n    })),\n\n    entries\n  }\n}];"
+        },
+        "position": [
+          -528,
+          480
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "084b3600-5f57-4062-ba5e-2660d5de92e7",
+        "name": "Code - chunk complete document",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "jsCode": "const input = $input.first().json;\n\nconst MAX_CHARS = 3000;\nconst MIN_CHARS = 800;\n\nconst entries =\n  Array.isArray(input.entries)\n    ? input.entries\n    : [];\n\nif (!entries.length) {\n  throw new Error(\n    `TextUUID ${input.TextUUID}: keine Entries zum Chunking vorhanden`\n  );\n}\n\nfunction normalizeText(value) {\n  return String(value ?? '')\n    .replace(/\\r\\n?/g, '\\n')\n    .replace(/[ \\t]+\\n/g, '\\n')\n    .replace(/\\n{3,}/g, '\\n\\n')\n    .trim();\n}\n\nfunction normalizeHeading(value) {\n  return normalizeText(value)\n    .replace(/\\n+/g, '\\n')\n    .trim();\n}\n\nfunction renderEntry(entry) {\n  const heading =\n    normalizeHeading(entry.heading);\n\n  const body =\n    normalizeText(entry.text);\n\n  if (heading && body) {\n    return `${heading}\\n${body}`.trim();\n  }\n\n  return heading || body;\n}\n\nfunction validPage(value) {\n  const number = Number(value);\n\n  return Number.isInteger(number) && number > 0\n    ? number\n    : null;\n}\n\nfunction firstPage(...values) {\n  const pages =\n    values\n      .map(validPage)\n      .filter(value => value !== null);\n\n  return pages.length\n    ? Math.min(...pages)\n    : null;\n}\n\nfunction lastPage(...values) {\n  const pages =\n    values\n      .map(validPage)\n      .filter(value => value !== null);\n\n  return pages.length\n    ? Math.max(...pages)\n    : null;\n}\n\n/*\n * Text robust auf MAX_CHARS teilen.\n */\nfunction splitTextSafe(\n  value,\n  maxChars = MAX_CHARS,\n  minChars = MIN_CHARS\n) {\n  const output = [];\n\n  let remaining =\n    normalizeText(value);\n\n  while (remaining) {\n    if (remaining.length <= maxChars) {\n      output.push(remaining);\n      break;\n    }\n\n    const window =\n      remaining.slice(0, maxChars);\n\n    let cut = -1;\n\n    for (const separator of [\n      '\\n\\n',\n      '. ',\n      '! ',\n      '? ',\n      '; ',\n      ': ',\n      '\\n'\n    ]) {\n      const position =\n        window.lastIndexOf(separator);\n\n      if (position >= minChars) {\n        cut = Math.max(\n          cut,\n          position + separator.length\n        );\n      }\n    }\n\n    if (cut < minChars) {\n      const whitespace =\n        window.lastIndexOf(' ');\n\n      cut =\n        whitespace >= minChars\n          ? whitespace\n          : maxChars;\n    }\n\n    const part =\n      normalizeText(\n        remaining.slice(0, cut)\n      );\n\n    if (part) {\n      output.push(part);\n    }\n\n    remaining =\n      normalizeText(\n        remaining.slice(cut)\n      );\n  }\n\n  /*\n   * Sehr kleinen letzten Rest möglichst\n   * wieder mit dem Vorgänger verbinden.\n   */\n  if (\n    output.length > 1 &&\n    output[output.length - 1].length < minChars\n  ) {\n    const previous =\n      output[output.length - 2];\n\n    const last =\n      output[output.length - 1];\n\n    const combined =\n      `${previous}\\n\\n${last}`;\n\n    if (combined.length <= maxChars) {\n      output.splice(\n        output.length - 2,\n        2,\n        combined\n      );\n    }\n  }\n\n  return output.filter(Boolean);\n}\n\n/*\n * Zunächst aus Entries atomare Einheiten machen.\n *\n * Ein Entry kann selbst >3000 Zeichen sein.\n */\nconst prepared = [];\n\nfor (const entry of entries) {\n  const text =\n    renderEntry(entry);\n\n  if (!text) {\n    continue;\n  }\n\n  const pageFrom =\n    validPage(entry.page_from);\n\n  const pageTo =\n    validPage(entry.page_to);\n\n  const parts =\n    splitTextSafe(text);\n\n  for (\n    let index = 0;\n    index < parts.length;\n    index++\n  ) {\n    prepared.push({\n      type:\n        entry.type || 'text',\n\n      heading:\n        index === 0\n          ? normalizeHeading(entry.heading)\n          : '',\n\n      text:\n        parts[index],\n\n      page_from:\n        pageFrom,\n\n      page_to:\n        pageTo,\n\n      /*\n       * Nur Debug-Provenienz.\n       * Wird nicht zwingend in if_chunks geschrieben.\n       */\n      part_from:\n        Number(entry.part_number),\n\n      part_to:\n        Number(entry.part_number)\n    });\n  }\n}\n\nif (!prepared.length) {\n  throw new Error(\n    `TextUUID ${input.TextUUID}: alle Entries waren leer`\n  );\n}\n\n/*\n * Zwei aufeinanderfolgende Chunks vereinigen.\n *\n * Hier dürfen bewusst auch Part-Grenzen\n * überschritten werden.\n */\nfunction mergePair(left, right) {\n  const leftText =\n    normalizeText(left.text);\n\n  const rightText =\n    normalizeText(right.text);\n\n  const headings =\n    [\n      normalizeHeading(left.heading),\n      normalizeHeading(right.heading)\n    ]\n      .filter(Boolean);\n\n  return {\n    type:\n      left.type === right.type\n        ? left.type\n        : 'mixed',\n\n    heading:\n      [...new Set(headings)]\n        .join('\\n'),\n\n    text:\n      [leftText, rightText]\n        .filter(Boolean)\n        .join('\\n\\n'),\n\n    page_from:\n      firstPage(\n        left.page_from,\n        left.page_to,\n        right.page_from,\n        right.page_to\n      ),\n\n    page_to:\n      lastPage(\n        left.page_from,\n        left.page_to,\n        right.page_from,\n        right.page_to\n      ),\n\n    part_from:\n      Math.min(\n        Number(left.part_from),\n        Number(right.part_from)\n      ),\n\n    part_to:\n      Math.max(\n        Number(left.part_to),\n        Number(right.part_to)\n      )\n  };\n}\n\n/*\n * Dokumentstrom der Reihe nach verdichten.\n *\n * Damit verschwindet die technische\n * 50-Seiten-Partgrenze vollständig.\n */\nconst compacted = [];\n\nfor (const current of prepared) {\n  const previous =\n    compacted[compacted.length - 1];\n\n  if (!previous) {\n    compacted.push({\n      ...current\n    });\n\n    continue;\n  }\n\n  const combinedLength =\n    normalizeText(previous.text).length +\n    normalizeText(current.text).length +\n    2;\n\n  if (combinedLength <= MAX_CHARS) {\n    compacted[\n      compacted.length - 1\n    ] = mergePair(\n      previous,\n      current\n    );\n  } else {\n    compacted.push({\n      ...current\n    });\n  }\n}\n\n/*\n * Kurze Chunks (<800) möglichst mit dem\n * Vorgänger vereinigen.\n */\nfor (\n  let index = 1;\n  index < compacted.length;\n  index++\n) {\n  const current =\n    compacted[index];\n\n  const currentLength =\n    normalizeText(current.text).length;\n\n  if (currentLength >= MIN_CHARS) {\n    continue;\n  }\n\n  const previous =\n    compacted[index - 1];\n\n  const previousLength =\n    normalizeText(previous.text).length;\n\n  if (\n    previousLength +\n      currentLength +\n      2\n    <= MAX_CHARS\n  ) {\n    compacted.splice(\n      index - 1,\n      2,\n      mergePair(\n        previous,\n        current\n      )\n    );\n\n    index--;\n  }\n}\n\n/*\n * Endgültige Chunknummerierung.\n *\n * ENTSCHEIDEND:\n * genau einmal über das gesamte Dokument.\n */\nconst chunks =\n  compacted.map(\n    (chunk, index) => ({\n      counter:\n        index + 1,\n\n      type:\n        chunk.type,\n\n      heading:\n        chunk.heading,\n\n      text:\n        normalizeText(chunk.text),\n\n      page_from:\n        chunk.page_from,\n\n      page_to:\n        chunk.page_to,\n\n      part_from:\n        chunk.part_from,\n\n      part_to:\n        chunk.part_to\n    })\n  );\n\n/*\n * Optionaler synthetischer Inhalts-/Outline-Chunk.\n * Entspricht dem bisherigen counter=0.\n */\nconst outline = [];\n\nconst seenOutline =\n  new Set();\n\nfor (const entry of entries) {\n  const heading =\n    normalizeHeading(entry.heading);\n\n  const page =\n    validPage(entry.page_from);\n\n  if (!heading || page === null) {\n    continue;\n  }\n\n  const key =\n    `${heading}\\u0000${page}`;\n\n  if (seenOutline.has(key)) {\n    continue;\n  }\n\n  seenOutline.add(key);\n\n  outline.push(\n    `${heading} page ${page}`\n  );\n}\n\nif (outline.length) {\n  chunks.push({\n    counter: 0,\n\n    type: 'content',\n\n    heading:\n      'Full Content',\n\n    text:\n      `Full Content\\n${outline.join('\\n')}`,\n\n    /*\n     * Keine reale Originalseite.\n     */\n    page_from: null,\n    page_to: null,\n\n    part_from: null,\n    part_to: null\n  });\n}\n\n/*\n * Abschließende Invarianten.\n */\nconst normalChunks =\n  chunks.filter(\n    chunk => chunk.counter > 0\n  );\n\nfor (\n  let index = 0;\n  index < normalChunks.length;\n  index++\n) {\n  const expected =\n    index + 1;\n\n  if (\n    normalChunks[index].counter !==\n    expected\n  ) {\n    throw new Error(\n      `Chunknummerierung inkonsistent: ` +\n      `erwartet ${expected}, erhalten ` +\n      `${normalChunks[index].counter}`\n    );\n  }\n\n  if (\n    normalChunks[index].text.length >\n    MAX_CHARS\n  ) {\n    throw new Error(\n      `Chunk ${expected} überschreitet ` +\n      `${MAX_CHARS} Zeichen`\n    );\n  }\n\n  const from =\n    validPage(\n      normalChunks[index].page_from\n    );\n\n  const to =\n    validPage(\n      normalChunks[index].page_to\n    );\n\n  if (\n    from !== null &&\n    to !== null &&\n    to < from\n  ) {\n    throw new Error(\n      `Chunk ${expected}: ungültiger ` +\n      `Seitenbereich ${from}-${to}`\n    );\n  }\n}\n\nreturn [{\n  json: {\n    QueueID:\n      Number(input.QueueID),\n\n    TextUUID:\n      input.TextUUID,\n\n    TotalParts:\n      Number(input.TotalParts),\n\n    TotalEntries:\n      Number(input.TotalEntries),\n\n    TotalChunks:\n      normalChunks.length,\n\n    HasContentChunk:\n      outline.length > 0,\n\n    chunks\n  }\n}];"
+        },
+        "position": [
+          -304,
+          400
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "72c7bab6-da5b-4829-a7dc-78b452b541bf",
+        "name": "MySQL - log done",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $('MySQL - claim one pending chunk job').first().json.TextUUID,\n  `inserted ${$('Code - build multi-row INSERT').all().length} chunks`\n] }}"
+          },
+          "query": "INSERT INTO infofee01_rag.if_extraction_log\n(\n    TextUUIDBin,\n    Stage,\n    Status,\n    Message,\n    LoggedAt\n)\nVALUES\n(\n    UUID_TO_BIN_MDB($1),\n    'chunk',\n    'done',\n    $2,\n    NOW()\n);"
+        },
+        "position": [
+          1504,
+          272
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "0f07d4bb-c4ed-4373-91df-34ea0ff5f19a",
+        "name": "MySQL - claim one pending chunk job",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "SELECT\n    cq.ChunkQueueID,\n    cq.QueueID,\n    BIN_TO_UUID_MDB(cq.TextUUIDBin) AS TextUUID,\n    cq.Attempts\nFROM infofee01_rag.if_chunk_queue cq\nWHERE cq.Status = 'pending'\nORDER BY cq.CreatedAt ASC\nLIMIT 1;"
+        },
+        "position": [
+          -2464,
+          736
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "e3668815-d44a-455f-8de0-265c6218f0d3",
+        "name": "MySQL - mark chunk job processing",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $('MySQL - claim one pending chunk job').first().json.ChunkQueueID\n] }}"
+          },
+          "query": "UPDATE infofee01_rag.if_chunk_queue\nSET\n    Status = 'processing',\n    StartedAt = NOW(),\n    FinishedAt = NULL,\n    Attempts = Attempts + 1,\n    LastError = NULL\nWHERE ChunkQueueID = $1\n  AND Status = 'pending';"
+        },
+        "position": [
+          -2048,
+          624
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "33df83fd-1754-43fd-8837-b954ac36639c",
+        "name": "MySQL - mark chunk job done",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $('MySQL - claim one pending chunk job').first().json.ChunkQueueID\n] }}"
+          },
+          "query": "UPDATE infofee01_rag.if_chunk_queue\nSET\n    Status = 'done',\n    FinishedAt = NOW(),\n    LastError = NULL\nWHERE ChunkQueueID = $1\n  AND Status = 'processing';"
+        },
+        "position": [
+          1312,
+          272
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "d0491ff0-97a4-4d21-9bd6-ea0d5b66ba60",
+        "name": "MySQL - mark chunk job failed",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  (\n    $json.error?.message\n    ?? $json.message\n    ?? $json.error\n    ?? 'Unknown chunking error'\n  ).toString(),\n  $('MySQL - claim one pending chunk job').first().json.ChunkQueueID\n] }}"
+          },
+          "query": "UPDATE infofee01_rag.if_chunk_queue\nSET\n    Status = 'failed',\n    LastError = $1,\n    FinishedAt = NOW()\nWHERE ChunkQueueID = $2\n  AND Status = 'processing';"
+        },
+        "position": [
+          1392,
+          928
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "52c3185f-e4ae-4ab7-901e-6302f58840ef",
+        "name": "MySQL - read chunk attempts",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $('MySQL - claim one pending chunk job').first().json.ChunkQueueID\n] }}"
+          },
+          "query": "SELECT\n    ChunkQueueID,\n    Attempts,\n    LastError\nFROM infofee01_rag.if_chunk_queue\nWHERE ChunkQueueID = $1;"
+        },
+        "position": [
+          1584,
+          928
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "c7193218-a6a6-4672-8930-84d789a5a07c",
+        "name": "MySQL - requeue",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $('MySQL - claim one pending chunk job').first().json.ChunkQueueID\n] }}"
+          },
+          "query": "UPDATE infofee01_rag.if_chunk_queue\nSET\n    Status = 'pending',\n    StartedAt = NULL,\n    FinishedAt = NULL,\n    LastError = CONCAT(\n        'RETRY: ',\n        IFNULL(LastError, 'unknown error')\n    )\nWHERE ChunkQueueID = $1\n  AND Status = 'failed';"
+        },
+        "position": [
+          1984,
+          1024
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "9ff91ae1-862f-48b7-b867-bb52c22156d1",
+        "name": "MySQL - dead letter",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [\n  $('MySQL - claim one pending chunk job').first().json.ChunkQueueID\n] }}"
+          },
+          "query": "UPDATE infofee01_rag.if_chunk_queue\nSET\n    Status = 'dead_letter',\n    FinishedAt = NOW(),\n    LastError = CONCAT(\n        IFNULL(LastError, 'unknown error'),\n        ' | DEAD_LETTER: exceeded 3 attempts'\n    )\nWHERE ChunkQueueID = $1\n  AND Status = 'failed';"
+        },
+        "position": [
+          1984,
+          832
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "id": "2e93221f-4ef4-4083-a22f-9a4433ef3f00",
+        "name": "If Attempts >= 3",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "689c1d4a-bfc2-45a8-b4b9-b66e6c6e341f",
+                "leftValue": "={{ Number($json.Attempts ?? 0) }}",
+                "operator": {
+                  "operation": "gte",
+                  "type": "number"
+                },
+                "rightValue": 3
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          1776,
+          928
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "ac8c3c6d-0deb-4170-910c-522be2fd9bd7",
+        "name": "MySQL - recover stale chunk jobs",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {},
+          "query": "UPDATE infofee01_rag.if_chunk_queue\nSET\n    Status = 'pending',\n    LastError = CONCAT(\n        IFNULL(LastError, ''),\n        CASE\n            WHEN LastError IS NULL OR LastError = ''\n                THEN ''\n            ELSE ' | '\n        END,\n        'STALE_PROCESSING_RECOVERY: chunk worker did not finish'\n    ),\n    StartedAt = NULL,\n    FinishedAt = NULL\nWHERE Status = 'processing'\n  AND StartedAt < NOW() - INTERVAL 30 MINUTE;"
+        },
+        "position": [
+          -2656,
+          736
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "id": "a29b48fd-fbcb-4673-b235-648dd1a2453b",
+        "name": "Code Throw Chunking Error",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "jsCode": "throw new Error(\n  `Unbekannter SourceType: ${$json.SourceType ?? 'NULL'}`\n);"
+        },
+        "position": [
+          -656,
+          912
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "id": "9e2b8e31-12c2-4565-8b14-280cc1acbf74",
+        "name": "If all chunks inserted?",
+        "parameters": {
+          "conditions": {
+            "combinator": "and",
+            "conditions": [
+              {
+                "id": "c0fce185-b173-4107-a1cf-1769f9b4b9f8",
+                "leftValue": "={{ Number($json.ActualChunks ?? 0) }}",
+                "operator": {
+                  "operation": "equals",
+                  "type": "number"
+                },
+                "rightValue": "={{ $('Code - collapse insert results').first().json.ExpectedChunks }}"
+              }
+            ],
+            "options": {
+              "caseSensitive": true,
+              "leftValue": "",
+              "typeValidation": "strict",
+              "version": 3
+            }
+          },
+          "options": {}
+        },
+        "position": [
+          880,
+          352
+        ],
+        "type": "n8n-nodes-base.if",
+        "typeVersion": 2.3
+      },
+      {
+        "id": "4e539bd2-f722-4c60-8271-ca6842e040d6",
+        "name": "Code - collapse insert results",
+        "parameters": {
+          "jsCode": "const insertResults = $input.all();\n\nconst expected =\n  $('Code - build multi-row INSERT').all().length;\n\nreturn [{\n  json: {\n    TextUUID:\n      $('Code - chunk complete document').first().json.TextUUID,\n\n    ExpectedChunks:\n      expected,\n\n    SuccessfulInsertResults:\n      insertResults.length\n  }\n}];"
+        },
+        "position": [
+          496,
+          352
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      },
+      {
+        "credentials": "__REDACTED__",
+        "id": "922e8af3-79d1-4678-99c4-929a3a4d04fe",
+        "name": "MySQL - count inserted chunks",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "operation": "executeQuery",
+          "options": {
+            "queryReplacement": "={{ [ $json.TextUUID ] }}"
+          },
+          "query": "SELECT\n    COUNT(*) AS ActualChunks\nFROM infofee01_rag.if_chunks\nWHERE TextUUIDBin = UUID_TO_BIN_MDB($1);"
+        },
+        "position": [
+          688,
+          352
+        ],
+        "type": "n8n-nodes-base.mySql",
+        "typeVersion": 2.4
+      },
+      {
+        "id": "3ec0a2cd-4a27-4644-bee4-647d0c33090b",
+        "name": "Code - throw incomplete chunk insert",
+        "onError": "continueErrorOutput",
+        "parameters": {
+          "jsCode": "const actual =\n  Number($json.ActualChunks ?? 0);\n\nconst expected =\n  Number(\n    $('Code - collapse insert results')\n      .first()\n      .json\n      .ExpectedChunks ?? 0\n  );\n\nthrow new Error(\n  `Chunk INSERT incomplete: expected ${expected}, actual ${actual}`\n);"
+        },
+        "position": [
+          1056,
+          464
+        ],
+        "type": "n8n-nodes-base.code",
+        "typeVersion": 2
+      }
+    ],
+    "updatedAt": "2026-08-17T11:54:02.000Z",
+    "versionId": "af533c99-8007-4dac-ad35-f65201029395",
+    "workflowId": "PWg7ttqkv0pRhicM"
+  },
+  "activeVersionId": "af533c99-8007-4dac-ad35-f65201029395",
+  "connections": {
+    "Code - build multi-row INSERT": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - insert chunks",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark chunk job failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Code - choose extraction source per part": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If DoclingJSON?",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark chunk job failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Code - chunk complete document": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - delete old chunks (idempotency)",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark chunk job failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Code - collapse insert results": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - count inserted chunks",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Code - combine parsed part": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code - chunk complete document",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark chunk job failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Code - parse DoclingJSON part": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code - combine parsed part",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark chunk job failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Code - parse DoclingMD part": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code - combine parsed part",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark chunk job failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Code - parse PaddleJSON part": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code - combine parsed part",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark chunk job failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Code - throw incomplete chunk insert": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark chunk job done",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark chunk job failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Code Throw Chunking Error": {
+      "main": [
+        [],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark chunk job failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If Attempts >= 3": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - dead letter",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - requeue",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If DoclingJSON?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code - parse DoclingJSON part",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "If PaddleJSON?",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If DoclingMD?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code - parse DoclingMD part",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Code Throw Chunking Error",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If PaddleJSON?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code - parse PaddleJSON part",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "If DoclingMD?",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "If all chunks inserted?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark chunk job done",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "Code - throw incomplete chunk insert",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - claim one pending chunk job": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Row found?",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - count inserted chunks": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If all chunks inserted?",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark chunk job failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - delete old chunks (idempotency)": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code - build multi-row INSERT",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark chunk job failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - insert chunks": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code - collapse insert results",
+            "type": "main"
+          }
+        ],
+        []
+      ]
+    },
+    "MySQL - load extraction parts": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "Code - choose extraction source per part",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark chunk job failed",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - mark chunk job done": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - log done",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - mark chunk job failed": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - read chunk attempts",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - mark chunk job processing": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - load extraction parts",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - read chunk attempts": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "If Attempts >= 3",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "MySQL - recover stale chunk jobs": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - claim one pending chunk job",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Row found?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - mark chunk job processing",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger Chunker": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "MySQL - recover stale chunk jobs",
+            "type": "main"
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2026-08-14T06:49:46.715Z",
+  "id": "PWg7ttqkv0pRhicM",
+  "isArchived": false,
+  "name": "RAG Chunker",
+  "nodes": [
+    {
+      "credentials": "__REDACTED__",
+      "id": "d3dda9f5-3391-441f-ae35-7a95bc25c838",
+      "name": "MySQL - delete old chunks (idempotency)",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [  $('Code - chunk complete document').first().json.TextUUID] }}"
+        },
+        "query": "DELETE FROM infofee01_rag.if_chunks\nWHERE TextUUIDBin = UUID_TO_BIN_MDB($1);"
+      },
+      "position": [
+        -80,
+        384
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "id": "76a6ed6e-4160-4224-93e0-e009cdf055cf",
+      "name": "Code - build multi-row INSERT",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "jsCode": "const source =\n  $('Code - chunk complete document').first().json;\n\nconst chunks =\n  Array.isArray(source.chunks)\n    ? source.chunks\n    : [];\n\nif (!chunks.length) {\n  throw new Error(\n    `TextUUID ${source.TextUUID}: keine Chunks vorhanden`\n  );\n}\n\nreturn chunks.map(chunk => ({\n  json: {\n    TextUUID:\n      source.TextUUID,\n\n    ChunkSprache:\n      '?',\n\n    ChunkChunkNumber:\n      Number(chunk.counter),\n\n    ChunkText:\n      chunk.text ?? '',\n\n    ChunkPageFrom:\n      chunk.page_from ?? null,\n\n    ChunkPageTo:\n      chunk.page_to ?? null\n  }\n}));"
+      },
+      "position": [
+        112,
+        368
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "730b8e66-80c0-46ab-9484-59afc5079960",
+      "name": "MySQL - insert chunks",
+      "onError": "continueRegularOutput",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $json.TextUUID,\n  $json.ChunkSprache,\n  $json.ChunkChunkNumber,\n  $json.ChunkText ?? '',\n  $json.ChunkPageFrom ?? null,\n  $json.ChunkPageTo ?? null\n] }}"
+        },
+        "query": "INSERT INTO infofee01_rag.if_chunks\n(\n    ChunkUUIDBin,\n    ChunkDatum,\n    ChunkLetzterBearbeiterNr,\n    TextUUIDBin,\n    ChunkSprache,\n    ChunkChunkNumber,\n    ChunkText,\n    ChunkPageFrom,\n    ChunkPageTo\n)\nVALUES\n(\n    UUID_TO_BIN_MDB(UUID()),\n    NOW(),\n    0,\n    UUID_TO_BIN_MDB($1),\n    $2,\n    $3,\n    $4,\n    $5,\n    $6\n);"
+      },
+      "position": [
+        304,
+        352
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "id": "ecf4cb27-795c-484b-b5e8-769cb26e2856",
+      "name": "Schedule Trigger Chunker",
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "expression": "*/30 * * * * *",
+              "field": "cronExpression"
+            }
+          ]
+        }
+      },
+      "position": [
+        -2848,
+        736
+      ],
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2
+    },
+    {
+      "id": "e57d84ad-dbb3-4317-857b-0ba4188bc390",
+      "name": "Row found?",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "if-no-row",
+              "leftValue": "={{ $('MySQL - claim one pending chunk job').item?.json?.ChunkQueueID }}",
+              "operator": {
+                "operation": "exists",
+                "singleValue": true,
+                "type": "number"
+              },
+              "rightValue": ""
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        -2256,
+        736
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "f9a04842-a3c6-42ba-b72b-6a16cc5fb286",
+      "name": "MySQL - load extraction parts",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $('MySQL - claim one pending chunk job').first().json.QueueID\n] }}"
+        },
+        "query": "SELECT\n    p.PartID,\n    p.QueueID,\n    BIN_TO_UUID_MDB(p.TextUUIDBin) AS TextUUID,\n    p.PartNumber,\n    p.PageFrom,\n    p.PageTo,\n    p.Extractor,\n    p.DoclingJSON,\n    p.DoclingMD,\n    p.PaddleJSON\nFROM infofee01_rag.if_extraction_parts p\nWHERE p.QueueID = $1\n  AND p.Status = 'done'\nORDER BY p.PartNumber ASC;"
+      },
+      "position": [
+        -1840,
+        624
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "id": "c7bcc4b7-aa51-4428-a33d-599a63e04525",
+      "name": "Code - choose extraction source per part",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nreturn items.map(item => {\n  const part = item.json;\n\n  const hasDoclingJSON =\n    typeof part.DoclingJSON === 'string'\n      ? part.DoclingJSON.trim() !== ''\n      : part.DoclingJSON != null;\n\n  const hasPaddleJSON =\n    typeof part.PaddleJSON === 'string'\n      ? part.PaddleJSON.trim() !== ''\n      : part.PaddleJSON != null;\n\n  const hasDoclingMD =\n    typeof part.DoclingMD === 'string'\n      ? part.DoclingMD.trim() !== ''\n      : part.DoclingMD != null;\n\n  let SourceType = null;\n\n  // Primär anhand dessen, was tatsächlich gespeichert wurde.\n  if (hasDoclingJSON) {\n    SourceType = 'docling_json';\n  } else if (hasPaddleJSON) {\n    SourceType = 'paddle_json';\n  } else if (hasDoclingMD) {\n    SourceType = 'docling_md';\n  }\n\n  if (!SourceType) {\n    throw new Error(\n      `Part ${part.PartNumber} / PartID ${part.PartID}: ` +\n      `keine verwertbaren Extraktionsdaten vorhanden`\n    );\n  }\n\n  return {\n    json: {\n      ...part,\n      SourceType,\n      PageOffset: Number(part.PageFrom) - 1\n    }\n  };\n});"
+      },
+      "position": [
+        -1648,
+        608
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "be769b14-01fc-4a44-984e-bf4ffc485b8e",
+      "name": "Code - parse DoclingJSON part",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "jsCode": "const item = $json;\n\nconst partNumber = Number(item.PartNumber);\nconst partId = Number(item.PartID);\nconst pageOffset = Number(item.PageOffset ?? 0);\n\nfunction asArray(x) {\n  return Array.isArray(x) ? x : [];\n}\n\nfunction refId(refObj) {\n  return refObj && typeof refObj.$ref === 'string'\n    ? refObj.$ref\n    : '';\n}\n\nfunction localPageNo(item) {\n  const value = item?.prov?.[0]?.page_no;\n\n  if (\n    value === undefined ||\n    value === null ||\n    value === ''\n  ) {\n    return null;\n  }\n\n  const n = Number(value);\n\n  return Number.isFinite(n)\n    ? n\n    : null;\n}\n\n/*\n * Vorerst Annahme: Docling page_no ist 1-basiert.\n * Falls wir später feststellen, dass page_no 0-basiert ist,\n * ändern wir genau diese Funktion.\n */\nfunction globalPageNo(item) {\n  const local = localPageNo(item);\n\n  if (local === null) {\n    return null;\n  }\n\n  return local + pageOffset;\n}\n\nfunction normalizeCellText(s) {\n  return String(s || '')\n    .trim()\n    .replace(/\\s+/g, ' ');\n}\n\nlet document = {};\n\ntry {\n  document =\n    typeof item.DoclingJSON === 'string'\n      ? JSON.parse(item.DoclingJSON)\n      : item.DoclingJSON;\n} catch (e) {\n  throw new Error(\n    `Part ${partNumber}: DoclingJSON ist kein gültiges JSON`\n  );\n}\n\nconst bodyChildren = asArray(document?.body?.children);\nconst texts = asArray(document?.texts);\nconst groups = asArray(document?.groups);\nconst tables = asArray(document?.tables);\n\nconst entries = [];\n\nlet lastLabel = '';\nlet textblock = '';\nlet heading = '';\nlet pageFrom = null;\nlet pageTo = null;\n\nfunction findTextByRef(ref) {\n  return texts.find(t => t?.self_ref === ref);\n}\n\nfunction pushTextEntry() {\n  if (!textblock && !heading) {\n    return;\n  }\n\n  entries.push({\n    type: 'text',\n    heading,\n    text: textblock,\n    page_from: pageFrom,\n    page_to: pageTo,\n\n    part_number: partNumber,\n    part_id: partId\n  });\n\n  textblock = '';\n  heading = '';\n  pageFrom = null;\n  pageTo = null;\n}\n\nfunction handleTextItem(t) {\n  const label = t?.label || '';\n  const original = t?.orig || '';\n  const text = t?.text || '';\n  const hyperlink = t?.hyperlink || '';\n\n  const currentPage = globalPageNo(t);\n\n  if (currentPage !== null) {\n    pageTo = currentPage;\n\n    if (pageFrom === null) {\n      pageFrom = currentPage;\n    }\n  }\n\n  if (label === 'section_header') {\n    if (textblock) {\n      pushTextEntry();\n    }\n\n    if (heading) {\n      heading += '\\n' + text;\n    } else {\n      heading = text;\n    }\n  }\n\n  else if (label === 'list_item') {\n    if (\n      textblock &&\n      !textblock.endsWith('\\n')\n    ) {\n      textblock += '\\n';\n    }\n\n    if (original) {\n      textblock += original.trim();\n    } else if (text) {\n      textblock += `- ${text.trim()}`;\n    }\n\n    if (hyperlink) {\n      textblock += ` (${hyperlink})`;\n    }\n\n    textblock += '\\n';\n  }\n\n  else if (label === 'text') {\n    if (\n      textblock &&\n      !/[ \\n]$/.test(textblock)\n    ) {\n      textblock += ' ';\n    }\n\n    if (text) {\n      textblock += text.trim();\n\n      if (hyperlink) {\n        textblock += ` (${hyperlink})`;\n      }\n    }\n  }\n\n  lastLabel = label;\n}\n\nfunction normalizeTable(tab) {\n  const data = tab?.data || {};\n  const cells = asArray(data.table_cells);\n\n  let hasColumnHeaders = false;\n  let maxRow = 0;\n  let maxCol = 0;\n\n  const defs = cells.map(tc => {\n    const def = {\n      text: normalizeCellText(tc?.text),\n      row_header: !!tc?.row_header,\n      column_header: !!tc?.column_header,\n      row_span: tc?.row_span || 1,\n      col_span: tc?.col_span || 1,\n      start_row: tc?.start_row_offset_idx || 0,\n      start_col: tc?.start_col_offset_idx || 0,\n    };\n\n    hasColumnHeaders ||= def.column_header;\n\n    maxRow = Math.max(\n      maxRow,\n      def.start_row + def.row_span\n    );\n\n    maxCol = Math.max(\n      maxCol,\n      def.start_col + def.col_span\n    );\n\n    return def;\n  });\n\n  if (!maxRow || !maxCol) {\n    return '';\n  }\n\n  const grid = Array.from(\n    { length: maxRow },\n    () =>\n      Array.from(\n        { length: maxCol },\n        () => ({\n          text: '',\n          row_header: false,\n          column_header: false,\n        })\n      )\n  );\n\n  for (const cell of defs) {\n    for (\n      let r = cell.start_row;\n      r < cell.start_row + cell.row_span;\n      r++\n    ) {\n      for (\n        let c = cell.start_col;\n        c < cell.start_col + cell.col_span;\n        c++\n      ) {\n        grid[r][c].text =\n          grid[r][c].text\n            ? `${grid[r][c].text} / ${cell.text}`\n            : cell.text;\n\n        grid[r][c].row_header ||= cell.row_header;\n        grid[r][c].column_header ||= cell.column_header;\n      }\n    }\n  }\n\n  const lines = [];\n\n  if (!hasColumnHeaders) {\n    for (let r = 0; r < maxRow; r++) {\n      const line = grid[r]\n        .map(c => c.text)\n        .join(' ')\n        .trim();\n\n      if (line) {\n        lines.push(line);\n      }\n    }\n  } else {\n    for (let r = 1; r < maxRow; r++) {\n      const parts = [];\n\n      for (let c = 0; c < maxCol; c++) {\n        const header =\n          grid[0][c].text ||\n          `Column ${c + 1}`;\n\n        const value =\n          grid[r][c].text || '';\n\n        parts.push(\n          `${header}: ${value};`\n        );\n      }\n\n      const line =\n        parts.join(' ').trim();\n\n      if (line) {\n        lines.push(line);\n      }\n    }\n  }\n\n  return lines.join('\\n').trim();\n}\n\nfunction handleTableRef(ref) {\n  if (textblock || heading) {\n    pushTextEntry();\n  }\n\n  const tab =\n    tables.find(t => t?.self_ref === ref);\n\n  if (!tab) {\n    return;\n  }\n\n  const currentPage =\n    globalPageNo(tab);\n\n  let caption = '';\n\n  for (const cap of asArray(tab.captions)) {\n    const t =\n      findTextByRef(refId(cap));\n\n    if (t?.text) {\n      caption += '\\n' + t.text;\n    }\n  }\n\n  const tableHeading =\n    caption\n      ? caption\n          .replace(/\\n/g, ' ')\n          .trim()\n      : '';\n\n  const tableText =\n    normalizeTable(tab);\n\n  if (tableText) {\n    entries.push({\n      type: tableHeading\n        ? 'table'\n        : 'text',\n\n      heading: tableHeading,\n      text: tableText,\n\n      page_from: currentPage,\n      page_to: currentPage,\n\n      part_number: partNumber,\n      part_id: partId\n    });\n  }\n\n  textblock = '';\n  heading = '';\n  pageFrom = null;\n  pageTo = null;\n  lastLabel = 'table';\n}\n\nfor (const bc of bodyChildren) {\n  const ref = refId(bc);\n\n  if (!ref) {\n    continue;\n  }\n\n  if (ref.includes('/texts/')) {\n    const t =\n      findTextByRef(ref);\n\n    if (t) {\n      handleTextItem(t);\n    }\n  }\n\n  else if (ref.includes('/groups/')) {\n    const group =\n      groups.find(\n        g => g?.self_ref === ref\n      );\n\n    for (\n      const gc of asArray(group?.children)\n    ) {\n      const childRef =\n        refId(gc);\n\n      const t =\n        findTextByRef(childRef);\n\n      if (t) {\n        handleTextItem(t);\n      }\n    }\n  }\n\n  else if (ref.includes('/tables/')) {\n    handleTableRef(ref);\n  }\n}\n\nif (textblock || heading) {\n  pushTextEntry();\n}\n\nreturn {\n  json: {\n    PartID: partId,\n    QueueID: Number(item.QueueID),\n    TextUUID: item.TextUUID,\n\n    PartNumber: partNumber,\n    PageFrom: Number(item.PageFrom),\n    PageTo: Number(item.PageTo),\n    PageOffset: pageOffset,\n    SourceType: item.SourceType,\n\n    entries\n  }\n};",
+        "mode": "runOnceForEachItem"
+      },
+      "position": [
+        -1248,
+        496
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "fde0ab7f-ec58-45cd-8ea0-5377f891a5d7",
+      "name": "If DoclingJSON?",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "d166a6be-4a37-487d-94cf-d0ff56d5681d",
+              "leftValue": "={{ $json.SourceType }}",
+              "operator": {
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "docling_json"
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        -1456,
+        592
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3
+    },
+    {
+      "id": "47b408ce-e7fe-43cb-9aab-77e44ccf4d61",
+      "name": "Code - parse PaddleJSON part",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "jsCode": "const item = $json;\n\nconst partNumber = Number(item.PartNumber);\nconst partId = Number(item.PartID);\nconst queueId = Number(item.QueueID);\nconst pageOffset = Number(item.PageOffset ?? 0);\n\nfunction asArray(value) {\n  return Array.isArray(value) ? value : [];\n}\n\nfunction normalizeText(value) {\n  return String(value ?? '')\n    .replace(/\\r\\n?/g, '\\n')\n    .replace(/\\\\n/g, '\\n')\n    .replace(/[ \\t]+\\n/g, '\\n')\n    .replace(/\\n{3,}/g, '\\n\\n')\n    .trim();\n}\n\nfunction decodeHtml(value) {\n  const named = {\n    amp: '&',\n    quot: '\"',\n    apos: \"'\",\n    lt: '<',\n    gt: '>',\n    nbsp: ' ',\n  };\n\n  return String(value ?? '')\n    .replace(/&#x([0-9a-f]+);/gi, (_, hex) =>\n      String.fromCodePoint(parseInt(hex, 16))\n    )\n    .replace(/&#(\\d+);/g, (_, number) =>\n      String.fromCodePoint(parseInt(number, 10))\n    )\n    .replace(/&([a-z]+);/gi, (match, name) =>\n      Object.prototype.hasOwnProperty.call(named, name.toLowerCase())\n        ? named[name.toLowerCase()]\n        : match\n    );\n}\n\nfunction htmlToText(value) {\n  return normalizeText(\n    decodeHtml(\n      String(value ?? '')\n        .replace(/<br\\s*\\/?\\s*>/gi, '\\n')\n        .replace(/<\\/(p|div|li|h[1-6])\\s*>/gi, '\\n')\n        .replace(/<li\\b[^>]*>/gi, '- ')\n        .replace(/<[^>]+>/g, ' ')\n    ).replace(/[ \\t]{2,}/g, ' ')\n  );\n}\n\nfunction parsePositiveInt(attributes, name, fallback = 1) {\n  const match = String(attributes ?? '').match(\n    new RegExp(`${name}\\\\s*=\\\\s*[\"']?(\\\\d+)`, 'i')\n  );\n\n  const value = match ? Number(match[1]) : fallback;\n\n  return Number.isInteger(value) && value > 0\n    ? value\n    : fallback;\n}\n\nfunction parseHtmlTableRows(html) {\n  const rowMatches = [\n    ...String(html ?? '').matchAll(\n      /<tr\\b[^>]*>([\\s\\S]*?)<\\/tr>/gi\n    ),\n  ];\n\n  const rows = [];\n  const spans = [];\n\n  for (const rowMatch of rowMatches) {\n    const grid = [];\n\n    for (let column = 0; column < spans.length; column++) {\n      const span = spans[column];\n\n      if (!span || span.remaining <= 0) {\n        continue;\n      }\n\n      grid[column] = span.text;\n      span.remaining -= 1;\n\n      if (span.remaining <= 0) {\n        spans[column] = null;\n      }\n    }\n\n    const cells = [\n      ...rowMatch[1].matchAll(\n        /<(td|th)\\b([^>]*)>([\\s\\S]*?)<\\/\\1>/gi\n      ),\n    ];\n\n    let column = 0;\n\n    for (const cell of cells) {\n      while (grid[column] !== undefined) {\n        column += 1;\n      }\n\n      const attributes = cell[2] ?? '';\n      const text = htmlToText(cell[3]);\n\n      const rowSpan =\n        parsePositiveInt(attributes, 'rowspan');\n\n      const colSpan =\n        parsePositiveInt(attributes, 'colspan');\n\n      for (let offset = 0; offset < colSpan; offset++) {\n        const targetColumn = column + offset;\n\n        grid[targetColumn] = text;\n\n        if (rowSpan > 1) {\n          spans[targetColumn] = {\n            text,\n            remaining: rowSpan - 1,\n          };\n        }\n      }\n\n      column += colSpan;\n    }\n\n    const values = [];\n    let previous = null;\n\n    for (const cell of grid) {\n      const text = normalizeText(cell);\n\n      if (!text || text === previous) {\n        continue;\n      }\n\n      values.push(text.replace(/\\n+/g, ' / '));\n      previous = text;\n    }\n\n    if (values.length > 0) {\n      rows.push(values.join(' | '));\n    }\n  }\n\n  return rows;\n}\n\nfunction splitPipeTableRow(line) {\n  let value = String(line ?? '').trim();\n\n  if (value.startsWith('|')) {\n    value = value.slice(1);\n  }\n\n  if (value.endsWith('|')) {\n    value = value.slice(0, -1);\n  }\n\n  return value\n    .split('|')\n    .map(cell => normalizeText(cell))\n    .filter(Boolean);\n}\n\nfunction parsePipeTableRows(markdown) {\n  return normalizeText(markdown)\n    .split('\\n')\n    .filter(line => {\n      const value = line.trim();\n      return value.startsWith('|') && value.endsWith('|');\n    })\n    .filter(line => {\n      const cells = splitPipeTableRow(line);\n\n      return !(\n        cells.length > 0 &&\n        cells.every(cell => /^:?-{3,}:?$/.test(cell))\n      );\n    })\n    .map(line =>\n      splitPipeTableRow(line).join(' | ')\n    )\n    .filter(Boolean);\n}\n\nfunction tableRows(value) {\n  const content = String(value ?? '');\n\n  if (/<table\\b/i.test(content)) {\n    return parseHtmlTableRows(content);\n  }\n\n  return parsePipeTableRows(content);\n}\n\nfunction isTableLabel(label) {\n  return String(label ?? '')\n    .toLowerCase()\n    .includes('table');\n}\n\nfunction isIgnoredLabel(label) {\n  return new Set([\n    'header',\n    'footer',\n    'page_header',\n    'page_footer',\n    'header_image',\n    'footer_image',\n    'footnote',\n    'number',\n    'aside_text',\n    'image',\n    'picture',\n  ]).has(\n    String(label ?? '').toLowerCase()\n  );\n}\n\nfunction isTitleLabel(label) {\n  const value =\n    String(label ?? '').toLowerCase();\n\n  return [\n    'title',\n    'doc_title',\n    'document_title',\n    'paragraph_title',\n    'section_header',\n    'heading',\n  ].includes(value);\n}\n\nfunction isPageMarker(text) {\n  const value = normalizeText(text);\n\n  return (\n    /^seite\\s*\\d+\\s*(?:von|\\/)?\\s*\\d*$/i.test(value) ||\n    /^page\\s*\\d+\\s*(?:of|\\/)?\\s*\\d*$/i.test(value) ||\n    /^\\d+\\s*(?:von|of|\\/)\\s*\\d+$/i.test(value)\n  );\n}\n\nfunction isPlausibleHeading(text) {\n  const value =\n    normalizeText(text).replace(/\\s+/g, ' ');\n\n  if (!value || value.length > 120) {\n    return false;\n  }\n\n  if (value.split(/\\s+/).length > 14) {\n    return false;\n  }\n\n  if (/[.:;!?]$/.test(value)) {\n    return false;\n  }\n\n  if (isPageMarker(value)) {\n    return false;\n  }\n\n  if (\n    /^[\\s\\d.,+-]+(?:EUR|USD|CHF|GBP)?$/i.test(value)\n  ) {\n    return false;\n  }\n\n  return true;\n}\n\n/*\n * Liefert bewusst eine 1-basierte lokale Seitennummer.\n */\nfunction localPageNumber(page, index) {\n  const explicit =\n    page?.page_no ??\n    page?.pageNumber ??\n    page?.prunedResult?.page_no ??\n    page?.prunedResult?.pageNumber;\n\n  if (\n    Number.isFinite(Number(explicit)) &&\n    Number(explicit) > 0\n  ) {\n    return Number(explicit);\n  }\n\n  const pageIndex =\n    page?.page_index ??\n    page?.prunedResult?.page_index;\n\n  if (Number.isFinite(Number(pageIndex))) {\n    return Number(pageIndex) + 1;\n  }\n\n  return index + 1;\n}\n\nfunction globalPageNumber(page, index) {\n  return (\n    localPageNumber(page, index) +\n    pageOffset\n  );\n}\n\nfunction orderedBlocks(page) {\n  return asArray(\n    page?.prunedResult?.parsing_res_list ??\n    page?.prunedResult?.parsingResList ??\n    page?.parsing_res_list ??\n    page?.parsingResList\n  )\n    .map((block, index) => ({\n      block,\n      index,\n    }))\n    .sort((left, right) => {\n      const leftOrder =\n        Number.isFinite(\n          Number(left.block?.block_order)\n        )\n          ? Number(left.block.block_order)\n          : left.index;\n\n      const rightOrder =\n        Number.isFinite(\n          Number(right.block?.block_order)\n        )\n          ? Number(right.block.block_order)\n          : right.index;\n\n      return leftOrder - rightOrder;\n    })\n    .map(entry => entry.block);\n}\n\n/*\n * PaddleJSON einlesen\n */\nconst rawPaddleJSON = item.PaddleJSON;\n\nif (\n  rawPaddleJSON === undefined ||\n  rawPaddleJSON === null ||\n  String(rawPaddleJSON).trim() === ''\n) {\n  throw new Error(\n    `Part ${partNumber}: PaddleJSON ist leer`\n  );\n}\n\nlet paddleResponse;\n\ntry {\n  paddleResponse =\n    typeof rawPaddleJSON === 'string'\n      ? JSON.parse(rawPaddleJSON)\n      : rawPaddleJSON;\n} catch (error) {\n  throw new Error(\n    `Part ${partNumber}: PaddleJSON ist ungültiges JSON: ${error.message}`\n  );\n}\n\nconst response =\n  paddleResponse?.body?.result\n    ? paddleResponse.body\n    : paddleResponse;\n\nif (\n  response?.errorCode !== undefined &&\n  Number(response.errorCode) !== 0\n) {\n  throw new Error(\n    `Part ${partNumber}: PaddleOCR-VL Fehler ` +\n    `${response.errorCode}: ` +\n    `${response.errorMsg || 'Unknown error'}`\n  );\n}\n\nconst layoutParsingResults =\n  asArray(\n    response?.result?.layoutParsingResults ??\n    response?.layoutParsingResults\n  );\n\nif (layoutParsingResults.length === 0) {\n  throw new Error(\n    `Part ${partNumber}: PaddleJSON enthält keine layoutParsingResults`\n  );\n}\n\nconst pages =\n  layoutParsingResults.map(\n    (page, index) => ({\n      source: page,\n\n      /*\n       * Ab hier ausschließlich globale Seiten.\n       */\n      pageNumber:\n        globalPageNumber(page, index),\n\n      blocks:\n        orderedBlocks(page),\n\n      markdown:\n        normalizeText(\n          page?.markdown?.text ??\n          page?.markdown ??\n          page?.md_content ??\n          ''\n        ),\n    })\n  );\n\n/*\n * Wiederkehrende Kopf-/Fußtexte erkennen.\n * Da pages.pageNumber bereits global ist,\n * arbeitet auch diese Logik direkt mit Originalseiten.\n */\nconst textPages = new Map();\n\nfor (const page of pages) {\n  const seenOnPage = new Set();\n\n  for (const block of page.blocks) {\n    const label =\n      block?.block_label ??\n      block?.label ??\n      '';\n\n    if (isTableLabel(label)) {\n      continue;\n    }\n\n    const text =\n      htmlToText(\n        block?.block_content ??\n        block?.content ??\n        block?.text ??\n        ''\n      ).replace(/\\s+/g, ' ');\n\n    if (\n      !text ||\n      text.length > 300 ||\n      seenOnPage.has(text)\n    ) {\n      continue;\n    }\n\n    seenOnPage.add(text);\n\n    if (!textPages.has(text)) {\n      textPages.set(text, new Set());\n    }\n\n    textPages\n      .get(text)\n      .add(page.pageNumber);\n  }\n}\n\nfunction isRepeatedNoise(text) {\n  const value =\n    normalizeText(text)\n      .replace(/\\s+/g, ' ');\n\n  const occurrences =\n    textPages.get(value);\n\n  return Boolean(\n    occurrences &&\n    occurrences.size >= 3 &&\n    value.length <= 300\n  );\n}\n\nconst entries = [];\nlet currentEntryNumber = 0;\n\nfunction addEntry(\n  type,\n  heading,\n  text,\n  pageFrom,\n  pageTo = pageFrom\n) {\n  const normalizedHeading =\n    normalizeText(heading);\n\n  const normalizedBody =\n    normalizeText(text);\n\n  if (\n    !normalizedHeading &&\n    !normalizedBody\n  ) {\n    return;\n  }\n\n  entries.push({\n    source_counter:\n      currentEntryNumber++,\n\n    type:\n      type || 'text',\n\n    heading:\n      normalizedHeading,\n\n    text:\n      normalizedBody,\n\n    /*\n     * Bereits globale Original-PDF-Seiten.\n     */\n    page_from:\n      pageFrom,\n\n    page_to:\n      pageTo,\n\n    part_number:\n      partNumber,\n\n    part_id:\n      partId,\n  });\n}\n\nfunction isLikelyHeaderRow(line) {\n  return (\n    /(pos\\.?|artikelnr\\.?|bezeichnung|menge|einzelpreis|gesamtpreis)/i\n      .test(String(line ?? ''))\n  );\n}\n\nfunction addTableEntries(\n  rows,\n  heading,\n  page\n) {\n  const normalizedRows =\n    rows\n      .map(row =>\n        normalizeText(row)\n          .replace(/\\n+/g, ' / ')\n      )\n      .filter(Boolean);\n\n  if (normalizedRows.length === 0) {\n    return;\n  }\n\n  const repeatedHeader =\n    normalizedRows\n      .slice(0, 3)\n      .find(isLikelyHeaderRow) ?? '';\n\n  /*\n   * Hier noch NICHT auf 3000 Zeichen chunken.\n   * Wir erhalten nur semantische Tabellen-Entries.\n   */\n  for (const row of normalizedRows) {\n    addEntry(\n      'table',\n      heading,\n      row,\n      page,\n      page\n    );\n  }\n}\n\nfunction parseMarkdownFallback(\n  markdown,\n  page,\n  initialHeading = ''\n) {\n  const parts =\n    String(markdown ?? '')\n      .split(\n        /(<table\\b[\\s\\S]*?<\\/table>)/gi\n      )\n      .filter(part =>\n        normalizeText(part)\n      );\n\n  let heading =\n    initialHeading;\n\n  for (const part of parts) {\n    if (/<table\\b/i.test(part)) {\n      addTableEntries(\n        parseHtmlTableRows(part),\n        heading,\n        page\n      );\n\n      continue;\n    }\n\n    const bodyLines = [];\n\n    function flushBody() {\n      const text =\n        normalizeText(\n          bodyLines.join('\\n')\n        );\n\n      if (text) {\n        addEntry(\n          'text',\n          heading,\n          text,\n          page,\n          page\n        );\n      }\n\n      bodyLines.length = 0;\n    }\n\n    for (\n      const line of\n      normalizeText(part).split('\\n')\n    ) {\n      const match =\n        line\n          .trim()\n          .match(\n            /^(#{1,6})\\s+(.+?)\\s*#*$/\n          );\n\n      if (\n        match &&\n        isPlausibleHeading(match[2])\n      ) {\n        flushBody();\n\n        heading =\n          normalizeText(match[2]);\n      } else if (!isPageMarker(line)) {\n        bodyLines.push(\n          htmlToText(line)\n        );\n      }\n    }\n\n    flushBody();\n  }\n}\n\n/*\n * Pages in Dokumentreihenfolge verarbeiten.\n */\nfor (const page of pages) {\n  let currentHeading = '';\n  let textBuffer = [];\n\n  function flushTextBuffer() {\n    const text =\n      normalizeText(\n        textBuffer.join('\\n\\n')\n      );\n\n    if (text) {\n      addEntry(\n        'text',\n        currentHeading,\n        text,\n        page.pageNumber,\n        page.pageNumber\n      );\n    }\n\n    textBuffer = [];\n  }\n\n  if (page.blocks.length === 0) {\n    parseMarkdownFallback(\n      page.markdown,\n      page.pageNumber\n    );\n\n    continue;\n  }\n\n  for (const block of page.blocks) {\n    const label =\n      String(\n        block?.block_label ??\n        block?.label ??\n        'text'\n      ).toLowerCase();\n\n    const rawContent =\n      block?.block_content ??\n      block?.content ??\n      block?.text ??\n      '';\n\n    if (isIgnoredLabel(label)) {\n      continue;\n    }\n\n    if (\n      isTableLabel(label) ||\n      /<table\\b/i.test(\n        String(rawContent)\n      )\n    ) {\n      flushTextBuffer();\n\n      addTableEntries(\n        tableRows(rawContent),\n        currentHeading,\n        page.pageNumber\n      );\n\n      continue;\n    }\n\n    const text =\n      htmlToText(rawContent);\n\n    if (\n      !text ||\n      isPageMarker(text) ||\n      isRepeatedNoise(text)\n    ) {\n      continue;\n    }\n\n    if (\n      isTitleLabel(label) &&\n      isPlausibleHeading(text)\n    ) {\n      flushTextBuffer();\n\n      currentHeading =\n        text.replace(/\\s+/g, ' ');\n\n      continue;\n    }\n\n    textBuffer.push(text);\n  }\n\n  flushTextBuffer();\n}\n\nif (entries.length === 0) {\n  throw new Error(\n    `Part ${partNumber}: PaddleJSON enthält keinen verwertbaren Inhalt`\n  );\n}\n\nreturn {\n  json: {\n    PartID:\n      partId,\n\n    QueueID:\n      queueId,\n\n    TextUUID:\n      item.TextUUID,\n\n    PartNumber:\n      partNumber,\n\n    PageFrom:\n      Number(item.PageFrom),\n\n    PageTo:\n      Number(item.PageTo),\n\n    PageOffset:\n      pageOffset,\n\n    SourceType:\n      item.SourceType,\n\n    entries\n  }\n};",
+        "mode": "runOnceForEachItem"
+      },
+      "position": [
+        -1040,
+        592
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "6b268505-0bc7-4dba-80e4-9f38dc607c70",
+      "name": "If DoclingMD?",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "732472d5-99f2-4a6b-b4a2-36fbd41e1da4",
+              "leftValue": "={{ $json.SourceType }}",
+              "operator": {
+                "name": "filter.operator.equals",
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "docling_md"
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        -1040,
+        784
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3
+    },
+    {
+      "id": "ee5cfab2-d884-47f9-bebf-94703a77982c",
+      "name": "If PaddleJSON?",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "5604472c-384c-406c-851a-5c1c12d69385",
+              "leftValue": "={{ $json.SourceType }}",
+              "operator": {
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "paddle_json"
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        -1248,
+        688
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3
+    },
+    {
+      "id": "43c94d5a-a8ac-474b-9655-0d13901e8816",
+      "name": "Code - parse DoclingMD part",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "jsCode": "const item = $json;\n\nconst partNumber = Number(item.PartNumber);\nconst partId = Number(item.PartID);\nconst queueId = Number(item.QueueID);\nconst pageOffset = Number(item.PageOffset ?? 0);\n\nfunction normalizeText(value) {\n  return String(value ?? '')\n    .replace(/\\\\r\\\\n|\\\\n|\\\\r/g, '\\n')\n    .replace(/\\r\\n?/g, '\\n')\n    .replace(/[ \\t]+\\n/g, '\\n')\n    .replace(/\\n{3,}/g, '\\n\\n')\n    .trim();\n}\n\nfunction markdownString(value) {\n  if (value === undefined || value === null) {\n    return '';\n  }\n\n  if (typeof value === 'string') {\n    const trimmed = value.trim();\n\n    if (\n      (trimmed.startsWith('\"') && trimmed.endsWith('\"')) ||\n      (trimmed.startsWith(\"'\") && trimmed.endsWith(\"'\"))\n    ) {\n      try {\n        const parsed = JSON.parse(trimmed);\n\n        if (typeof parsed === 'string') {\n          return parsed;\n        }\n      } catch (_) {\n        // normaler Markdown-String\n      }\n    }\n\n    return value;\n  }\n\n  if (typeof value === 'object') {\n    return markdownString(\n      value?.document?.md_content ??\n      value?.md_content ??\n      value?.DoclingMD ??\n      value?.markdown ??\n      value?.md ??\n      ''\n    );\n  }\n\n  return String(value);\n}\n\nfunction normalizeInline(value) {\n  return String(value ?? '')\n    .replace(/<br\\s*\\/?\\s*>/gi, ' / ')\n    .replace(/<!--.*?-->/g, ' ')\n    .replace(/\\\\\\|/g, '|')\n    .replace(/\\s+/g, ' ')\n    .trim();\n}\n\nfunction stripHeadingMarkup(line) {\n  return normalizeInline(\n    String(line ?? '')\n      .replace(/^\\s{0,3}#{1,6}\\s+/, '')\n  );\n}\n\nfunction headingLevel(line) {\n  const match =\n    String(line ?? '')\n      .match(/^\\s{0,3}(#{1,6})\\s+/);\n\n  return match\n    ? match[1].length\n    : 0;\n}\n\nfunction isPageMarker(line) {\n  return stripHeadingMarkup(line).match(\n    /^seite\\s+(\\d+)\\s+(?:von|\\/)\\s+(\\d+)\\s*$/i\n  );\n}\n\nfunction splitMarkdownRow(line) {\n  const cells = [];\n  let cell = '';\n  let escaped = false;\n\n  for (const character of String(line ?? '').trim()) {\n    if (escaped) {\n      cell += character;\n      escaped = false;\n      continue;\n    }\n\n    if (character === '\\\\') {\n      escaped = true;\n      continue;\n    }\n\n    if (character === '|') {\n      cells.push(cell);\n      cell = '';\n    } else {\n      cell += character;\n    }\n  }\n\n  cells.push(cell);\n\n  if (cells[0]?.trim() === '') {\n    cells.shift();\n  }\n\n  if (\n    cells[cells.length - 1]?.trim() === ''\n  ) {\n    cells.pop();\n  }\n\n  return cells\n    .map(normalizeInline);\n}\n\nfunction isTableSeparator(cells) {\n  return (\n    cells.length > 0 &&\n    cells.every(\n      cell => /^:?-{3,}:?$/.test(cell)\n    )\n  );\n}\n\nfunction normalizeTableRow(line) {\n  const cells =\n    splitMarkdownRow(line);\n\n  if (isTableSeparator(cells)) {\n    return '';\n  }\n\n  const meaningful = [];\n\n  for (const cell of cells) {\n    if (!cell) {\n      continue;\n    }\n\n    if (\n      meaningful[meaningful.length - 1] === cell\n    ) {\n      continue;\n    }\n\n    meaningful.push(cell);\n  }\n\n  return meaningful.join(' | ');\n}\n\nfunction isTableLine(line) {\n  return /^\\s*\\|.*\\|\\s*$/.test(\n    String(line ?? '')\n  );\n}\n\nfunction canonicalNoise(value) {\n  return stripHeadingMarkup(value)\n    .toLowerCase()\n    .replace(/\\s+/g, ' ')\n    .trim();\n}\n\nfunction isKnownBoilerplate(value) {\n  const text =\n    stripHeadingMarkup(value);\n\n  return (\n    !text ||\n    /^<!--.*-->$/.test(text) ||\n    /^biomers\\.net GmbH\\s*\\|/i.test(text) ||\n    /Handelsregister.*Ust\\.-Id\\.\\/VAT ID/i.test(text) ||\n    /^Geschäftsführer:.*Sparkasse/i.test(text) ||\n    /^Sitz des Unternehmens:.*Handelsregister/i.test(text)\n  );\n}\n\nfunction isPlausibleHeading(value) {\n  const text =\n    normalizeInline(value);\n\n  if (!text || text.length > 120) {\n    return false;\n  }\n\n  if (text.split(/\\s+/).length > 14) {\n    return false;\n  }\n\n  if (/[.:;!?]$/.test(text)) {\n    return false;\n  }\n\n  if (\n    /^[\\s\\d.,+-]+(?:EUR|USD|CHF|GBP)?$/i\n      .test(text)\n  ) {\n    return false;\n  }\n\n  return true;\n}\n\n/*\n * Docling-Markdown enthält in deinem bisherigen\n * Parser Marker wie:\n *\n * Seite 1 von 50\n *\n * Diese Nummer ist lokal zum Part.\n */\nfunction splitPages(markdown) {\n  const pages = [];\n  let lines = [];\n\n  let localPage = 1;\n\n  function flush(pageNumber) {\n    const content =\n      lines.join('\\n').trim();\n\n    if (\n      content ||\n      pages.length === 0\n    ) {\n      pages.push({\n        localPageNumber: pageNumber,\n        globalPageNumber:\n          pageNumber + pageOffset,\n        content\n      });\n    }\n\n    lines = [];\n  }\n\n  for (\n    const line of\n    normalizeText(markdown).split('\\n')\n  ) {\n    const marker =\n      isPageMarker(line);\n\n    if (marker) {\n      const markerPage =\n        Number(marker[1]);\n\n      flush(markerPage);\n\n      localPage =\n        markerPage + 1;\n\n      continue;\n    }\n\n    if (\n      /^\\s*<!--\\s*image\\s*-->\\s*$/i\n        .test(line)\n    ) {\n      continue;\n    }\n\n    lines.push(line);\n  }\n\n  if (\n    lines.some(line => line.trim())\n  ) {\n    flush(localPage);\n  }\n\n  return pages;\n}\n\nconst rawMarkdown =\n  markdownString(item.DoclingMD);\n\nif (!normalizeText(rawMarkdown)) {\n  throw new Error(\n    `Part ${partNumber}: DoclingMD ist leer`\n  );\n}\n\nconst pages =\n  splitPages(rawMarkdown);\n\n/*\n * Wiederkehrende Header/Footer innerhalb\n * dieses Parts erkennen.\n */\nconst occurrences =\n  new Map();\n\nfor (const page of pages) {\n  const seen =\n    new Set();\n\n  for (\n    const line of\n    page.content.split('\\n')\n  ) {\n    if (\n      isTableLine(line) ||\n      isKnownBoilerplate(line)\n    ) {\n      continue;\n    }\n\n    const key =\n      canonicalNoise(line);\n\n    if (\n      !key ||\n      key.length > 400 ||\n      seen.has(key)\n    ) {\n      continue;\n    }\n\n    seen.add(key);\n\n    if (!occurrences.has(key)) {\n      occurrences.set(\n        key,\n        new Set()\n      );\n    }\n\n    occurrences\n      .get(key)\n      .add(page.globalPageNumber);\n  }\n}\n\nconst repeatedNoise =\n  new Set(\n    [...occurrences.entries()]\n      .filter(\n        ([, pageNumbers]) =>\n          pageNumbers.size >= 3\n      )\n      .map(([text]) => text)\n  );\n\nconst entries = [];\nlet sourceCounter = 0;\n\nfunction addEntry(\n  type,\n  heading,\n  text,\n  pageFrom,\n  pageTo = pageFrom\n) {\n  const normalizedHeading =\n    normalizeInline(heading);\n\n  const normalizedBody =\n    normalizeText(text);\n\n  if (\n    !normalizedHeading &&\n    !normalizedBody\n  ) {\n    return;\n  }\n\n  entries.push({\n    source_counter:\n      sourceCounter++,\n\n    type:\n      type || 'text',\n\n    heading:\n      normalizedHeading,\n\n    text:\n      normalizedBody,\n\n    page_from:\n      pageFrom,\n\n    page_to:\n      pageTo,\n\n    part_number:\n      partNumber,\n\n    part_id:\n      partId\n  });\n}\n\nfunction addTableRows(\n  rows,\n  heading,\n  page\n) {\n  for (const row of rows) {\n    const normalized =\n      normalizeTableRow(row);\n\n    if (!normalized) {\n      continue;\n    }\n\n    addEntry(\n      'table',\n      heading,\n      normalized,\n      page,\n      page\n    );\n  }\n}\n\nfor (const page of pages) {\n  const lines =\n    page.content.split('\\n');\n\n  const globalPage =\n    page.globalPageNumber;\n\n  let currentHeading = '';\n  let paragraph = [];\n\n  function flushParagraph() {\n    const text =\n      normalizeText(\n        paragraph.join('\\n')\n      );\n\n    if (text) {\n      addEntry(\n        'text',\n        currentHeading,\n        text,\n        globalPage,\n        globalPage\n      );\n    }\n\n    paragraph = [];\n  }\n\n  for (\n    let index = 0;\n    index < lines.length;\n  ) {\n    const line =\n      lines[index];\n\n    if (isTableLine(line)) {\n      flushParagraph();\n\n      const tableLines = [];\n\n      while (\n        index < lines.length &&\n        isTableLine(lines[index])\n      ) {\n        tableLines.push(\n          lines[index]\n        );\n\n        index++;\n      }\n\n      addTableRows(\n        tableLines,\n        currentHeading,\n        globalPage\n      );\n\n      continue;\n    }\n\n    const normalizedLine =\n      normalizeInline(line);\n\n    const noiseKey =\n      canonicalNoise(line);\n\n    if (\n      isKnownBoilerplate(line) ||\n      repeatedNoise.has(noiseKey)\n    ) {\n      index++;\n      continue;\n    }\n\n    const level =\n      headingLevel(line);\n\n    if (level > 0) {\n      const heading =\n        stripHeadingMarkup(line);\n\n      if (\n        isPlausibleHeading(heading)\n      ) {\n        flushParagraph();\n\n        currentHeading =\n          heading;\n      } else if (heading) {\n        paragraph.push(heading);\n      }\n\n      index++;\n      continue;\n    }\n\n    if (!normalizedLine) {\n      if (\n        paragraph.length &&\n        paragraph[\n          paragraph.length - 1\n        ] !== ''\n      ) {\n        paragraph.push('');\n      }\n    } else {\n      paragraph.push(\n        normalizedLine\n      );\n    }\n\n    index++;\n  }\n\n  flushParagraph();\n}\n\n/*\n * Falls die Markdown-Struktur ungewöhnlich ist,\n * Part nicht einfach verlieren.\n */\nif (entries.length === 0) {\n  addEntry(\n    'text',\n    '',\n    normalizeText(rawMarkdown),\n    Number(item.PageFrom),\n    Number(item.PageTo)\n  );\n}\n\nreturn {\n  json: {\n    PartID:\n      partId,\n\n    QueueID:\n      queueId,\n\n    TextUUID:\n      item.TextUUID,\n\n    PartNumber:\n      partNumber,\n\n    PageFrom:\n      Number(item.PageFrom),\n\n    PageTo:\n      Number(item.PageTo),\n\n    PageOffset:\n      pageOffset,\n\n    SourceType:\n      item.SourceType,\n\n    entries\n  }\n};",
+        "mode": "runOnceForEachItem"
+      },
+      "position": [
+        -832,
+        688
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "15afbb58-346a-49c0-819d-445e2e8e877d",
+      "name": "Code - combine parsed part",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "jsCode": "const items = $input.all();\n\nif (!items.length) {\n  throw new Error('Keine geparsten Parts erhalten');\n}\n\nconst parts = items\n  .map(item => item.json)\n  .sort((a, b) =>\n    Number(a.PartNumber) - Number(b.PartNumber)\n  );\n\n/*\n * Konsistenz prüfen\n */\nconst queueIds = new Set(\n  parts.map(p => Number(p.QueueID))\n);\n\nconst textUUIDs = new Set(\n  parts.map(p => String(p.TextUUID ?? ''))\n);\n\nif (queueIds.size !== 1) {\n  throw new Error(\n    `Mehrere QueueIDs im Chunk-Dokumentstrom: ${\n      [...queueIds].join(', ')\n    }`\n  );\n}\n\nif (textUUIDs.size !== 1) {\n  throw new Error(\n    `Mehrere TextUUIDs im Chunk-Dokumentstrom: ${\n      [...textUUIDs].join(', ')\n    }`\n  );\n}\n\n/*\n * Part-Reihenfolge auf Lücken prüfen.\n */\nfor (let index = 0; index < parts.length; index++) {\n  const expectedPartNumber = index + 1;\n  const actualPartNumber =\n    Number(parts[index].PartNumber);\n\n  if (actualPartNumber !== expectedPartNumber) {\n    throw new Error(\n      `Part-Reihenfolge unvollständig: erwartet Part ` +\n      `${expectedPartNumber}, erhalten ${actualPartNumber}`\n    );\n  }\n}\n\n/*\n * Entries in Original-Dokumentreihenfolge zusammenführen.\n */\nconst entries = [];\n\nfor (const part of parts) {\n  const partEntries =\n    Array.isArray(part.entries)\n      ? part.entries\n      : [];\n\n  if (!partEntries.length) {\n    throw new Error(\n      `Part ${part.PartNumber} enthält keine Entries`\n    );\n  }\n\n  for (\n    let entryIndex = 0;\n    entryIndex < partEntries.length;\n    entryIndex++\n  ) {\n    const entry = partEntries[entryIndex];\n\n    entries.push({\n      ...entry,\n\n      part_number:\n        Number(part.PartNumber),\n\n      part_id:\n        Number(part.PartID),\n\n      source_entry_number:\n        entryIndex\n    });\n  }\n}\n\n/*\n * Sicherheitsprüfung der Seitennummern.\n */\nfor (const entry of entries) {\n  const from =\n    entry.page_from == null\n      ? null\n      : Number(entry.page_from);\n\n  const to =\n    entry.page_to == null\n      ? null\n      : Number(entry.page_to);\n\n  if (\n    from !== null &&\n    (!Number.isInteger(from) || from < 1)\n  ) {\n    throw new Error(\n      `Ungültige page_from=${entry.page_from} ` +\n      `in Part ${entry.part_number}`\n    );\n  }\n\n  if (\n    to !== null &&\n    (!Number.isInteger(to) || to < 1)\n  ) {\n    throw new Error(\n      `Ungültige page_to=${entry.page_to} ` +\n      `in Part ${entry.part_number}`\n    );\n  }\n\n  if (\n    from !== null &&\n    to !== null &&\n    to < from\n  ) {\n    throw new Error(\n      `Ungültiger Seitenbereich ${from}-${to} ` +\n      `in Part ${entry.part_number}`\n    );\n  }\n}\n\nreturn [{\n  json: {\n    QueueID:\n      Number(parts[0].QueueID),\n\n    TextUUID:\n      parts[0].TextUUID,\n\n    TotalParts:\n      parts.length,\n\n    TotalEntries:\n      entries.length,\n\n    Parts: parts.map(part => ({\n      PartID: Number(part.PartID),\n      PartNumber: Number(part.PartNumber),\n      PageFrom: Number(part.PageFrom),\n      PageTo: Number(part.PageTo),\n      SourceType: part.SourceType,\n      EntryCount:\n        Array.isArray(part.entries)\n          ? part.entries.length\n          : 0\n    })),\n\n    entries\n  }\n}];"
+      },
+      "position": [
+        -528,
+        480
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "084b3600-5f57-4062-ba5e-2660d5de92e7",
+      "name": "Code - chunk complete document",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "jsCode": "const input = $input.first().json;\n\nconst MAX_CHARS = 3000;\nconst MIN_CHARS = 800;\n\nconst entries =\n  Array.isArray(input.entries)\n    ? input.entries\n    : [];\n\nif (!entries.length) {\n  throw new Error(\n    `TextUUID ${input.TextUUID}: keine Entries zum Chunking vorhanden`\n  );\n}\n\nfunction normalizeText(value) {\n  return String(value ?? '')\n    .replace(/\\r\\n?/g, '\\n')\n    .replace(/[ \\t]+\\n/g, '\\n')\n    .replace(/\\n{3,}/g, '\\n\\n')\n    .trim();\n}\n\nfunction normalizeHeading(value) {\n  return normalizeText(value)\n    .replace(/\\n+/g, '\\n')\n    .trim();\n}\n\nfunction renderEntry(entry) {\n  const heading =\n    normalizeHeading(entry.heading);\n\n  const body =\n    normalizeText(entry.text);\n\n  if (heading && body) {\n    return `${heading}\\n${body}`.trim();\n  }\n\n  return heading || body;\n}\n\nfunction validPage(value) {\n  const number = Number(value);\n\n  return Number.isInteger(number) && number > 0\n    ? number\n    : null;\n}\n\nfunction firstPage(...values) {\n  const pages =\n    values\n      .map(validPage)\n      .filter(value => value !== null);\n\n  return pages.length\n    ? Math.min(...pages)\n    : null;\n}\n\nfunction lastPage(...values) {\n  const pages =\n    values\n      .map(validPage)\n      .filter(value => value !== null);\n\n  return pages.length\n    ? Math.max(...pages)\n    : null;\n}\n\n/*\n * Text robust auf MAX_CHARS teilen.\n */\nfunction splitTextSafe(\n  value,\n  maxChars = MAX_CHARS,\n  minChars = MIN_CHARS\n) {\n  const output = [];\n\n  let remaining =\n    normalizeText(value);\n\n  while (remaining) {\n    if (remaining.length <= maxChars) {\n      output.push(remaining);\n      break;\n    }\n\n    const window =\n      remaining.slice(0, maxChars);\n\n    let cut = -1;\n\n    for (const separator of [\n      '\\n\\n',\n      '. ',\n      '! ',\n      '? ',\n      '; ',\n      ': ',\n      '\\n'\n    ]) {\n      const position =\n        window.lastIndexOf(separator);\n\n      if (position >= minChars) {\n        cut = Math.max(\n          cut,\n          position + separator.length\n        );\n      }\n    }\n\n    if (cut < minChars) {\n      const whitespace =\n        window.lastIndexOf(' ');\n\n      cut =\n        whitespace >= minChars\n          ? whitespace\n          : maxChars;\n    }\n\n    const part =\n      normalizeText(\n        remaining.slice(0, cut)\n      );\n\n    if (part) {\n      output.push(part);\n    }\n\n    remaining =\n      normalizeText(\n        remaining.slice(cut)\n      );\n  }\n\n  /*\n   * Sehr kleinen letzten Rest möglichst\n   * wieder mit dem Vorgänger verbinden.\n   */\n  if (\n    output.length > 1 &&\n    output[output.length - 1].length < minChars\n  ) {\n    const previous =\n      output[output.length - 2];\n\n    const last =\n      output[output.length - 1];\n\n    const combined =\n      `${previous}\\n\\n${last}`;\n\n    if (combined.length <= maxChars) {\n      output.splice(\n        output.length - 2,\n        2,\n        combined\n      );\n    }\n  }\n\n  return output.filter(Boolean);\n}\n\n/*\n * Zunächst aus Entries atomare Einheiten machen.\n *\n * Ein Entry kann selbst >3000 Zeichen sein.\n */\nconst prepared = [];\n\nfor (const entry of entries) {\n  const text =\n    renderEntry(entry);\n\n  if (!text) {\n    continue;\n  }\n\n  const pageFrom =\n    validPage(entry.page_from);\n\n  const pageTo =\n    validPage(entry.page_to);\n\n  const parts =\n    splitTextSafe(text);\n\n  for (\n    let index = 0;\n    index < parts.length;\n    index++\n  ) {\n    prepared.push({\n      type:\n        entry.type || 'text',\n\n      heading:\n        index === 0\n          ? normalizeHeading(entry.heading)\n          : '',\n\n      text:\n        parts[index],\n\n      page_from:\n        pageFrom,\n\n      page_to:\n        pageTo,\n\n      /*\n       * Nur Debug-Provenienz.\n       * Wird nicht zwingend in if_chunks geschrieben.\n       */\n      part_from:\n        Number(entry.part_number),\n\n      part_to:\n        Number(entry.part_number)\n    });\n  }\n}\n\nif (!prepared.length) {\n  throw new Error(\n    `TextUUID ${input.TextUUID}: alle Entries waren leer`\n  );\n}\n\n/*\n * Zwei aufeinanderfolgende Chunks vereinigen.\n *\n * Hier dürfen bewusst auch Part-Grenzen\n * überschritten werden.\n */\nfunction mergePair(left, right) {\n  const leftText =\n    normalizeText(left.text);\n\n  const rightText =\n    normalizeText(right.text);\n\n  const headings =\n    [\n      normalizeHeading(left.heading),\n      normalizeHeading(right.heading)\n    ]\n      .filter(Boolean);\n\n  return {\n    type:\n      left.type === right.type\n        ? left.type\n        : 'mixed',\n\n    heading:\n      [...new Set(headings)]\n        .join('\\n'),\n\n    text:\n      [leftText, rightText]\n        .filter(Boolean)\n        .join('\\n\\n'),\n\n    page_from:\n      firstPage(\n        left.page_from,\n        left.page_to,\n        right.page_from,\n        right.page_to\n      ),\n\n    page_to:\n      lastPage(\n        left.page_from,\n        left.page_to,\n        right.page_from,\n        right.page_to\n      ),\n\n    part_from:\n      Math.min(\n        Number(left.part_from),\n        Number(right.part_from)\n      ),\n\n    part_to:\n      Math.max(\n        Number(left.part_to),\n        Number(right.part_to)\n      )\n  };\n}\n\n/*\n * Dokumentstrom der Reihe nach verdichten.\n *\n * Damit verschwindet die technische\n * 50-Seiten-Partgrenze vollständig.\n */\nconst compacted = [];\n\nfor (const current of prepared) {\n  const previous =\n    compacted[compacted.length - 1];\n\n  if (!previous) {\n    compacted.push({\n      ...current\n    });\n\n    continue;\n  }\n\n  const combinedLength =\n    normalizeText(previous.text).length +\n    normalizeText(current.text).length +\n    2;\n\n  if (combinedLength <= MAX_CHARS) {\n    compacted[\n      compacted.length - 1\n    ] = mergePair(\n      previous,\n      current\n    );\n  } else {\n    compacted.push({\n      ...current\n    });\n  }\n}\n\n/*\n * Kurze Chunks (<800) möglichst mit dem\n * Vorgänger vereinigen.\n */\nfor (\n  let index = 1;\n  index < compacted.length;\n  index++\n) {\n  const current =\n    compacted[index];\n\n  const currentLength =\n    normalizeText(current.text).length;\n\n  if (currentLength >= MIN_CHARS) {\n    continue;\n  }\n\n  const previous =\n    compacted[index - 1];\n\n  const previousLength =\n    normalizeText(previous.text).length;\n\n  if (\n    previousLength +\n      currentLength +\n      2\n    <= MAX_CHARS\n  ) {\n    compacted.splice(\n      index - 1,\n      2,\n      mergePair(\n        previous,\n        current\n      )\n    );\n\n    index--;\n  }\n}\n\n/*\n * Endgültige Chunknummerierung.\n *\n * ENTSCHEIDEND:\n * genau einmal über das gesamte Dokument.\n */\nconst chunks =\n  compacted.map(\n    (chunk, index) => ({\n      counter:\n        index + 1,\n\n      type:\n        chunk.type,\n\n      heading:\n        chunk.heading,\n\n      text:\n        normalizeText(chunk.text),\n\n      page_from:\n        chunk.page_from,\n\n      page_to:\n        chunk.page_to,\n\n      part_from:\n        chunk.part_from,\n\n      part_to:\n        chunk.part_to\n    })\n  );\n\n/*\n * Optionaler synthetischer Inhalts-/Outline-Chunk.\n * Entspricht dem bisherigen counter=0.\n */\nconst outline = [];\n\nconst seenOutline =\n  new Set();\n\nfor (const entry of entries) {\n  const heading =\n    normalizeHeading(entry.heading);\n\n  const page =\n    validPage(entry.page_from);\n\n  if (!heading || page === null) {\n    continue;\n  }\n\n  const key =\n    `${heading}\\u0000${page}`;\n\n  if (seenOutline.has(key)) {\n    continue;\n  }\n\n  seenOutline.add(key);\n\n  outline.push(\n    `${heading} page ${page}`\n  );\n}\n\nif (outline.length) {\n  chunks.push({\n    counter: 0,\n\n    type: 'content',\n\n    heading:\n      'Full Content',\n\n    text:\n      `Full Content\\n${outline.join('\\n')}`,\n\n    /*\n     * Keine reale Originalseite.\n     */\n    page_from: null,\n    page_to: null,\n\n    part_from: null,\n    part_to: null\n  });\n}\n\n/*\n * Abschließende Invarianten.\n */\nconst normalChunks =\n  chunks.filter(\n    chunk => chunk.counter > 0\n  );\n\nfor (\n  let index = 0;\n  index < normalChunks.length;\n  index++\n) {\n  const expected =\n    index + 1;\n\n  if (\n    normalChunks[index].counter !==\n    expected\n  ) {\n    throw new Error(\n      `Chunknummerierung inkonsistent: ` +\n      `erwartet ${expected}, erhalten ` +\n      `${normalChunks[index].counter}`\n    );\n  }\n\n  if (\n    normalChunks[index].text.length >\n    MAX_CHARS\n  ) {\n    throw new Error(\n      `Chunk ${expected} überschreitet ` +\n      `${MAX_CHARS} Zeichen`\n    );\n  }\n\n  const from =\n    validPage(\n      normalChunks[index].page_from\n    );\n\n  const to =\n    validPage(\n      normalChunks[index].page_to\n    );\n\n  if (\n    from !== null &&\n    to !== null &&\n    to < from\n  ) {\n    throw new Error(\n      `Chunk ${expected}: ungültiger ` +\n      `Seitenbereich ${from}-${to}`\n    );\n  }\n}\n\nreturn [{\n  json: {\n    QueueID:\n      Number(input.QueueID),\n\n    TextUUID:\n      input.TextUUID,\n\n    TotalParts:\n      Number(input.TotalParts),\n\n    TotalEntries:\n      Number(input.TotalEntries),\n\n    TotalChunks:\n      normalChunks.length,\n\n    HasContentChunk:\n      outline.length > 0,\n\n    chunks\n  }\n}];"
+      },
+      "position": [
+        -304,
+        400
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "72c7bab6-da5b-4829-a7dc-78b452b541bf",
+      "name": "MySQL - log done",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $('MySQL - claim one pending chunk job').first().json.TextUUID,\n  `inserted ${$('Code - build multi-row INSERT').all().length} chunks`\n] }}"
+        },
+        "query": "INSERT INTO infofee01_rag.if_extraction_log\n(\n    TextUUIDBin,\n    Stage,\n    Status,\n    Message,\n    LoggedAt\n)\nVALUES\n(\n    UUID_TO_BIN_MDB($1),\n    'chunk',\n    'done',\n    $2,\n    NOW()\n);"
+      },
+      "position": [
+        1504,
+        272
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "0f07d4bb-c4ed-4373-91df-34ea0ff5f19a",
+      "name": "MySQL - claim one pending chunk job",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "SELECT\n    cq.ChunkQueueID,\n    cq.QueueID,\n    BIN_TO_UUID_MDB(cq.TextUUIDBin) AS TextUUID,\n    cq.Attempts\nFROM infofee01_rag.if_chunk_queue cq\nWHERE cq.Status = 'pending'\nORDER BY cq.CreatedAt ASC\nLIMIT 1;"
+      },
+      "position": [
+        -2464,
+        736
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "e3668815-d44a-455f-8de0-265c6218f0d3",
+      "name": "MySQL - mark chunk job processing",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $('MySQL - claim one pending chunk job').first().json.ChunkQueueID\n] }}"
+        },
+        "query": "UPDATE infofee01_rag.if_chunk_queue\nSET\n    Status = 'processing',\n    StartedAt = NOW(),\n    FinishedAt = NULL,\n    Attempts = Attempts + 1,\n    LastError = NULL\nWHERE ChunkQueueID = $1\n  AND Status = 'pending';"
+      },
+      "position": [
+        -2048,
+        624
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "33df83fd-1754-43fd-8837-b954ac36639c",
+      "name": "MySQL - mark chunk job done",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $('MySQL - claim one pending chunk job').first().json.ChunkQueueID\n] }}"
+        },
+        "query": "UPDATE infofee01_rag.if_chunk_queue\nSET\n    Status = 'done',\n    FinishedAt = NOW(),\n    LastError = NULL\nWHERE ChunkQueueID = $1\n  AND Status = 'processing';"
+      },
+      "position": [
+        1312,
+        272
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "d0491ff0-97a4-4d21-9bd6-ea0d5b66ba60",
+      "name": "MySQL - mark chunk job failed",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  (\n    $json.error?.message\n    ?? $json.message\n    ?? $json.error\n    ?? 'Unknown chunking error'\n  ).toString(),\n  $('MySQL - claim one pending chunk job').first().json.ChunkQueueID\n] }}"
+        },
+        "query": "UPDATE infofee01_rag.if_chunk_queue\nSET\n    Status = 'failed',\n    LastError = $1,\n    FinishedAt = NOW()\nWHERE ChunkQueueID = $2\n  AND Status = 'processing';"
+      },
+      "position": [
+        1392,
+        928
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "52c3185f-e4ae-4ab7-901e-6302f58840ef",
+      "name": "MySQL - read chunk attempts",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $('MySQL - claim one pending chunk job').first().json.ChunkQueueID\n] }}"
+        },
+        "query": "SELECT\n    ChunkQueueID,\n    Attempts,\n    LastError\nFROM infofee01_rag.if_chunk_queue\nWHERE ChunkQueueID = $1;"
+      },
+      "position": [
+        1584,
+        928
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "c7193218-a6a6-4672-8930-84d789a5a07c",
+      "name": "MySQL - requeue",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $('MySQL - claim one pending chunk job').first().json.ChunkQueueID\n] }}"
+        },
+        "query": "UPDATE infofee01_rag.if_chunk_queue\nSET\n    Status = 'pending',\n    StartedAt = NULL,\n    FinishedAt = NULL,\n    LastError = CONCAT(\n        'RETRY: ',\n        IFNULL(LastError, 'unknown error')\n    )\nWHERE ChunkQueueID = $1\n  AND Status = 'failed';"
+      },
+      "position": [
+        1984,
+        1024
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "9ff91ae1-862f-48b7-b867-bb52c22156d1",
+      "name": "MySQL - dead letter",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [\n  $('MySQL - claim one pending chunk job').first().json.ChunkQueueID\n] }}"
+        },
+        "query": "UPDATE infofee01_rag.if_chunk_queue\nSET\n    Status = 'dead_letter',\n    FinishedAt = NOW(),\n    LastError = CONCAT(\n        IFNULL(LastError, 'unknown error'),\n        ' | DEAD_LETTER: exceeded 3 attempts'\n    )\nWHERE ChunkQueueID = $1\n  AND Status = 'failed';"
+      },
+      "position": [
+        1984,
+        832
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "id": "2e93221f-4ef4-4083-a22f-9a4433ef3f00",
+      "name": "If Attempts >= 3",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "689c1d4a-bfc2-45a8-b4b9-b66e6c6e341f",
+              "leftValue": "={{ Number($json.Attempts ?? 0) }}",
+              "operator": {
+                "operation": "gte",
+                "type": "number"
+              },
+              "rightValue": 3
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        1776,
+        928
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "ac8c3c6d-0deb-4170-910c-522be2fd9bd7",
+      "name": "MySQL - recover stale chunk jobs",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {},
+        "query": "UPDATE infofee01_rag.if_chunk_queue\nSET\n    Status = 'pending',\n    LastError = CONCAT(\n        IFNULL(LastError, ''),\n        CASE\n            WHEN LastError IS NULL OR LastError = ''\n                THEN ''\n            ELSE ' | '\n        END,\n        'STALE_PROCESSING_RECOVERY: chunk worker did not finish'\n    ),\n    StartedAt = NULL,\n    FinishedAt = NULL\nWHERE Status = 'processing'\n  AND StartedAt < NOW() - INTERVAL 30 MINUTE;"
+      },
+      "position": [
+        -2656,
+        736
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "id": "a29b48fd-fbcb-4673-b235-648dd1a2453b",
+      "name": "Code Throw Chunking Error",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "jsCode": "throw new Error(\n  `Unbekannter SourceType: ${$json.SourceType ?? 'NULL'}`\n);"
+      },
+      "position": [
+        -656,
+        912
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "id": "9e2b8e31-12c2-4565-8b14-280cc1acbf74",
+      "name": "If all chunks inserted?",
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "c0fce185-b173-4107-a1cf-1769f9b4b9f8",
+              "leftValue": "={{ Number($json.ActualChunks ?? 0) }}",
+              "operator": {
+                "operation": "equals",
+                "type": "number"
+              },
+              "rightValue": "={{ $('Code - collapse insert results').first().json.ExpectedChunks }}"
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          }
+        },
+        "options": {}
+      },
+      "position": [
+        880,
+        352
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3
+    },
+    {
+      "id": "4e539bd2-f722-4c60-8271-ca6842e040d6",
+      "name": "Code - collapse insert results",
+      "parameters": {
+        "jsCode": "const insertResults = $input.all();\n\nconst expected =\n  $('Code - build multi-row INSERT').all().length;\n\nreturn [{\n  json: {\n    TextUUID:\n      $('Code - chunk complete document').first().json.TextUUID,\n\n    ExpectedChunks:\n      expected,\n\n    SuccessfulInsertResults:\n      insertResults.length\n  }\n}];"
+      },
+      "position": [
+        496,
+        352
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "credentials": "__REDACTED__",
+      "id": "922e8af3-79d1-4678-99c4-929a3a4d04fe",
+      "name": "MySQL - count inserted chunks",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "operation": "executeQuery",
+        "options": {
+          "queryReplacement": "={{ [ $json.TextUUID ] }}"
+        },
+        "query": "SELECT\n    COUNT(*) AS ActualChunks\nFROM infofee01_rag.if_chunks\nWHERE TextUUIDBin = UUID_TO_BIN_MDB($1);"
+      },
+      "position": [
+        688,
+        352
+      ],
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.4
+    },
+    {
+      "id": "3ec0a2cd-4a27-4644-bee4-647d0c33090b",
+      "name": "Code - throw incomplete chunk insert",
+      "onError": "continueErrorOutput",
+      "parameters": {
+        "jsCode": "const actual =\n  Number($json.ActualChunks ?? 0);\n\nconst expected =\n  Number(\n    $('Code - collapse insert results')\n      .first()\n      .json\n      .ExpectedChunks ?? 0\n  );\n\nthrow new Error(\n  `Chunk INSERT incomplete: expected ${expected}, actual ${actual}`\n);"
+      },
+      "position": [
+        1056,
+        464
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    }
+  ],
+  "settings": {
+    "binaryMode": "separate",
+    "executionOrder": "v1"
+  },
+  "tags": [
+    {
+      "createdAt": "2026-06-16T05:48:49.435Z",
+      "id": "Dz5cI4qGPy822fko",
+      "name": "rag",
+      "updatedAt": "2026-06-16T05:48:49.435Z"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2026-08-17T11:54:41.389Z",
+  "versionId": "af533c99-8007-4dac-ad35-f65201029395"
+}
