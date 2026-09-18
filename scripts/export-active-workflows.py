@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 """Export all active n8n workflows as sanitized deterministic JSON.
 
-Environment:
+Configuration:
+  The script loads .env from the repository root (one directory above scripts/)
+  when present. Already exported environment variables take precedence.
+
   N8N_BASE_URL   Base URL of the n8n instance, without /api/v1.
   N8N_API_KEY    n8n Public API key.
 
@@ -20,10 +23,52 @@ import urllib.parse
 import urllib.request
 from pathlib import Path
 
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+ENV_FILE = REPO_ROOT / ".env"
+OUT_DIR = REPO_ROOT / "workflows" / "active"
+INVENTORY = REPO_ROOT / "docs" / "WORKFLOW-INVENTORY.generated.md"
+
+
+def load_env_file(path: Path) -> None:
+    """Load simple KEY=VALUE pairs without overwriting the process environment."""
+    if not path.is_file():
+        return
+
+    for line_number, raw_line in enumerate(
+        path.read_text(encoding="utf-8-sig").splitlines(),
+        start=1,
+    ):
+        line = raw_line.strip()
+        if not line or line.startswith("#"):
+            continue
+
+        if line.startswith("export "):
+            line = line[7:].lstrip()
+
+        if "=" not in line:
+            die(f"{path}:{line_number}: expected KEY=VALUE.")
+
+        key, value = line.split("=", 1)
+        key = key.strip()
+        value = value.strip()
+
+        if not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", key):
+            die(f"{path}:{line_number}: invalid environment variable name {key!r}.")
+
+        if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
+            value = value[1:-1]
+        else:
+            # Allow comments after unquoted values when separated by whitespace.
+            value = re.split(r"\s+#", value, maxsplit=1)[0].rstrip()
+
+        os.environ.setdefault(key, value)
+
+
+load_env_file(ENV_FILE)
+
 BASE_URL = os.environ.get("N8N_BASE_URL", "").rstrip("/")
 API_KEY = os.environ.get("N8N_API_KEY", "")
-OUT_DIR = Path("workflows/active")
-INVENTORY = Path("docs/WORKFLOW-INVENTORY.generated.md")
 
 SECRET_KEY_RE = re.compile(
     r"(password|passwd|secret|token|api[_-]?key|authorization|private[_-]?key|"
