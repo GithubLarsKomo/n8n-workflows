@@ -95,7 +95,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "={{$json.lookup_sql}}",
+        "query": "={{ \"SELECT \" + \"'\" + $json.canonical_url.replace(/'/g,\"''\") + \"'\" + \" AS canonical_url, \" + \"'\" + ($json.discovery_title || '').replace(/'/g,\"''\") + \"'\" + \" AS discovery_title, \" + \"'\" + ($json.discovery_snippet || '').replace(/'/g,\"''\") + \"'\" + \" AS discovery_snippet, \" + \"'\" + ($json.source_class || '').replace(/'/g,\"''\") + \"'\" + \" AS source_class, s.last_content_hash, s.last_crawled_at FROM (SELECT 1) x LEFT JOIN ci_oumeng_source s ON s.url_hash=SHA2(\" + \"'\" + $json.canonical_url.replace(/'/g,\"''\") + \"'\" + \",256) LIMIT 1\" }}",
         "options": {}
       },
       "id": "dblookup",
@@ -140,7 +140,7 @@
     },
     {
       "parameters": {
-        "jsCode": "function h(s){let a=2166136261;for(let i=0;i<s.length;i++){a^=s.charCodeAt(i);a=Math.imul(a,16777619)}return ('00000000'+(a>>>0).toString(16)).slice(-8)}\nreturn items.map(i=>{const d=i.json.data||i.json;const md=String(d.markdown||'').trim();const meta=d.metadata||{};const prev=$('MariaDB Source Lookup').item.json;return {json:{canonical_url:meta.sourceURL||prev.canonical_url,title:meta.title||prev.discovery_title||'',source_class:prev.source_class,markdown:md,content_hash:h(md),previous_hash:prev.last_content_hash||null,changed:!!md&&h(md)!==prev.last_content_hash}}});"
+        "jsCode": "const prev=$('MariaDB Source Lookup').item.json;\nconst d=$json.data||$json;\nconst md=String(d.markdown||'').trim();\nconst meta=d.metadata||{};\n// A deterministic content fingerprint. MariaDB stores it as an opaque fingerprint;\n// it is intentionally not labelled SHA-256.\nfunction fp(s){let h1=0x811c9dc5,h2=0x9e3779b9;for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);h1=Math.imul(h1^c,0x01000193);h2=Math.imul(h2+c,0x85ebca6b)}return [h1,h2].map(x=>(x>>>0).toString(16).padStart(8,'0')).join('')}\nconst content_hash=fp(md);\nreturn [{json:{canonical_url:meta.sourceURL||prev.canonical_url,title:meta.title||prev.discovery_title||'',source_class:prev.source_class,markdown:md,content_hash,previous_hash:prev.last_content_hash||null,changed:!!md&&content_hash!==prev.last_content_hash}}];"
       },
       "id": "hash",
       "name": "Content Hash + Change Detection",
@@ -184,7 +184,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const src=$('Only New or Changed').item.json;let e={};try{e=JSON.parse($json.message?.content||'{}')}catch{};const basis=[e.event_type,e.event_date,e.summary_de,(e.entities||[]).sort().join('|')].join('|').toLowerCase().replace(/\\s+/g,' ').trim();let a=2166136261;for(let i=0;i<basis.length;i++){a^=basis.charCodeAt(i);a=Math.imul(a,16777619)}const fp=('00000000'+(a>>>0).toString(16)).slice(-8);return [{json:{...src,...e,event_fingerprint:fp}}];"
+        "jsCode": "const src=$('Only New or Changed').item.json;let e={};try{e=JSON.parse($json.message?.content||'{}')}catch{return []}\nconst allowed=['OWNERSHIP','TRANSACTION','FINANCING','MANAGEMENT','REGULATORY','DISTRIBUTION','LOCALIZATION','PRODUCTION','OPERATIONAL_INDEPENDENCE'];\nif(!e.relevant||!allowed.includes(e.event_type))return [];\nconst entities=Array.isArray(e.entities)?e.entities.map(String).sort():[];\nconst basis=[e.event_type,e.event_date||'',entities.join('|'),String(e.summary_de||'').toLowerCase().replace(/\\s+/g,' ').trim()].join('|');\nfunction fp(s){let h1=0x811c9dc5,h2=0x9e3779b9;for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);h1=Math.imul(h1^c,0x01000193);h2=Math.imul(h2+c,0x85ebca6b)}return [h1,h2].map(x=>(x>>>0).toString(16).padStart(8,'0')).join('')}\nreturn [{json:{...src,...e,entities,event_fingerprint:fp(basis)}}];"
       },
       "id": "fingerprint",
       "name": "Event Fingerprint",
@@ -197,7 +197,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const q=s=>\"'\"+String(s??'').replace(/\\\\/g,'\\\\\\\\').replace(/'/g,\"''\")+\"'\";return items.map(i=>{const j=i.json;const sql=`INSERT INTO ci_oumeng_source(canonical_url,url_hash,host,source_class,first_seen_at,last_seen_at,last_crawled_at,last_content_hash) VALUES(${q(j.canonical_url)},SHA2(${q(j.canonical_url)},256),SUBSTRING_INDEX(SUBSTRING_INDEX(${q(j.canonical_url)},'/',3),'/',-1),${q(j.source_class)},NOW(),NOW(),NOW(),${q(j.content_hash)}) ON DUPLICATE KEY UPDATE last_seen_at=NOW(),last_crawled_at=NOW(),last_content_hash=VALUES(last_content_hash),source_class=VALUES(source_class); INSERT IGNORE INTO ci_oumeng_snapshot(url_hash,canonical_url,content_hash,captured_at,title,markdown) VALUES(SHA2(${q(j.canonical_url)},256),${q(j.canonical_url)},${q(j.content_hash)},NOW(),${q(j.title)},${q(j.markdown)}); INSERT INTO ci_oumeng_event(event_fingerprint,event_type,event_date,materiality,confidence,status,summary_de,entities_json,first_seen_at,last_seen_at,source_count) VALUES(${q(j.event_fingerprint)},${q(j.event_type)},NULLIF(${q(j.event_date)},''),${Number(j.materiality)||0},${Number(j.confidence)||0},'candidate',${q(j.summary_de)},${q(JSON.stringify(j.entities||[]))},NOW(),NOW(),1) ON DUPLICATE KEY UPDATE last_seen_at=NOW(),materiality=GREATEST(materiality,VALUES(materiality)),confidence=GREATEST(confidence,VALUES(confidence)),source_count=source_count+1; INSERT IGNORE INTO ci_oumeng_event_evidence(event_fingerprint,url_hash,content_hash,source_role,evidence_json) VALUES(${q(j.event_fingerprint)},SHA2(${q(j.canonical_url)},256),${q(j.content_hash)},${q(j.source_class)},${q(JSON.stringify({quote:j.evidence_quote||'',url:j.canonical_url}))}); SELECT ${q(j.event_fingerprint)} event_fingerprint;`;return {json:{...j,persist_sql:sql}}});"
+        "jsCode": "const q=s=>\"'\"+String(s??'').replace(/\\\\/g,'\\\\\\\\').replace(/'/g,\"''\")+\"'\";return items.map(i=>{const j=i.json;const date=/^\\d{4}-\\d{2}-\\d{2}$/.test(String(j.event_date||''))?q(j.event_date):'NULL';const sql=`INSERT INTO ci_oumeng_source(canonical_url,url_hash,host,source_class,first_seen_at,last_seen_at,last_crawled_at,last_content_hash) VALUES(${q(j.canonical_url)},SHA2(${q(j.canonical_url)},256),SUBSTRING_INDEX(SUBSTRING_INDEX(${q(j.canonical_url)},'/',3),'/',-1),${q(j.source_class)},NOW(),NOW(),NOW(),${q(j.content_hash)}) ON DUPLICATE KEY UPDATE last_seen_at=NOW(),last_crawled_at=NOW(),last_content_hash=VALUES(last_content_hash),source_class=VALUES(source_class); INSERT IGNORE INTO ci_oumeng_snapshot(url_hash,canonical_url,content_hash,captured_at,title,markdown) VALUES(SHA2(${q(j.canonical_url)},256),${q(j.canonical_url)},${q(j.content_hash)},NOW(),${q(j.title)},${q(j.markdown)}); INSERT INTO ci_oumeng_event(event_fingerprint,event_type,event_date,materiality,confidence,status,summary_de,entities_json,first_seen_at,last_seen_at,source_count) VALUES(${q(j.event_fingerprint)},${q(j.event_type)},${date},${Math.max(0,Math.min(100,Number(j.materiality)||0))},${Math.max(0,Math.min(100,Number(j.confidence)||0))},'candidate',${q(j.summary_de)},${q(JSON.stringify(j.entities||[]))},NOW(),NOW(),1) ON DUPLICATE KEY UPDATE last_seen_at=NOW(),materiality=GREATEST(materiality,VALUES(materiality)),confidence=GREATEST(confidence,VALUES(confidence)); INSERT IGNORE INTO ci_oumeng_event_evidence(event_fingerprint,url_hash,content_hash,source_role,evidence_json) VALUES(${q(j.event_fingerprint)},SHA2(${q(j.canonical_url)},256),${q(j.content_hash)},${q(j.source_class)},${q(JSON.stringify({quote:j.evidence_quote||'',url:j.canonical_url}))}); UPDATE ci_oumeng_event e SET source_count=(SELECT COUNT(DISTINCT ev.url_hash) FROM ci_oumeng_event_evidence ev WHERE ev.event_fingerprint=e.event_fingerprint) WHERE e.event_fingerprint=${q(j.event_fingerprint)}; SELECT ${q(j.event_fingerprint)} event_fingerprint;`;return {json:{...j,persist_sql:sql}}});"
       },
       "id": "persistbuild",
       "name": "Build Evidence SQL",
@@ -211,7 +211,7 @@
     {
       "parameters": {
         "operation": "executeQuery",
-        "query": "={{$json.persist_sql}}",
+        "query": "={{ $json.persist_sql }}",
         "options": {}
       },
       "id": "dbpersist",
@@ -225,7 +225,7 @@
     },
     {
       "parameters": {
-        "jsCode": "const e=$('Build Evidence SQL').item.json;const primary=e.source_class?.startsWith('primary');const material=(Number(e.materiality)||0)>=70&&(Number(e.confidence)||0)>=75;const allowed=material&&e.relevant!==false&&(primary||!e.requires_corroboration);return allowed?[{json:e}]:[];"
+        "jsCode": "const e=$('Build Evidence SQL').item.json;const primary=String(e.source_class||'').startsWith('primary');const score=(Number(e.materiality)||0)>=70&&(Number(e.confidence)||0)>=75;if(!score||e.relevant===false)return[];if(primary)return[{json:e}];\n// Secondary claims that require corroboration are persisted but deliberately silent.\n// A later v2.1 can add a DB-backed independent-host corroboration join.\nif(e.requires_corroboration)return[];return[{json:e}];"
       },
       "id": "gate",
       "name": "Conservative Materiality Gate",
@@ -459,7 +459,10 @@
     "executionOrder": "v1"
   },
   "meta": {
-    "templateCredsSetupCompleted": true
+    "templateCredsSetupCompleted": true,
+    "implementationStatus": "inactive-test-candidate",
+    "validatedAgainstRepo": "n8n 2.x exports; MySQL node typeVersion 2.5",
+    "notes": "Requires MariaDB credential assignment after import. Secondary corroboration-required claims remain silent."
   },
   "tags": []
 }
