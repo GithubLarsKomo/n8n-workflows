@@ -30,6 +30,11 @@ OUT_DIR = REPO_ROOT / "workflows" / "active"
 INVENTORY = REPO_ROOT / "docs" / "WORKFLOW-INVENTORY.generated.md"
 
 
+def die(message: str) -> None:
+    print(message, file=sys.stderr)
+    raise SystemExit(2)
+
+
 def load_env_file(path: Path) -> None:
     """Load simple KEY=VALUE pairs without overwriting the process environment."""
     if not path.is_file():
@@ -79,11 +84,6 @@ SECRET_HEADER_RE = re.compile(
     r"^(authorization|proxy-authorization|x-api-key|api-key|x-auth-token)$",
     re.IGNORECASE,
 )
-
-
-def die(message: str) -> None:
-    print(message, file=sys.stderr)
-    raise SystemExit(2)
 
 
 def request_json(url: str):
