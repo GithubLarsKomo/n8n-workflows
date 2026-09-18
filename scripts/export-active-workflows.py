@@ -5,8 +5,10 @@ Configuration:
   The script loads .env from the repository root (one directory above scripts/)
   when present. Already exported environment variables take precedence.
 
-  N8N_BASE_URL   Base URL of the n8n instance, without /api/v1.
-  N8N_API_KEY    n8n Public API key.
+  N8N_BASE_URL       Base URL of the n8n instance, without /api/v1.
+  N8N_API_KEY        n8n Public API key.
+  N8N_BYPASS_PROXY   Set to true for an internal n8n host that must not use
+                     HTTP(S)_PROXY. Defaults to false.
 
 The repository is public. This script removes credential bindings and common
 secret-bearing values, but workflow parameters are arbitrary user content.
@@ -19,6 +21,8 @@ import json
 import os
 import re
 import sys
+import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from pathlib import Path
@@ -74,6 +78,16 @@ load_env_file(ENV_FILE)
 
 BASE_URL = os.environ.get("N8N_BASE_URL", "").rstrip("/")
 API_KEY = os.environ.get("N8N_API_KEY", "")
+BYPASS_PROXY = os.environ.get("N8N_BYPASS_PROXY", "").strip().lower() in {
+    "1",
+    "true",
+    "yes",
+    "on",
+}
+
+HTTP_OPENER = urllib.request.build_opener(
+    urllib.request.ProxyHandler({}) if BYPASS_PROXY else urllib.request.ProxyHandler()
+)
 
 SECRET_KEY_RE = re.compile(
     r"(password|passwd|secret|token|api[_-]?key|authorization|private[_-]?key|"
@@ -94,8 +108,56 @@ def request_json(url: str):
             "X-N8N-API-KEY": API_KEY,
         },
     )
-    with urllib.request.urlopen(req, timeout=60) as response:
-        return json.load(response)
+
+    retryable_statuses = {429, 502, 503, 504}
+    max_attempts = 4
+
+    for attempt in range(1, max_attempts + 1):
+        try:
+            with HTTP_OPENER.open(req, timeout=60) as response:
+                return json.load(response)
+
+        except urllib.error.HTTPError as exc:
+            body = exc.read(2048).decode("utf-8", errors="replace").strip()
+            retryable = exc.code in retryable_statuses and attempt < max_attempts
+
+            if retryable:
+                retry_after = exc.headers.get("Retry-After")
+                try:
+                    delay = max(1, int(retry_after)) if retry_after else 2 ** (attempt - 1)
+                except ValueError:
+                    delay = 2 ** (attempt - 1)
+
+                print(
+                    f"n8n API returned HTTP {exc.code}; "
+                    f"retrying in {delay}s ({attempt}/{max_attempts})...",
+                    file=sys.stderr,
+                )
+                time.sleep(delay)
+                continue
+
+            detail = f"\nResponse body: {body}" if body else ""
+            proxy_hint = (
+                "\nProxy bypass is OFF. If this is an internal n8n host behind "
+                "a corporate proxy, set N8N_BYPASS_PROXY=true in the root .env."
+                if not BYPASS_PROXY
+                else "\nProxy bypass is ON."
+            )
+            die(
+                f"n8n API request failed: HTTP {exc.code} {exc.reason}\n"
+                f"URL: {url}{detail}{proxy_hint}"
+            )
+
+        except urllib.error.URLError as exc:
+            proxy_hint = (
+                "\nProxy bypass is OFF. If this is an internal n8n host behind "
+                "a corporate proxy, set N8N_BYPASS_PROXY=true in the root .env."
+                if not BYPASS_PROXY
+                else "\nProxy bypass is ON."
+            )
+            die(f"n8n API connection failed: {exc.reason}\nURL: {url}{proxy_hint}")
+
+    die("n8n API request failed after retries.")
 
 
 def sanitize_url(value: str) -> str:
@@ -248,8 +310,15 @@ def write_exports(workflows):
 def main() -> None:
     if not BASE_URL:
         die("N8N_BASE_URL is not set.")
+    if BASE_URL.endswith("/api/v1"):
+        die("N8N_BASE_URL must not include /api/v1.")
     if not API_KEY:
         die("N8N_API_KEY is not set.")
+
+    print(
+        f"Using n8n instance {BASE_URL} "
+        f"(proxy bypass {'on' if BYPASS_PROXY else 'off'})."
+    )
 
     workflows = fetch_active_workflows()
     write_exports(workflows)
