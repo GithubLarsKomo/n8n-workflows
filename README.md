@@ -21,6 +21,7 @@ Example:
 
     N8N_BASE_URL=https://your-n8n.example.com
     N8N_API_KEY=...
+    N8N_BYPASS_PROXY=false
 
 You may also export the variables in the shell:
 
@@ -28,6 +29,14 @@ You may also export the variables in the shell:
     export N8N_API_KEY="..."
 
 Already exported environment variables take precedence over values from `.env`.
+
+For an internal n8n host that must not use a corporate `HTTP_PROXY`/`HTTPS_PROXY`, set:
+
+    N8N_BYPASS_PROXY=true
+
+This bypass applies only to this exporter process. If `N8N_BYPASS_PROXY` is false, Python's normal proxy and `NO_PROXY` handling remains in effect.
+
+The exporter retries HTTP 429/502/503/504 responses and prints a concise response body plus a proxy hint when the request still fails.
 
 The repository is public. `.env` and `.env.*` are ignored by Git; `.env.example` is the only exception. Never commit the real API key.
 
