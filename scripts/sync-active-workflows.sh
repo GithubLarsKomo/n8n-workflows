@@ -6,10 +6,10 @@ cd "$repo_root"
 
 python3 scripts/export-active-workflows.py
 
-git add workflows/active docs/WORKFLOW-INVENTORY.generated.md
+git add workflows/active workflows/inactive docs/WORKFLOW-INVENTORY.generated.md
 
 if git diff --cached --quiet; then
-  echo "No active workflow changes."
+  echo "No workflow changes."
   exit 0
 fi
 
@@ -22,7 +22,7 @@ echo "Review the full staged diff for secrets before pushing:"
 echo "  git diff --cached"
 echo
 
-git commit -m "Sync active n8n workflows"
+git commit -m "Sync n8n workflows"
 
 if [[ "${PUSH:-0}" == "1" ]]; then
   git push
