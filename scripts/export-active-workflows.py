@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export all active n8n workflows as sanitized deterministic JSON.
+"""Export active and inactive n8n workflows as sanitized deterministic JSON.
 
 Configuration:
   The script loads .env from the repository root (one directory above scripts/)
@@ -30,7 +30,8 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 ENV_FILE = REPO_ROOT / ".env"
-OUT_DIR = REPO_ROOT / "workflows" / "active"
+ACTIVE_DIR = REPO_ROOT / "workflows" / "active"
+INACTIVE_DIR = REPO_ROOT / "workflows" / "inactive"
 INVENTORY = REPO_ROOT / "docs" / "WORKFLOW-INVENTORY.generated.md"
 
 
@@ -68,7 +69,6 @@ def load_env_file(path: Path) -> None:
         if len(value) >= 2 and value[0] == value[-1] and value[0] in {"'", '"'}:
             value = value[1:-1]
         else:
-            # Allow comments after unquoted values when separated by whitespace.
             value = re.split(r"\s+#", value, maxsplit=1)[0].rstrip()
 
         os.environ.setdefault(key, value)
@@ -211,13 +211,13 @@ def slugify(name: str) -> str:
     return slug or "workflow"
 
 
-def fetch_active_workflows():
+def fetch_workflows(active: bool):
     workflows = []
     cursor = None
 
     while True:
         params = {
-            "active": "true",
+            "active": "true" if active else "false",
             "limit": "250",
             "excludePinnedData": "true",
         }
@@ -245,8 +245,8 @@ def fetch_active_workflows():
     return workflows
 
 
-def write_exports(workflows):
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
+def write_exports(workflows, out_dir: Path, status: str):
+    out_dir.mkdir(parents=True, exist_ok=True)
 
     expected = set()
     inventory_rows = []
@@ -255,7 +255,7 @@ def write_exports(workflows):
         workflow_id = str(workflow.get("id", "unknown"))
         name = str(workflow.get("name", "Unnamed workflow"))
         filename = f"{slugify(name)}--{workflow_id}.json"
-        path = OUT_DIR / filename
+        path = out_dir / filename
         expected.add(path.resolve())
 
         clean = sanitize(workflow)
@@ -276,34 +276,50 @@ def write_exports(workflows):
             (
                 name,
                 workflow_id,
+                status,
                 ", ".join(trigger_types) if trigger_types else "—",
                 len(nodes),
             )
         )
 
-    for old in OUT_DIR.glob("*.json"):
+    for old in out_dir.glob("*.json"):
         if old.resolve() not in expected:
             old.unlink()
 
-    inventory_rows.sort(key=lambda row: row[0].lower())
+    return inventory_rows
+
+
+def write_inventory(inventory_rows) -> None:
+    inventory_rows.sort(key=lambda row: (row[2], row[0].lower()))
 
     lines = [
-        "# Generated Active n8n Workflow Inventory",
+        "# Generated n8n Workflow Inventory",
         "",
-        "Generated from the live n8n Public API with active=true.",
+        "Generated from the live n8n Public API with separate active=true and active=false queries.",
         "",
-        "| Workflow | ID | Trigger node types | Nodes |",
-        "|---|---|---|---:|",
+        "| Workflow | ID | Status | Trigger node types | Nodes |",
+        "|---|---|---|---|---:|",
     ]
 
-    for name, workflow_id, trigger_types, node_count in inventory_rows:
+    for name, workflow_id, status, trigger_types, node_count in inventory_rows:
         safe_name = name.replace("|", "\\|")
+        safe_status = status.replace("|", "\\|")
         safe_triggers = trigger_types.replace("|", "\\|")
         lines.append(
-            f"| {safe_name} | {workflow_id} | {safe_triggers} | {node_count} |"
+            f"| {safe_name} | {workflow_id} | {safe_status} | "
+            f"{safe_triggers} | {node_count} |"
         )
 
-    lines += ["", f"Total active workflows: {len(inventory_rows)}.", ""]
+    active_count = sum(1 for row in inventory_rows if row[2] == "active")
+    inactive_count = sum(1 for row in inventory_rows if row[2] == "inactive")
+
+    lines += [
+        "",
+        f"Active workflows: {active_count}.",
+        f"Inactive workflows: {inactive_count}.",
+        f"Total workflows: {len(inventory_rows)}.",
+        "",
+    ]
     INVENTORY.write_text("\n".join(lines), encoding="utf-8")
 
 
@@ -320,9 +336,18 @@ def main() -> None:
         f"(proxy bypass {'on' if BYPASS_PROXY else 'off'})."
     )
 
-    workflows = fetch_active_workflows()
-    write_exports(workflows)
-    print(f"Exported {len(workflows)} active workflow(s) to {OUT_DIR}/")
+    active_workflows = fetch_workflows(active=True)
+    inactive_workflows = fetch_workflows(active=False)
+
+    inventory_rows = []
+    inventory_rows.extend(write_exports(active_workflows, ACTIVE_DIR, "active"))
+    inventory_rows.extend(write_exports(inactive_workflows, INACTIVE_DIR, "inactive"))
+    write_inventory(inventory_rows)
+
+    print(
+        f"Exported {len(active_workflows)} active workflow(s) to {ACTIVE_DIR}/ "
+        f"and {len(inactive_workflows)} inactive workflow(s) to {INACTIVE_DIR}/"
+    )
 
 
 if __name__ == "__main__":
